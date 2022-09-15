@@ -1,10 +1,12 @@
-import logo from "./logo.svg";
-import "./App.css";
-import Login from "./components/Login";
-import "bootstrap/dist/css/bootstrap.min.css";
+import './App.css'
+import RoutesContainer from './components/routes';
 
 function App() {
-  return <Login />;
+  return (
+    <div className="App">
+      <RoutesContainer />
+    </div>
+  );
 }
 
 export default App;
