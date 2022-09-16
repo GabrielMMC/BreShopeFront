@@ -2,7 +2,7 @@ import React from "react";
 import { URL } from "../../../variables";
 import { connect, useSelector, useDispatch } from "react-redux";
 import { login } from "../../../components/actions/AppActions";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
@@ -18,7 +18,7 @@ class Login extends React.Component {
       loading: false,
       msgErro: "",
       email: "admin@admin.com",
-      password: "12345678",
+      password: "123456",
       redirect: false,
       path: "",
       loading_save: false,
@@ -44,6 +44,7 @@ class Login extends React.Component {
       .then(async (responseLog) => {
         try {
           let resp = await responseLog.json();
+          console.log("json", resp);
           console.log(resp.errors);
           if (resp.errors.length != 0) {
             let errors = Object.values(resp.errors);
@@ -228,62 +229,36 @@ class Login extends React.Component {
             <form
               style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
             >
-              <div
-                className="normal-input"
-                onClick={(e) => {
-                  this.focusInput(e);
-                }}
-              >
-                <EmailIcon sx={{ color: "rgb(100, 100, 100)" }} />
-                <input
+              <div className="row">
+                <TextField
                   type="text"
                   placeholder="E-mail"
+                  className="my-3"
+                  label="E-mail"
                   value={this.state.email}
                   onChange={(e) =>
                     this.setState({ ...this.state, email: e.target.value })
                   }
                   error={this.state.msgErro}
                 />
-              </div>
 
-              <div
-                className="normal-input"
-                onClick={(e) => {
-                  this.focusInput(e);
-                }}
-              >
-                <HttpsIcon sx={{ color: "rgb(100, 100, 100)" }} />
-                <input
+                <TextField
                   type={this.state.hide_password ? "password" : "text"}
                   placeholder="Senha"
+                  className="my-3"
+                  label="Senha"
                   value={this.state.password}
                   onChange={(e) =>
                     this.setState({ ...this.state, password: e.target.value })
                   }
                   error={this.state.msgErro}
                 />
-                {this.state.hide_password ? (
-                  <VisibilityOffIcon
-                    sx={{ color: "rgb(100, 100, 100)", cursor: "pointer", }}
-                    onClick={() => this.setState({ hide_password: false })}
-                  />
-                ) : (
-                  <VisibilityIcon
-                    sx={{ color: "rgb(100, 100, 100)", cursor: "pointer" }}
-                    onClick={() => this.setState({ hide_password: true })}
-                  />
-                )}
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: "2rem",
-                  alignItems: "center",
-                  justifyItems: "center",
-                }}
-              >
+              <div className="row">
+                {this.state.msgErro && (
+                  <Typography>{this.state.msgErro}</Typography>
+                )}
                 <Typography
                   variant="body1"
                   sx={{ fontFamily: "var(--Raleway)" }}
@@ -293,23 +268,9 @@ class Login extends React.Component {
                     clique aqui.
                   </a>
                 </Typography>
-                <input
-                  type="submit"
-                  style={{
-                    padding: "1rem 2rem",
-                    backgroundColor: "var(--purple)",
-                    border: "none",
-                    outline: "none",
-                    color: "white",
-                    fontFamily: "var(--Raleway)",
-                    width: "max-content",
-                    alignSelf: "flex-end",
-                    borderRadius: "1rem",
-                    fontSize: "1rem",
-                  }}
-                  onClick={this.login.bind(this)}
-                  value="Entrar"
-                />
+                <Button onClick={this.login.bind(this)} variant="contained">
+                  Entrar
+                </Button>
               </div>
             </form>
           </Box>

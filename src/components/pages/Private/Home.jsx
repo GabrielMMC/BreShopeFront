@@ -119,11 +119,6 @@ const Home = (props) => {
             <div className="content-page" >
                 <div className="content" style={{ marginLeft: marginLeft, transition: 'all 0.3s ', paddingBottom: 100, background: '#f8f8fa' }}>
                     <div className="container-fluid">
-                        {/* <Route exact path={`${url}`} render={(props2) => <Dashboard {...props2} />} />
-                            <Route exact path={`${url}/teste`} render={(props2) => <Dashboard2 {...props2} />} /
-                            >
-                            <Route exact path={`${url}/edit/:id`} render={(props2) => <EditUser {...props2} />} /
-                            > */}
                         <Outlet />
                     </div>
                 </div>
