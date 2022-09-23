@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import { MdCopyright } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux';
 import Logo from '../../../../assets/es-logo-branco.png';
+import HomeIcon from '@mui/icons-material/Home';
 import { Link } from 'react-router-dom';
 
 
@@ -69,6 +70,15 @@ const Aside = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             }}>NewsLetter</NavLink></MenuItem>}
 
           </SubMenu>} */}
+
+            <MenuItem>
+            <NavLink exact to="/home/breshop" activeStyle={{
+              fontWeight: "bold",
+              color: "white"
+            }}><HomeIcon />
+            </NavLink>
+            </MenuItem>
+
         </Menu>
       </SidebarContent>
 

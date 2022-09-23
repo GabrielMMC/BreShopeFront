@@ -8,7 +8,7 @@ const GuestRoutes = () => {
       <Routes>
         {/* index */}
         <Route path={"/*"} element={<Home />}>
-          <Route path={"/add_shop"} element={<Home />} />
+          <Route path={"home/"} element={<Home />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
