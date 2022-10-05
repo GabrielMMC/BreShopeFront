@@ -28,6 +28,7 @@ class Login extends React.Component {
 
   async login(e) {
     e.preventDefault();
+    console.log("state", this.state);
     this.setState({ loading_save: true, msgErro: "" });
     fetch(`${URL}api/auth/login`, {
       method: "POST",
