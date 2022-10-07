@@ -17,6 +17,7 @@ const Breshop = () => {
     description: { label: 'Descrição', value: "", error: false, col:'col-12', type: 'multiline', },
     file: {value: '', url: '', type: 'file'},
   });
+  const [error, setError] = React.useState(false)
   const token = useSelector((state) => state.AppReducer.token);
   let user = localStorage.getItem('user');
   user = JSON.parse(user);
@@ -67,8 +68,27 @@ const Breshop = () => {
       }
     ).then(async (response) => {
       const resp = response.json()
-      console.log('josn', resp)
+      console.log('json', resp)
     })
+  }
+
+  function validate(){
+    const state2 = {...state}
+    const keys = Object.keys(state2)
+    keys.forEach(item =>{
+      if(state2[item].value === '')state2[item].error = true
+    })
+    setState(state2)
+
+    keys.forEach(item =>{
+      if(state[item].error === true){
+        setError(true)
+      }else{
+        setError(false)
+      }
+    })
+
+    if(!error)storeShop()
   }
 
   return (
@@ -87,7 +107,7 @@ const Breshop = () => {
             </div>
 
           <div className="d-flex justify-content-end mt-5">
-            <Button variant="contained" onClick={storeShop}>Salvar</Button>
+            <Button variant="contained" onClick={validate}>Salvar</Button>
           </div>      
         </div>
       </div>

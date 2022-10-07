@@ -17,6 +17,8 @@ const Input = ({state, setState, item}) => {
     let state2 = {...state}
     state2.cep.value = e.target.value
     state2.cep.error = false
+    state2.state.error = false
+    state2.city.error = false
     setState(state2)
 
     if (Array.from(e.target.value).length >= 8) {
@@ -75,7 +77,6 @@ const Input = ({state, setState, item}) => {
   };
 
   function render(){
-    console.log('teste', state)
     switch (state[item].type) {
       case 'text':
         return(

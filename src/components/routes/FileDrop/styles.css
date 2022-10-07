@@ -47,14 +47,16 @@
   text-align: center;
 }
 
-.file-drop > .file-drop-target.file-drop-dragging-over-frame, .file-drop-target.file-drop-dragging-leave-frame {
+.file-drop > .file-drop-target.file-drop-dragging-over-frame,
+.file-drop-target.file-drop-dragging-leave-frame {
   /* overlay a black mask when dragging over the frame */
   -webkit-transition: 0.5s;
-    -moz-transition: 0.5s;
-    -o-transition: 0.5s;
-    -ms-transition: 0.5s;
-    transition: 0.5s;
-    box-shadow: 0 13px 27px -5px rgba(50,50,93,0.25), 0 8px 16px -8px rgba(74, 167, 182, 0.3);
+  -moz-transition: 0.5s;
+  -o-transition: 0.5s;
+  -ms-transition: 0.5s;
+  transition: 0.5s;
+  box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
+    0 8px 16px -8px rgba(74, 167, 182, 0.3);
   z-index: 50;
   opacity: 1;
 }
