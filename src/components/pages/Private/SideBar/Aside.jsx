@@ -1,18 +1,17 @@
-import React, { useCallback, useState } from 'react';
-import { ProSidebar, Menu, MenuItem, SubMenu, SidebarHeader, SidebarFooter, SidebarContent } from 'react-pro-sidebar';
-import { FaUserAlt, FaTruckMoving, FaBriefcase, FaFolderPlus, FaCog, FaChartLine, FaRegComments, FaRecycle, FaUserNinja, FaUserSecret, FaGem, FaShieldAlt } from 'react-icons/fa';
+import React from 'react';
+import { ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent, SubMenu } from 'react-pro-sidebar';
+import { FaGem, FaShoppingCart } from 'react-icons/fa';
+import { HiHome } from 'react-icons/hi';
 import sidebarBg from './assets/bg1.jpg';
 import { NavLink } from 'react-router-dom';
 import { MdCopyright } from 'react-icons/md';
-import { useSelector, useDispatch } from 'react-redux';
 import Logo from '../../../../assets/es-logo-branco.png';
 import HomeIcon from '@mui/icons-material/Home';
-import { Link } from 'react-router-dom';
+// import { useSelector, useDispatch } from 'react-redux';
 
 
 const Aside = ({ image, collapsed, toggled, handleToggleSidebar }) => {
-  // #084808
-  let user = useSelector(store => store.AppReducer.user);
+  // let user = useSelector(store => store.AppReducer.user);
 
 
   return (
@@ -34,51 +33,59 @@ const Aside = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             alignItems: 'center'
           }}
         >
-          {collapsed == true && <span>
+          {collapsed === true && <span>
             <img src={Logo} alt="" height='60' style={{
               height: '60px',
               width: '90%',
               objectFit: 'contain'
             }} />
           </span>}
-          {collapsed == false && <i>
+          {collapsed === false && <i>
             <img className="img-fluid" src={Logo} alt="" height="100" style={{ height: '40px' }} />
           </i>}
         </div>
       </SidebarHeader>
       <SidebarContent style={{ background: '#222d32' }}>
-        <Menu iconShape="square">
+        <Menu iconShape="circle">
 
           <MenuItem icon={<FaGem />}><NavLink exact to="/home" activeStyle={{
             fontWeight: "bold",
             color: "white"
           }}>Dashboard</NavLink></MenuItem>
 
-          {/* <MenuItem icon={<FaGem />}> {'Cadastros'}</MenuItem> */}
-          {/* {<SubMenu title="Cadastros" icon={<FaFolderPlus />}>
-            {<MenuItem  > <NavLink exact to="/home" activeStyle={{
-              fontWeight: "bold",
-              color: "white"
-            }}>Teste</NavLink></MenuItem>}
-            {<MenuItem  > <NavLink exact to="/home/list" activeStyle={{
-              fontWeight: "bold",
-              color: "white"
-            }}>Usuários</NavLink></MenuItem>}
-            {<MenuItem  > <NavLink exact to="/home/news/list" activeStyle={{
-              fontWeight: "bold",
-              color: "white"
-            }}>NewsLetter</NavLink></MenuItem>}
-
-          </SubMenu>} */}
-
-            <MenuItem>
+          <MenuItem icon={<HiHome />}>
             <NavLink exact to="/home/breshop" activeStyle={{
               fontWeight: "bold",
               color: "white"
-            }}><HomeIcon />
+            }}>Loja
             </NavLink>
+          </MenuItem>
+
+          <MenuItem icon={<FaShoppingCart />}>
+            <NavLink exact to="/home/products" activeStyle={{
+              fontWeight: "bold",
+              color: "white"
+            }}>Produtos
+            </NavLink>
+          </MenuItem>
+
+          {/* <SubMenu title="Produtos" icon={<FaShoppingCart />}>
+            <MenuItem icon={<HomeIcon />}>
+              <NavLink exact to="/home/product/add" activeStyle={{
+                fontWeight: "bold",
+                color: "white"
+              }}>Cadastrar
+              </NavLink>
             </MenuItem>
 
+            <MenuItem icon={<HomeIcon />}>
+              <NavLink exact to="/home/products" activeStyle={{
+                fontWeight: "bold",
+                color: "white"
+              }}>Lista
+              </NavLink>
+            </MenuItem>
+          </SubMenu> */}
         </Menu>
       </SidebarContent>
 

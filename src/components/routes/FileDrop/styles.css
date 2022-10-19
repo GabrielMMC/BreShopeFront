@@ -1,6 +1,6 @@
 .file-drop {
   position: relative;
-  height: 100px;
+  height: 100%;
   width: 100%;
   background-color: #f1f1f1;
   cursor: pointer;
@@ -9,7 +9,7 @@
   border: 2px dashed #c4c4c4;
 }
 
-.file-drop > .file-drop-target {
+.file-drop>.file-drop-target {
   /* basic styles */
   position: absolute;
   top: 0;
@@ -47,23 +47,23 @@
   text-align: center;
 }
 
-.file-drop > .file-drop-target.file-drop-dragging-over-frame,
+.file-drop>.file-drop-target.file-drop-dragging-over-frame,
 .file-drop-target.file-drop-dragging-leave-frame {
   /* overlay a black mask when dragging over the frame */
-  -webkit-transition: 0.5s;
-  -moz-transition: 0.5s;
-  -o-transition: 0.5s;
-  -ms-transition: 0.5s;
-  transition: 0.5s;
+  -webkit-transition: 0.25s;
+  -moz-transition: 0.25s;
+  -o-transition: 0.25s;
+  -ms-transition: 0.25s;
+  transition: 0.25s;
   box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
     0 8px 16px -8px rgba(74, 167, 182, 0.3);
   z-index: 50;
   opacity: 1;
 }
 
-.file-drop > .file-drop-target.file-drop-dragging-over-target {
+.file-drop>.file-drop-target.file-drop-dragging-over-target {
   /* turn stuff orange when we are dragging over the target */
   /* color: #ff6e40;
   box-shadow: 0 0 13px 3px #ff6e40; */
-  background-color: white;
+  background-color: #FFFFA3;
 }
