@@ -16,6 +16,7 @@ const Breshop = () => {
     city: { label: 'Cidade', value: "", error: false, col:'col-4', type: 'text' },
     description: { label: 'Descrição', value: "", error: false, col:'col-12', type: 'multiline', },
     file: {value: '', url: '', type: 'file'},
+    teste: ''
   });
   const [error, setError] = React.useState(false)
   const token = useSelector((state) => state.AppReducer.token);
@@ -91,6 +92,28 @@ const Breshop = () => {
     if(!error)storeShop()
   }
 
+  const debounce = (func, wait) => {
+    let timeout;
+  
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+        console.log('args', ...args)
+      };
+  
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  };
+
+  function returnedFunction(e){
+    debounce(function () {
+    console.log('ativou')
+    // setState({...state, teste: e.target.value})
+  }, 500);
+}
+
   return (
     <div className="row mx-3">
       <div className="card m-auto" style={{maxWidth:800}}>
@@ -105,6 +128,11 @@ const Breshop = () => {
             <div className="col-12 mt-3">
               <img style={{ width: '100%', height: 200, borderRadius: 5 }} src={state.file ? state.file.url : `${URL}storage/fotos/no_banner.png`}></img>
             </div>
+
+            <TextField label='teste' onChange={(e) => debounce((e) => {
+              console.log('ativou')
+              // setState({...state, teste: e.target.value})
+            }, 500)} ></TextField>
 
           <div className="d-flex justify-content-end mt-5">
             <Button variant="contained" onClick={validate}>Salvar</Button>
