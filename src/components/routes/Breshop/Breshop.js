@@ -125,11 +125,6 @@ const Breshop = () => {
             <img style={{ width: '100%', height: 200, borderRadius: 5 }} src={state.file ? state.file.url : `${URL}storage/fotos/no_banner.png`} alt='banner'></img>
           </div>
 
-            <TextField label='teste' onChange={(e) => debounce((e) => {
-              console.log('ativou')
-              // setState({...state, teste: e.target.value})
-            }, 500)} ></TextField>
-
           <div className="d-flex justify-content-end mt-5">
             <Button variant="contained" onClick={validate}>Salvar</Button>
           </div>
