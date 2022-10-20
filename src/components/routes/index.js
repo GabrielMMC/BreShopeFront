@@ -1,15 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "../pages/Auth/Login";
 import Home from "../pages/Private/Home";
 import Breshop from "./Breshop/Breshop";
-
 import GuestRoutes from "./GuestRoutes";
+import AddProduct from "./Product/AddProduct";
+import EditProduct from "./Product/EditProduct";
+import ListProducts from "./Product/ListProducts";
 
 const PrivateRoute = (props) => {
-  console.log("props", props);
-
-  // const stream = useSelector(state => state.AppReducer.stream);
   const token = useSelector((state) => state.AppReducer.token);
 
   return token != null ? (
@@ -21,7 +20,6 @@ const PrivateRoute = (props) => {
 
 const LoginRoute = (props) => {
   const token = useSelector((state) => state.AppReducer.token);
-  // print('token')
   return token == null ? (
     <Login {...props} />
   ) : (
@@ -34,7 +32,7 @@ const RoutesContainer = () => {
   let token = localStorage.getItem("token");
   let user = localStorage.getItem("user");
   user = JSON.parse(user);
-  if (user == null || user == undefined) {
+  if (user == null || user === undefined) {
     user = {};
   }
   console.log(token);
@@ -44,6 +42,9 @@ const RoutesContainer = () => {
       <Route path={"/login"} element={<LoginRoute />} />
       <Route path={"/home"} element={<PrivateRoute />}>
         <Route path={"breshop"} element={<Breshop />} />
+        <Route path={"products"} element={<ListProducts />} />
+        <Route path={"product/add"} element={<AddProduct />} />
+        <Route path={"product/edit/:id"} element={<EditProduct />} />
       </Route>
       <Route path={"/*"} element={<GuestRoutes />} />
     </Routes>
