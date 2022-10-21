@@ -4,6 +4,26 @@ import Card from './Card';
 import { Typography } from "@mui/material";
 
 const Home = () => {
+  const [state, setState] = React.useState({
+    pageNumber: 1,
+  })
+
+  React.useEffect(() => {
+    fetch(`${URL}api/get_all_products?page=${state.pageNumber}`, {
+      method: 'GET',
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(async (response) => {
+      let resp = await response.json()
+      console.log('resp', resp)
+    })
+  }, [])
+
+  const renderProducts = () => {
+    return '';
+  }
+
   return (
     <div style={{overflowX: 'hidden', height: '100vh'}}>
       <Navbar />
@@ -12,11 +32,7 @@ const Home = () => {
           <div className="col-8 bg-light" style={{maxWidth: 1000}}>
             <Typography className="m-3" variant="h5" color="text.secondary">Produtos recomendados para você</Typography>
             <div className="d-flex">
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+            {renderProducts()}
             </div>
           </div>         
           </div>

@@ -87,6 +87,18 @@ const Input = ({ state, setState, item }) => {
           </form>
         )
 
+        case 'number':
+        return (
+          <form class="form-floating">
+            <input type='number' className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => {
+              if(e.target.value > 0){
+                setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })}
+              }
+            } id="floatingInputValue" />
+            <label for="floatingInputValue">{state[item].label}</label>
+          </form>
+        )
+
       case 'cep':
         return (
           <form class="form-floating">

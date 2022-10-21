@@ -109,7 +109,7 @@ const ListProducts = () => {
   }
 
   function EditSubject(id) {
-    history('/home/product/edit/' + id);
+    history('/home/product/' + id);
   }
 
   // function ShowInfo(id) {
@@ -137,7 +137,7 @@ const ListProducts = () => {
               }, 500)}></Input>
             </div>
             <div className="align-self-end ms-auto">
-              <Button classes={{ contained: 'bg-primary-bm' }} variant="contained" size='large' endIcon={<AutoStoriesIcon />} onClick={() => history('/home/subjects/add')}>Adicionar</Button>
+              <Button classes={{ contained: 'bg-primary-bm' }} variant="contained" size='large' endIcon={<AutoStoriesIcon />} onClick={() => history('/home/product/add')}>Adicionar</Button>
             </div>
           </div>
           <table className="table table-striped table-hover text-center mt-5">

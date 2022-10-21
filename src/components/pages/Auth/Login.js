@@ -97,6 +97,7 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
+    this.get_data()
     // const {
     //   match: { params },
     // } = this.props;
@@ -110,6 +111,18 @@ class Login extends React.Component {
 
       // return <Redirect to='/home' />
     }
+  }
+
+  get_data(){
+    fetch(`${URL}api/get_all_products?page=1`, {
+      method: 'GET',
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(async (response) => {
+      let resp = await response.json()
+      console.log('resp', resp)
+    })
   }
 
   changeEmail(event) {
