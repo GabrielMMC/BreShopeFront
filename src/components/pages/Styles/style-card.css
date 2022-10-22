@@ -1,0 +1,20 @@
+.hvr {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  -webkit-transform: perspective(1px) translateZ(0) !important;
+  transform: perspective(1px) translateZ(0) !important;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0) !important;
+  -webkit-transition-duration: 0.3s !important;
+  transition-duration: 0.3s !important;
+  -webkit-transition-property: box-shadow, transform !important;
+  transition-property: box-shadow, transform !important;
+  cursor: pointer !important;
+}
+
+.hvr:hover,
+.hvr:focus,
+.hvr:active {
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5) !important;
+  -webkit-transform: scale(1.1) !important;
+  transform: scale(1.1) !important;
+}

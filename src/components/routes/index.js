@@ -41,12 +41,12 @@ const RoutesContainer = () => {
   return (
     <Routes>
       <Route path={"/login"} element={<LoginRoute />} />
+      <Route path={"product/:id"} element={<Product />} />
       <Route path={"/home"} element={<PrivateRoute />}>
         <Route path={"breshop"} element={<Breshop />} />
         <Route path={"products"} element={<ListProducts />} />
         <Route path={"product/add"} element={<AddProduct />} />
         <Route path={"product/edit/:id"} element={<EditProduct />} />
-        <Route path={"product/:id"} element={<Product />} />
       </Route>
       <Route path={"/*"} element={<GuestRoutes />} />
     </Routes>

@@ -2,35 +2,36 @@ import { ThemeProvider } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import {URL} from '../../variables'
+import { URL } from '../../variables'
+import Navbar from './Navbar'
 import Theme from '../routes/Theme/Theme'
 
 const Product = () => {
-    const [state, setState] = React.useState({
+  const [state, setState] = React.useState({
     product: [],
   })
-  const token = useSelector(state => state.AppReducer.token);
   const params = useParams()
 
   React.useEffect(() => {
-    fetch(`${URL}api/get_product/${params.id}`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Authorization': `Bearer ${token}`,
-          // 'Content-Type': 'application/json',
-        }
+    fetch(`${URL}api/get_public_product/${params.id}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        // 'Content-Type': 'application/json',
+      }
+    })
+      .then(async (response) => {
+        const resp = await response.json();
+        setState({ ...state, product: resp.product })
       })
-        .then(async (response) => {
-          const resp = await response.json();
-          setState({...state, product: resp.product})
-        })
   }, [])
 
   return (
     <ThemeProvider theme={Theme}>
+      <Navbar />
+      <p>teste</p>
       <div className='card m-auto' style={{ maxWidth: 1000 }}>
-        <div className="card-body">
+        {/* <div className="card-body">
           <div className="row mt-3">
             <div className="col-md-6 col-12 m-auto my-2">
               <div className="col-12">
@@ -102,7 +103,7 @@ const Product = () => {
             <div className="align-self-center ms-auto">
               <LoadingButton variant='contained' size='large' loading={state.loading_save} onClick={() => edit ? store_product('update') : store_product('add')} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
             </div>
-          </div>
+          </div> */}
       </div >
     </ThemeProvider>
   )
