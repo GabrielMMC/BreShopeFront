@@ -48,7 +48,7 @@ const Product = () => {
 
   return (
     <ThemeProvider theme={Theme}>
-      <div className='bg-light'>
+      <div className='bg-light vh-100'>
         <Navbar />
         <div className="m-auto bg-white mt-5 p-5 rounded" style={{ maxWidth: 1000 }}>
           {!state.loading ?
@@ -131,7 +131,7 @@ const Product = () => {
 
                   <div className="ms-auto">
                     <Button variant='contained' className='mx-2'>Adicionar ao carrinho</Button>
-                    <Button variant='contained' onClick={() => history(`/paymant/${params.id}`)}>Finalizar compra</Button>
+                    <Button variant='contained'>Finalizar compra</Button>
                   </div>
                 </div>
               </div>
