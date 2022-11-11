@@ -25,6 +25,7 @@ export default function RecipeReviewCard({ product }) {
           height="150"
           image={`${URL}storage/${product.images[0].file}`}
           alt="Paella dish"
+          onClick={() => history(`/product/${product.id}`)}
         />
         <CardContent sx={{ padding: 0, margin: 0 }}>
           <Typography variant="body2" color="text.secondary">

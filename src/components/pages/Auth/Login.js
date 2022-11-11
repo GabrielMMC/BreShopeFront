@@ -108,15 +108,14 @@ class Login extends React.Component {
 
     if (current_token != null) {
       console.log("ta logado. redirecionado");
-
       // return <Redirect to='/home' />
     }
   }
 
-  get_data(){
+  get_data() {
     fetch(`${URL}api/get_all_products?page=1`, {
       method: 'GET',
-      headers:{
+      headers: {
         'Content-Type': 'application/json'
       }
     }).then(async (response) => {
@@ -151,23 +150,6 @@ class Login extends React.Component {
           background: "rgb(240, 244, 247)",
         }}
       >
-        {/* <div className="row vh-100 vw-100 justify-content-center align-items-center bg-light">
-          <div className="col-8" style={{ maxWidth: 600 }}>
-            <div className="card py-5">
-              <div className="card-body">
-                <div className="text-center mb-5">
-                  <h1 className="display-6">Login</h1>
-                  <p className="lead">Venha fazer parte do nosso masterclass</p>
-                </div>
-                <div className="d-flex flex-column col-12 col-md-6 m-auto">
-                  <Input label={'Usuário'} state={this.state} setState={(e) => this.setState(e)} type={'email'}></Input>
-                  <Input label={'Senha'} state={this.state} setState={(e) => this.setState(e)} type={'password'}></Input>
-                  <Button variant='outlined' size='large' onClick={this.login.bind(this)}>Entrar</Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
 
         <Typography
           variant="h5"

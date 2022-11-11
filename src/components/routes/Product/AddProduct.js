@@ -1,4 +1,4 @@
-import { Button, createTheme, IconButton, ThemeProvider, Typography } from '@mui/material';
+import { Button, ThemeProvider, Typography } from '@mui/material';
 import React from 'react';
 import { FileDrop } from 'react-file-drop';
 import { URL } from '../../../variables';
@@ -7,7 +7,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
-import styles from '../FileDrop/styles.css';
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -200,16 +199,16 @@ const AddProduct = ({ edit }) => {
                 {renderSize()}
               </div>
             </div>
-          </div>         
+          </div>
         </div>
         <div className="d-flex m-2">
-            <div className="align-self-center">
-              <Button variant='contained' size='large' onClick={() => history('/home/products')} startIcon={<ReplyAllIcon />}> Voltar</Button>
-            </div>
-            <div className="align-self-center ms-auto">
-              <LoadingButton variant='contained' size='large' loading={state.loading_save} onClick={() => edit ? store_product('update') : store_product('add')} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
-            </div>
+          <div className="align-self-center">
+            <Button variant='contained' size='large' onClick={() => history('/home/products')} startIcon={<ReplyAllIcon />}> Voltar</Button>
           </div>
+          <div className="align-self-center ms-auto">
+            <LoadingButton variant='contained' size='large' loading={state.loading_save} onClick={() => edit ? store_product('update') : store_product('add')} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
+          </div>
+        </div>
       </div >
     </ThemeProvider>
   )

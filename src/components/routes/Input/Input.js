@@ -47,6 +47,7 @@ const Input = ({ state, setState, item }) => {
         ...state,
         city: { ...state.city, value: data.localidade, disabled: true },
         state: { ...state.state, value: data.uf, disabled: true },
+        street: { ...state.street, value: data.logradouro, disabled: true },
       })
     }
   }
@@ -81,37 +82,40 @@ const Input = ({ state, setState, item }) => {
     switch (state[item].type) {
       case 'text':
         return (
-          <form class="form-floating">
+          <form className="form-floating">
             <input className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })} id="floatingInputValue" />
-            <label for="floatingInputValue">{state[item].label}</label>
+            <label htmlFor="floatingInputValue">{state[item].label}</label>
           </form>
         )
 
-        case 'number':
+      case 'select':
         return (
-          <form class="form-floating">
-            <input type='number' className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => {
-              if(e.target.value > 0){
-                setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })}
-              }
-            } id="floatingInputValue" />
-            <label for="floatingInputValue">{state[item].label}</label>
-          </form>
-        )
-
-      case 'cep':
-        return (
-          <form class="form-floating">
-            <input className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => pesquisaCep(e)} id="floatingInputValue" />
-            <label for="floatingInputValue">{state[item].label}</label>
+          <form className="form-floating">
+            <select className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })} id="floatingSelect" aria-label="Floating label select example">
+              {state[item].fillOption && state[item].fillOption.map(item => (<option key={item} value={item}>{item}</option>))}
+            </select>
+            <label htmlFor="floatingSelect">{state[item].label}</label>
           </form>
         )
 
       case 'number':
         return (
-          <form class="form-floating">
-            <input className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => phoneMaskBrazil(e)} id="floatingInputValue" />
-            <label for="floatingInputValue">{state[item].label}</label>
+          <form className="form-floating">
+            <input type='number' className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => {
+              if (e.target.value > 0) {
+                setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })
+              }
+            }
+            } id="floatingInputValue" />
+            <label htmlFor="floatingInputValue">{state[item].label}</label>
+          </form>
+        )
+
+      case 'cep':
+        return (
+          <form className="form-floating">
+            <input className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => pesquisaCep(e)} id="floatingInputValue" />
+            <label htmlFor="floatingInputValue">{state[item].label}</label>
           </form>
         )
 
@@ -135,9 +139,9 @@ const Input = ({ state, setState, item }) => {
 
       case 'multiline':
         return (
-          <form class="form-floating">
+          <form className="form-floating">
             <textarea style={{ height: 150 }} className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })} id="floatingTextarea" />
-            <label for="floatingTextarea">{state[item].label}</label>
+            <label htmlFor="floatingTextarea">{state[item].label}</label>
           </form>
         )
 
@@ -155,7 +159,7 @@ const Input = ({ state, setState, item }) => {
               value={state[item].value}
               onChange={(e) => setState({ ...state, [item]: { ...state[item], value: e, error: false } })}
             />
-            <label for="floatingInputValue">{state[item].label}</label>
+            <label htmlFor="floatingInputValue">{state[item].label}</label>
             {console.log('price', state[item].value)}
           </form>
         )
@@ -165,9 +169,7 @@ const Input = ({ state, setState, item }) => {
     }
   }
   return (
-    <div className={`${state[item].col} col-12 my-2`}>
-      {render()}
-    </div>
+    render()
   )
 }
 

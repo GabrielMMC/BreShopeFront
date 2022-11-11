@@ -1,70 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { URL } from '../../../variables';
 import { useSelector, useDispatch } from 'react-redux';
 import Aside from './SideBar/Aside';
-
 import { mudarDados } from '../../../components/actions/AppActions';
-// import { Route, Switch } from 'react-router';
-import { BrowserRouter, Route, Routes, Switch, Redirect, Router, useParams, useMatch, useLocation, Outlet } from "react-router-dom";
-
-
-import Request from './Request';
-
+import { useParams, useLocation, Outlet } from "react-router-dom";
 import Header from './Header';
-// import { BrowserRouter } from 'react-router-dom';
 import './SideBar/styles/index.css';
 import './SideBar/styles/App.scss';
 import './SideBar/styles/bootstrap.css';
-import { MemoryRouter } from 'react-router-dom';
-
-
-
-
-
 
 const Home = (props) => {
     const toggled = useSelector(store => store.AppReducer.toggled)
     const collapsed = useSelector(store => store.AppReducer.collapsed)
-    const user = useSelector(store => store.AppReducer.user);
-    const token = useSelector(store => store.AppReducer.token);
 
     const dispatch = useDispatch();
-    const [loading_home, setLoadingHome] = useState(false);
     const [image, setImage] = useState(true);
-    // const [toggled, setToggled] = useState(false);
     const handleCollapsedChange = (checked) => {
         dispatch(mudarDados({ collapsed: checked }));
 
     };
 
-    const GetRole = async () => {
-        let response = await Request.Post(`auth/user`)
-        if (!response) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-
-            dispatch({ type: 'logout', payload: {} });
-        }
-        else if (response.message == "Unauthenticated.") {
-            localStorage.removeItem('token'); localStorage.removeItem('user');
-            dispatch({ type: 'logout', payload: {} });
-            return;
-        }
-        else {
-            dispatch({ type: 'login', payload: { token: token, user: response['user'] } });
-
-        }
-
-    }
-
-
-
     const handleToggleSidebar = (value) => {
         // setToggled(value);
         dispatch(mudarDados({ toggled: value }));
     };
-
-
 
     useEffect(() => {
         const event = (e) => {
@@ -93,7 +51,6 @@ const Home = (props) => {
             // Anything in here is fired on component unmount.
         }
     }, [])
-    const params = useParams();
     const location = useLocation()
     const marginLeft = (toggled == false || window.innerWidth <= 768) ? 0 : (collapsed == false ? 270 : 80);
     console.log(location);

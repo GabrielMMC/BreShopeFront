@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "../pages/Auth/Login";
+import Paymant from "../pages/Paymant/Paymant";
 import Home from "../pages/Private/Home";
 import Product from "../pages/Product";
 import Breshop from "./Breshop/Breshop";
@@ -42,6 +43,7 @@ const RoutesContainer = () => {
     <Routes>
       <Route path={"/login"} element={<LoginRoute />} />
       <Route path={"product/:id"} element={<Product />} />
+      <Route path={"paymant/:id"} element={<Paymant />} />
       <Route path={"/home"} element={<PrivateRoute />}>
         <Route path={"breshop"} element={<Breshop />} />
         <Route path={"products"} element={<ListProducts />} />
