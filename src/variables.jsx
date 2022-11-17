@@ -30,7 +30,6 @@ export function MOUNT_JSON_BODY(props) {
 }
 
 export async function POST_FETCH(props) {
-  console.log('body', { ...props.body })
   return (fetch(props.url, {
     method: 'POST',
     headers: {
@@ -38,6 +37,48 @@ export async function POST_FETCH(props) {
       'Authorization': `Bearer ${props.token}`
     },
     body: JSON.stringify({ ...props.body })
+  }).then(async (response) => {
+    const resp = await response.json()
+    return resp
+  })
+  )
+}
+
+export async function POST_PUBLIC_FETCH(props) {
+  console.log('props', props.body)
+  return (fetch(props.url, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ...props.body })
+  }).then(async (response) => {
+    const resp = await response.json()
+    return resp
+  })
+  )
+}
+
+export async function GET_FETCH(props) {
+  return (fetch(props.url, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${props.token}`
+    }
+  }).then(async (response) => {
+    const resp = await response.json()
+    return resp
+  })
+  )
+}
+
+export async function GET_PUBLIC_FETCH(props) {
+  return (fetch(props.url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json'
+    }
   }).then(async (response) => {
     const resp = await response.json()
     return resp

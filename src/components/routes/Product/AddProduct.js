@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import Theme from '../Theme/Theme';
 
 const AddProduct = ({ edit }) => {
-  const [state, setState] = React.useState({
+  const [form, setForm] = React.useState({
     name: { label: 'Nome*', value: "", error: false, col: 'col-sm-12', type: 'text' },
     price: { label: 'Preço*', value: "", error: false, col: 'col-sm-6', type: 'price', },
     material: { label: 'Material*', value: "", error: false, col: 'col-sm-6', type: 'text' },
@@ -38,12 +38,14 @@ const AddProduct = ({ edit }) => {
   user = JSON.parse(user);
 
   function renderInput() {
-    const state2 = { ...state }
-    let keys = Object.keys(state2)
+    const form2 = { ...form }
+    let keys = Object.keys(form2)
     keys = keys.filter(item => item === 'name' || item === 'material' || item === 'description' || item === 'damage' || item === 'price' || item === 'quantity')
     return (
       keys.map(item => (
-        <Input state={state} setState={(e) => setState(e)} item={item} />
+        <div key={form[item].label} className={`${form[item].col} col-12 my-2`}>
+          <Input state={form} setState={(e) => setForm(e)} item={item} />
+        </div>
       ))
     )
   }
@@ -65,9 +67,9 @@ const AddProduct = ({ edit }) => {
   function changeFile(file, index) {
     let fr = new FileReader()
     fr.onload = (e) => {
-      let file2 = { ...state }
+      let file2 = { ...form }
       file2.files[index] = { value: file, url: e.target.result }
-      setState(file2)
+      setForm(file2)
     }
     fr.readAsDataURL(file)
   }
@@ -82,17 +84,17 @@ const AddProduct = ({ edit }) => {
   }
 
   function store_product() {
-    setState({ ...state, loading_save: true })
-    let price = state.price.value
+    setForm({ ...form, loading_save: true })
+    let price = form.price.value
     price = formatReal(price)
     let data = new FormData()
     data.append('user_id', user.id)
-    data.append('name', state.name.value)
+    data.append('name', form.name.value)
     data.append('price', parseFloat(price))
-    data.append('material', state.material.value)
-    data.append('damage', state.damage.value)
-    data.append('description', state.description.value)
-    data.append('quantity', state.quantity.value)
+    data.append('material', form.material.value)
+    data.append('damage', form.damage.value)
+    data.append('description', form.description.value)
+    data.append('quantity', form.quantity.value)
 
     data.append('pp', size.pp)
     data.append('p', size.p)
@@ -101,7 +103,7 @@ const AddProduct = ({ edit }) => {
     data.append('gg', size.gg)
     data.append('xg', size.xg)
 
-    state.files.forEach(item => {
+    form.files.forEach(item => {
       data.append('files[]', item.value)
     })
 
@@ -122,7 +124,7 @@ const AddProduct = ({ edit }) => {
     }).then(async (response) => {
       const resp = response.json()
       console.log('resp', resp)
-      setState({ ...state, loading_save: false })
+      setForm({ ...form, loading_save: false })
     })
   }
 
@@ -137,8 +139,8 @@ const AddProduct = ({ edit }) => {
                 <div style={{ height: 350 }}>
                   <FileDrop onDrop={(files, event) => changeFile(files[0], 0)}>
                     <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                      {!state.files[0].url && <Typography variant='p' style={{ color: '#666666' }}>Arraste a foto ou escolha um arquivo</Typography>}
-                      {state.files[0].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={state.files[0].url ? state.files[0].url : `${URL}storage/products/no_product.jpg`}></img>}
+                      {!form.files[0].url && <Typography variant='p' style={{ color: '#666666' }}>Arraste a foto ou escolha um arquivo</Typography>}
+                      {form.files[0].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[0].url ? form.files[0].url : `${URL}storage/products/no_product.jpg`}></img>}
                       <input hidden onChange={(e) => changeFile(e.target.files[0], 0)} accept="image/*" multiple type="file" />
                     </Button>
                   </FileDrop>
@@ -149,8 +151,8 @@ const AddProduct = ({ edit }) => {
                   <div style={{ height: 100 }}>
                     <FileDrop style={{ height: "100px !important" }} onDrop={(files, event) => changeFile(files[0], 1)}>
                       <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                        {!state.files[1].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
-                        {state.files[1].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={state.files[1].url ? state.files[1].url : `${URL}storage/products/no_product.jpg`}></img>}
+                        {!form.files[1].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
+                        {form.files[1].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[1].url ? form.files[1].url : `${URL}storage/products/no_product.jpg`}></img>}
                         <input hidden onChange={(e) => changeFile(e.target.files[0], 1)} accept="image/*" multiple type="file" />
                       </Button>
                     </FileDrop>
@@ -160,8 +162,8 @@ const AddProduct = ({ edit }) => {
                   <div style={{ height: 100 }}>
                     <FileDrop style={{ height: "100px !important" }} onDrop={(files, event) => changeFile(files[0], 2)}>
                       <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                        {!state.files[2].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
-                        {state.files[2].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={state.files[2].url ? state.files[2].url : `${URL}storage/products/no_product.jpg`}></img>}
+                        {!form.files[2].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
+                        {form.files[2].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[2].url ? form.files[2].url : `${URL}storage/products/no_product.jpg`}></img>}
                         <input hidden onChange={(e) => changeFile(e.target.files[0], 2)} accept="image/*" multiple type="file" />
                       </Button>
                     </FileDrop>
@@ -171,8 +173,8 @@ const AddProduct = ({ edit }) => {
                   <div style={{ height: 100 }}>
                     <FileDrop style={{ height: "100px !important" }} onDrop={(files, event) => changeFile(files[0], 3)}>
                       <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                        {!state.files[3].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
-                        {state.files[3].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={state.files[3].url ? state.files[3].url : `${URL}storage/products/no_product.jpg`}></img>}
+                        {!form.files[3].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
+                        {form.files[3].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[3].url ? form.files[3].url : `${URL}storage/products/no_product.jpg`}></img>}
                         <input hidden onChange={(e) => changeFile(e.target.files[0], 3)} accept="image/*" multiple type="file" />
                       </Button>
                     </FileDrop>
@@ -182,8 +184,8 @@ const AddProduct = ({ edit }) => {
                   <div style={{ height: 100 }}>
                     <FileDrop style={{ height: "100px !important" }} onDrop={(files, event) => changeFile(files[0], 4)}>
                       <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                        {!state.files[4].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
-                        {state.files[4].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={state.files[4].url ? state.files[4].url : `${URL}storage/products/no_product.jpg`}></img>}
+                        {!form.files[4].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
+                        {form.files[4].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[4].url ? form.files[4].url : `${URL}storage/products/no_product.jpg`}></img>}
                         <input hidden onChange={(e) => changeFile(e.target.files[0], 4)} accept="image/*" multiple type="file" />
                       </Button>
                     </FileDrop>
@@ -206,7 +208,7 @@ const AddProduct = ({ edit }) => {
             <Button variant='contained' size='large' onClick={() => history('/home/products')} startIcon={<ReplyAllIcon />}> Voltar</Button>
           </div>
           <div className="align-self-center ms-auto">
-            <LoadingButton variant='contained' size='large' loading={state.loading_save} onClick={() => edit ? store_product('update') : store_product('add')} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
+            <LoadingButton variant='contained' size='large' loading={form.loading_save} onClick={() => edit ? store_product('update') : store_product('add')} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
           </div>
         </div>
       </div >

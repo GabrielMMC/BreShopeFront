@@ -7,7 +7,10 @@ import Theme from '../routes/Theme/Theme';
 // import { Carousel } from 'react-responsive-carousel';
 // import Slider from "react-slick";
 import Slider from "react-slick";
-import './Styles/style-card.css'
+import './Styles/style-card.css';
+import './Private/SideBar/styles/index.css';
+import './Private/SideBar/styles/App.scss';
+import './Private/SideBar/styles/bootstrap.css';
 import Footer from "./Footer";
 
 const Home = () => {
@@ -32,7 +35,9 @@ const Home = () => {
 
   const renderProducts = () => {
     return state.products.map(item => (
-      <div className="col-xl-2 col-md-3 col-sm-4 col-6" style={{ padding: '0 !important' }} key={item.id}><Card product={item}></Card></div>
+      <div className="col-md-2 col-sm-3 col-6 m-2" style={{ padding: '0 !important' }} key={item.id}>
+        <Card product={item}></Card>
+      </div>
     ))
   }
 
@@ -40,8 +45,8 @@ const Home = () => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 6,
+    slidesToShow: 5,
+    slidesToScroll: 5,
     responsive: [
       {
         breakpoint: 992,
@@ -73,7 +78,7 @@ const Home = () => {
         <Navbar />
         <div className="row bg-white" style={{ height: '40vh' }}>
           <div className="d-flex justify-content-center rounded my-3">
-            <div className="col-12 bg-light" style={{ maxWidth: 1300 }}>
+            <div className="col-12 bg-light" style={{ maxWidth: 1000 }}>
               <Typography className="m-3" variant="h5" color="text.secondary">Produtos recomendados para você</Typography>
               <Slider {...settings}>
                 {renderProducts()}
@@ -84,7 +89,7 @@ const Home = () => {
 
         <div className="row bg-white" style={{ minHeight: '40vh' }}>
           <div className="d-flex justify-content-center rounded my-3">
-            <div className="col-12 bg-light" style={{ maxWidth: 1300 }}>
+            <div className="col-12 bg-light" style={{ maxWidth: 1000 }}>
               <Typography className="m-3" variant="h5" color="text.secondary">Produtos postados recentemente</Typography>
               <div className="row">
                 {renderProducts()}

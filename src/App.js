@@ -1,4 +1,4 @@
-import './App.css'
+import './components/pages/Styles/style.css';
 import RoutesContainer from './components/routes';
 
 function App() {

@@ -106,16 +106,16 @@ const Input = ({ state, setState, item }) => {
                 setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })
               }
             }
-            } id="floatingInputValue" />
-            <label htmlFor="floatingInputValue">{state[item].label}</label>
+            } id="floatingInputValue2" />
+            <label htmlFor="floatingInputValue2">{state[item].label}</label>
           </form>
         )
 
       case 'cep':
         return (
           <form className="form-floating">
-            <input className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => pesquisaCep(e)} id="floatingInputValue" />
-            <label htmlFor="floatingInputValue">{state[item].label}</label>
+            <input className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => pesquisaCep(e)} id="floatingInputValue3" />
+            <label htmlFor="floatingInputValue3">{state[item].label}</label>
           </form>
         )
 
@@ -151,7 +151,7 @@ const Input = ({ state, setState, item }) => {
             <CurrencyInput
               className={`form-control ${state[item].error && 'is-invalid'}`}
               prefix="R$"
-              id="floatingInputValue"
+              id="floatingInputValue4"
               name="input-name"
               decimalsLimit={2}
               decimalSeparator="."
@@ -159,8 +159,23 @@ const Input = ({ state, setState, item }) => {
               value={state[item].value}
               onChange={(e) => setState({ ...state, [item]: { ...state[item], value: e, error: false } })}
             />
-            <label htmlFor="floatingInputValue">{state[item].label}</label>
-            {console.log('price', state[item].value)}
+            <label htmlFor="floatingInputValue4">{state[item].label}</label>
+          </form>
+        )
+
+      case 'email':
+        return (
+          <form className="form-floating">
+            <input type='email' className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })} id="floatingInputValue5" />
+            <label htmlFor="floatingInputValue5">{state[item].label}</label>
+          </form>
+        )
+
+      case 'password':
+        return (
+          <form className="form-floating">
+            <input type='password' className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })} id={state[item].label} />
+            <label htmlFor={state[item].label}>{state[item].label}</label>
           </form>
         )
 

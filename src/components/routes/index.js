@@ -1,8 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "../pages/Auth/Login";
+import Register from "../pages/Auth/Register";
+import Profile from "../pages/Dashboard/Profile";
 import Paymant from "../pages/Paymant/Paymant";
-import Home from "../pages/Private/Home";
+import Home from "../pages/Home";
 import Product from "../pages/Product";
 import Breshop from "./Breshop/Breshop";
 import GuestRoutes from "./GuestRoutes";
@@ -42,9 +44,11 @@ const RoutesContainer = () => {
   return (
     <Routes>
       <Route path={"/login"} element={<LoginRoute />} />
+      <Route path={"/register"} element={<Register />} />
       <Route path={"product/:id"} element={<Product />} />
       <Route path={"paymant/:id"} element={<Paymant />} />
-      <Route path={"/home"} element={<PrivateRoute />}>
+      <Route path={"/home"} element={<PrivateRoute />} />
+      <Route path={"/profile"} element={<Profile />}>
         <Route path={"breshop"} element={<Breshop />} />
         <Route path={"products"} element={<ListProducts />} />
         <Route path={"product/add"} element={<AddProduct />} />

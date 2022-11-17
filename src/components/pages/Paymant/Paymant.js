@@ -39,6 +39,13 @@ const Paymant = () => {
     paymant: { label: 'Forma de pagamento*', value: "", error: false, col: 'col-sm-6', type: 'select', fillOption },
   })
 
+  const [product, setProduct] = React.useState({
+    amount: { value: "" },
+    description: { value: "" },
+    quantity: { value: "" },
+    code: { value: "" },
+  })
+
   function verifyPage(action) {
     if (action === 'prev') {
       if (page > 0) {
@@ -59,9 +66,10 @@ const Paymant = () => {
   async function sendData() {
     let adr = MOUNT_JSON_BODY({ form: adress })
     let pay = MOUNT_JSON_BODY({ form: paymant })
-    let body = { adress: { ...adr }, paymant: { ...pay } }
-    let transition = await POST_FETCH({ url: `${URL}api/store_order`, body, token })
-    console.log('transition', transition)
+    let prd = MOUNT_JSON_BODY({ form: product })
+    let body = { adress: { ...adr }, paymant: { ...pay }, product: { ...prd } }
+    // let transition = await POST_FETCH({ url: `${URL}api/store_order`, body, token })
+    console.log('transition', body)
   }
 
   function renderPage() {
@@ -73,7 +81,7 @@ const Paymant = () => {
         return <PayData form={paymant} setForm={(e) => setPaymant(e)} />
 
       case 2:
-        return <Confirm />
+        return <Confirm form={product} setForm={(e) => setProduct(e)} />
 
       default:
         return null

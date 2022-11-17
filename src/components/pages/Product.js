@@ -1,12 +1,9 @@
-import { Avatar, Button, Chip, CircularProgress, Divider, Fade, Rating, ThemeProvider, Typography } from '@mui/material'
+import { Button, CircularProgress, Divider, Fade, Rating, ThemeProvider, Typography } from '@mui/material'
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { URL } from '../../variables'
 import Navbar from './Navbar'
 import Theme from '../routes/Theme/Theme'
-import { FileDrop } from 'react-file-drop'
-import Footer from './Footer'
 
 const Product = () => {
   const [state, setState] = React.useState({
@@ -48,7 +45,7 @@ const Product = () => {
 
   return (
     <ThemeProvider theme={Theme}>
-      <div className='bg-light vh-100'>
+      <div style={{ backgroundColor: '#F5F5F5' }}>
         <Navbar />
         <div className="m-auto bg-white mt-5 p-5 rounded" style={{ maxWidth: 1000 }}>
           {!state.loading ?
@@ -56,7 +53,7 @@ const Product = () => {
               <div className="row mx-3">
                 <div className="col-md-6 col-12 m-auto my-2">
                   <div className="col-12" style={{ minHeight: 350 }}>
-                    <Fade in={state.changeImg}><img src={`${URL}storage/${state.imgSelected ? state.imgSelected.file : state.product.images[0].file}`} style={{ width: 450, height: 450, borderRadius: 10, transitionDuration: '0.5s' }} alt='product' /></Fade>
+                    <Fade in={state.changeImg}><img src={`${URL}storage/${state.imgSelected ? state.imgSelected.file : state.product.images[0].file}`} style={{ width: 400, height: 400, borderRadius: 10, transitionDuration: '0.5s' }} alt='product' /></Fade>
                   </div>
                   <div className="row">
                     {state.product && renderImages()}
@@ -131,7 +128,7 @@ const Product = () => {
 
                   <div className="ms-auto">
                     <Button variant='contained' className='mx-2'>Adicionar ao carrinho</Button>
-                    <Button variant='contained'>Finalizar compra</Button>
+                    <Button variant='contained' onClick={() => history(`/paymant/${params.id}`)}>Finalizar compra</Button>
                   </div>
                 </div>
               </div>

@@ -1,0 +1,27 @@
+.w-500 {
+  max-width: 500px;
+}
+
+.shadow {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.navlink {
+  cursor: pointer;
+  align-items: center;
+  display: flex;
+  top: 0;
+  width: 100%;
+  text-decoration: none;
+}
+
+.bg-purple {
+  color: white;
+  background-color: #693B9F;
+}
+
+.content {
+  transition: all 0.3s;
+  background: #F5F5F5;
+  max-width: 1000;
+}
