@@ -17,11 +17,12 @@
 
 .bg-purple {
   color: white;
-  background-color: #693B9F;
+  background-color: #693b9f;
 }
 
 .content {
+  min-height: 100vh;
   transition: all 0.3s;
-  background: #F5F5F5;
+  background: #f5f5f5;
   max-width: 1000;
 }

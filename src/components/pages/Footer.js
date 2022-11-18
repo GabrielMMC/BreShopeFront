@@ -6,7 +6,7 @@ import Theme from '../routes/Theme/Theme'
 const Footer = () => {
   return (
     <ThemeProvider theme={Theme}>
-      <footer className='row' style={{ backgroundColor: '#693B9F' }}>
+      <footer className='row bg-purple' style={{position: 'relative', bottom: 0}}>
         <div className="col-4">
           <p>logo</p>
         </div>
