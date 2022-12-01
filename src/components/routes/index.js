@@ -11,6 +11,8 @@ import GuestRoutes from "./GuestRoutes";
 import AddProduct from "./Product/AddProduct";
 import EditProduct from "./Product/EditProduct";
 import ListProducts from "./Product/ListProducts";
+import Address from "./User/Address";
+import PaymantData from "./User/PaymantData";
 
 const PrivateRoute = (props) => {
   const token = useSelector((state) => state.AppReducer.token);
@@ -49,6 +51,8 @@ const RoutesContainer = () => {
       <Route path={"paymant/:id"} element={<Paymant />} />
       <Route path={"/home"} element={<PrivateRoute />} />
       <Route path={"/profile"} element={<Profile />}>
+        <Route path={"address"} element={<Address />} />
+        <Route path={"paymant"} element={<PaymantData />} />
         <Route path={"breshop"} element={<Breshop />} />
         <Route path={"products"} element={<ListProducts />} />
         <Route path={"product/add"} element={<AddProduct />} />

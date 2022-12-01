@@ -6,6 +6,7 @@ import Navbar from '../Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { mudarDados } from '../../actions/AppActions'
 import Aside from '../Private/SideBar/Aside'
+import Data from '../../routes/User/Data'
 
 const Profile = () => {
   const toggled = useSelector(store => store.AppReducer.toggled)
@@ -19,7 +20,7 @@ const Profile = () => {
 
   const handleToggleSidebar = (value) => {
     // setToggled(value);
-    dispatch(mudarDados({ toggled: value }));
+    dispatch(mudarDados({ toggled: !toggled }));
   };
 
   React.useEffect(() => {
@@ -51,22 +52,15 @@ const Profile = () => {
   }, [])
   const location = useLocation()
   const marginLeft = (!toggled || window.innerWidth <= 768) ? 0 : (!collapsed ? 270 : 80);
-  console.log(location);
+  console.log('location', toggled);
   return (
     <ThemeProvider theme={Theme}>
       <Navbar />
-      <div className={`app ${toggled ? 'toggled' : ''}`}>
-        <Aside
-          collapsed={collapsed}
-          toggled={toggled}
-          handleToggleSidebar={handleToggleSidebar}
-          handleCollapsedChange={handleCollapsedChange}
-        />
+      <div className={`app ${toggled && 'toggled'}`}>
+        <Aside collapsed={collapsed} toggled={toggled} handleToggleSidebar={handleToggleSidebar} handleCollapsedChange={handleCollapsedChange} />
         <div className="content-page">
-          <div className="content mt-5 m-auto" style={{ marginLeft: marginLeft }}>
-            <div className="container-fluid">
-              <Outlet />
-            </div>
+          <div className="container-fluid">
+            {location.pathname === '/profile' ? <Data /> : <Outlet />}
           </div>
         </div>
       </div>

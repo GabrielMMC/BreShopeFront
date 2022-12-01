@@ -4,7 +4,7 @@ const INITIAL_STATE = {
     token: null,
     user: {},
     collapsed: false,
-    toggled: false,
+    toggled: true,
     currentPage: 1,
 };
 

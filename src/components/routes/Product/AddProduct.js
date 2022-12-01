@@ -2,7 +2,7 @@ import { Button, ThemeProvider, Typography } from '@mui/material';
 import React from 'react';
 import { FileDrop } from 'react-file-drop';
 import { URL } from '../../../variables';
-import Input from '../Input/Input';
+import Input from '../Form/Input';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';

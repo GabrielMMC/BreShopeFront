@@ -2,25 +2,20 @@ import React from "react";
 import { Button, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { URL } from "../../../variables";
-import Input from "../Input/Input";
+import Input from "../Form/Input";
 
 const Breshop = () => {
+  const [edit, setEdit] = React.useState(false)
   const [state, setState] = React.useState({
     name: { label: 'Nome', value: "", error: false, col: 'col-6', type: 'text' },
-    number: { label: 'Número', value: "", error: false, col: 'col-6', type: 'number', },
-    cep: { label: 'CEP', value: "", error: false, col: 'col-4', type: 'cep', },
-    state: { label: 'Estado', value: "", error: false, col: 'col-4', type: 'text' },
-    city: { label: 'Cidade', value: "", error: false, col: 'col-4', type: 'text' },
     description: { label: 'Descrição', value: "", error: false, col: 'col-12', type: 'multiline', },
     file: { value: '', url: '', type: 'file' },
   });
   const [error, setError] = React.useState(false)
   const token = useSelector((state) => state.AppReducer.token);
-  let user = localStorage.getItem('user');
-  user = JSON.parse(user);
 
   React.useEffect(() => {
-    fetch(`${URL}api/get_breshop/${user.id}`, {
+    fetch(`${URL}api/get_breshop`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -30,34 +25,31 @@ const Breshop = () => {
       let resp = await response.json();
       console.log("json", resp);
     });
-  },);
+  }, []);
 
   function renderInputs() {
-    const state2 = { ...state }
-    const keys = Object.keys(state2)
-    return (
-      <div className="row">
-        {keys.map((item, index) => (
-          <Input key={index} state={state} setState={(e) => setState(e)} item={item} />
-        ))}
+    let keys = { ...state }
+    keys = Object.keys(keys)
+
+    return keys.map(item => (
+      <div key={state[item].label} className={`${state[item].col} col-12 my-2 justify-content-center`}>
+        <Input state={state} setState={(e) => setState(e)} item={item} edit={edit} />
       </div>
-    )
+    ))
   }
 
   function storeShop() {
     let data = new FormData()
-    data.append('user_id', user.id)
     data.append('name', state.name.value)
-    data.append('number', state.number.value)
-    data.append('cep', state.cep.value)
-    data.append('state', state.state.value)
-    data.append('city', state.city.value)
     data.append('description', state.description.value)
     data.append('file', state.file.file)
+
+    console.log('caiu')
 
     fetch(`${URL}api/store_breshop`, {
       method: 'POST',
       headers: {
+        Accept: 'application/json',
         // 'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
@@ -70,45 +62,46 @@ const Breshop = () => {
   }
 
   function validate() {
-    const state2 = { ...state }
-    const keys = Object.keys(state2)
-    keys.forEach(item => {
-      if (state2[item].value === '') state2[item].error = true
-    })
-    setState(state2)
+    // const state2 = { ...state }
+    // const keys = Object.keys(state2)
+    // keys.forEach(item => {
+    //   if (state2[item].value === '') state2[item].error = true
+    // })
+    // setState(state2)
 
-    keys.forEach(item => {
-      if (state[item].error === true) {
-        setError(true)
-      } else {
-        setError(false)
-      }
-    })
+    // keys.forEach(item => {
+    //   if (state[item].error === true) {
+    //     setError(true)
+    //   } else {
+    //     setError(false)
+    //   }
+    // })
 
-    if (!error) storeShop()
+    // if (!error) 
+    storeShop()
   }
 
   const debounce = (func, wait) => {
     let timeout;
-  
+
     return function executedFunction(...args) {
       const later = () => {
         clearTimeout(timeout);
         func(...args);
         console.log('args', ...args)
       };
-  
+
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
   };
 
-  function returnedFunction(e){
+  function returnedFunction(e) {
     debounce(function () {
-    console.log('ativou')
-    // setState({...state, teste: e.target.value})
-  }, 500);
-}
+      console.log('ativou')
+      // setState({...state, teste: e.target.value})
+    }, 500);
+  }
 
   return (
     <div className="row mx-3">

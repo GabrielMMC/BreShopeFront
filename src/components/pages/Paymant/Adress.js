@@ -1,5 +1,5 @@
 import React from 'react'
-import Input from '../../routes/Input/Input'
+import Input from '../../routes/Form/Input'
 
 const Adress = ({ form, setForm }) => {
   function renderForm() {

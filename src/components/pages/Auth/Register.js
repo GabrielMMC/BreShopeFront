@@ -2,7 +2,7 @@ import { Alert, Button, LinearProgress, ThemeProvider } from '@mui/material'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MOUNT_JSON_BODY, POST_PUBLIC_FETCH, URL } from '../../../variables'
-import Input from '../../routes/Input/Input'
+import Input from '../../routes/Form/Input'
 import Theme from '../../routes/Theme/Theme'
 import Navbar from '../Navbar'
 import Footer from '../Footer'
@@ -40,7 +40,7 @@ const Register = () => {
 
   return (
     <ThemeProvider theme={Theme}>
-      <div className='d-flex vh-100 align-items-center' style={{overflow: 'hidden', backgroundColor: '#f5f5f5'}}> 
+      <div className='d-flex vh-100 align-items-center' style={{ overflow: 'hidden', backgroundColor: '#f5f5f5' }}>
         <div className="p-sm-5 p-3 rounded shadow m-auto bg-white" style={{ width: 500 }}>
           <div style={{ height: '30%' }}>
             <img src={`${URL}storage/banner.png`} className='img-fluid' alt="logo" />

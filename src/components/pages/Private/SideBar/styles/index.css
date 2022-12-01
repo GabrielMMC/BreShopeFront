@@ -12,6 +12,15 @@ code {
     monospace;
 }
 
+.img {
+  height: 100%;
+  width: 100%;
+}
+
+.rounded-50 {
+  border-radius: 50%;
+}
+
 
 .navbar-custom {
   background-color: #ececf1;
@@ -38,13 +47,6 @@ code {
   position: relative;
   width: 240px;
   z-index: 1;
-}
-
-
-.content-page {
-  width: 100%;
-  background: #F5F5F5;
-  min-height: 100vh;
 }
 
 .tab {

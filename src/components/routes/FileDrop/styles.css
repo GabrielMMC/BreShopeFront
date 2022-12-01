@@ -16,7 +16,7 @@
   left: 0;
   height: 100%;
   width: 100%;
-  border-radius: 2px;
+  border-radius: 50%;
 
   /* horizontally and vertically center all content */
   display: flex;
@@ -66,4 +66,8 @@
   /* color: #ff6e40;
   box-shadow: 0 0 13px 3px #ff6e40; */
   background-color: #FFFFA3;
+}
+
+.file-rounded {
+  border-radius: 50% !important;
 }

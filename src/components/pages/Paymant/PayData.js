@@ -1,5 +1,5 @@
 import React from 'react'
-import Input from '../../routes/Input/Input'
+import Input from '../../routes/Form/Input'
 
 const PayData = ({ form, setForm }) => {
   function renderForm() {
