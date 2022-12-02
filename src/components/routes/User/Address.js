@@ -27,11 +27,14 @@ const Address = () => {
 
   const getData = async () => {
     let response = await GET_FETCH({ url: 'get_user_address', token })
-    let user = response.user
+    if (response.user) {
+      console.log('caiu', response)
+      let user = response.user
 
-    let editAddress = SEED_STATE({ state: address, respState: user, setState: setAddress, setId })
+      let editAddress = SEED_STATE({ state: address, respState: user, setState: setAddress, setId })
 
-    if (editAddress) setEdit(true)
+      if (editAddress) setEdit(true)
+    }
     setLoading(false)
   }
 

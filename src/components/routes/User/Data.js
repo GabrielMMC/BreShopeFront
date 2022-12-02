@@ -13,8 +13,8 @@ const Data = () => {
   const token = useSelector(state => state.AppReducer.token);
 
   const [data, setData] = React.useState({
-    birthdate: { label: 'Data de Nascimento*', value: "", error: false, col: 'col-sm-4', type: 'date' },
-    gender: { label: 'Gênero*', value: "Masculino", error: false, col: 'col-sm-4', type: 'select', fillOption: ['Masculino', 'Feminino'] },
+    birthdate: { label: 'Data de Nascimento*', value: "", error: false, col: 'col-sm-4', type: 'date', date: '' },
+    gender: { label: 'Gênero*', value: "male", error: false, col: 'col-sm-4', type: 'select', fillOption: ['male', 'female'] },
     file_path: { label: 'Imagem*', value: "", error: false, col: 'col-sm-4 d-flex', type: 'file-rounded', url: '' },
     name: { label: 'Nome*', value: "", error: false, col: 'col-sm-6', type: 'text' },
     document: { label: 'CPF*', value: "", error: false, col: 'col-sm-6', type: 'cpf', mask: '' },
@@ -32,18 +32,21 @@ const Data = () => {
 
   async function getData() {
     let response = await GET_FETCH({ url: `get_user_data`, token })
-    let userData = response.user_data[0]
-    let userPhone = response.user_data[0].user_phone
+    if (response.user_data[0]) {
+      console.log('resp', response)
+      let userData = response.user_data[0]
+      let userPhone = response.user_data[0].user_phone
 
-    let editData = SEED_STATE({ state: data, respState: userData, setState: setData, setId })
-    let editPhone = SEED_STATE({ state: phone, respState: userPhone, setState: setPhone })
+      let editData = SEED_STATE({ state: data, respState: userData, setState: setData, setId })
+      let editPhone = SEED_STATE({ state: phone, respState: userPhone, setState: setPhone })
+      if (editData && editPhone) setEdit(true)
+    }
 
-    if (editData && editPhone) setEdit(true)
     setLoading(false)
   }
 
   async function save(type) {
-    setLoadingSave(true)
+    setLoadingSave(false)
     let body = mountBody()
     let response
 

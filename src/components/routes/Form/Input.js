@@ -75,6 +75,8 @@ const Input = ({ state, setState, item, edit }) => {
       setState({ ...state, [item]: { ...state[item], value, error: false } })
       return
     }
+
+    setState({ ...state, [item]: { ...state[item], value: e.target.value, error: false } })
   }
 
   function handleFileChange(file) {
@@ -86,7 +88,6 @@ const Input = ({ state, setState, item, edit }) => {
   }
 
   function handleCpfChange(val) {
-    console.log('load')
     const value = val.replace(/\D/g, '')
     let cpf;
 
@@ -259,7 +260,7 @@ const Input = ({ state, setState, item, edit }) => {
       case 'cpf':
         return (
           <form className="form-floating">
-            <input type='text' className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item]?.mask} onChange={(e) => handleCpfChange(e)} disabled={edit} id={state[item].label} />
+            <input type='text' className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item]?.mask} onChange={(e) => handleCpfChange(e.target.value)} disabled={edit} id={state[item].label} />
             <label htmlFor={state[item].label}>{state[item].label}</label>
           </form>
         )
@@ -282,6 +283,18 @@ const Input = ({ state, setState, item, edit }) => {
             <div className={`brand`}><img src={`${STORAGE_URL}/brands/${state.brand.value ? state.brand.value : 'nocard'}.png`} alt='brand'></img></div>
           </div >
           // ${focus && 'focus'}
+        )
+
+      case 'date':
+        return (
+          <form className="form-floating" hidden={state[item]?.hidden}>
+            <input type={'date'} className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].date} onChange={(e) => {
+              let date = e.target.value + 'T00:00:00.000'
+              setState({ ...state, [item]: { ...state[item], value: date, date: e.target.value } })
+              console.log('date', e.target.value, date)
+            }} id={state[item].label} />
+            <label htmlFor={state[item].label}>{state[item].label}</label>
+          </form>
         )
 
       default:

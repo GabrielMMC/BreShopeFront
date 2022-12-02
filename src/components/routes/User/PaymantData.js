@@ -6,7 +6,7 @@ import Input from '../Form/Input'
 import SavePreset from '../Form/SavePreset'
 
 const PaymantData = () => {
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = React.useState(false)
   const [loadingSave, setLoadingSave] = React.useState(false)
   const [id, setId] = React.useState(false)
   const [edit, setEdit] = React.useState('')
@@ -26,7 +26,7 @@ const PaymantData = () => {
   })
 
   React.useEffect(() => {
-    getData()
+    // getData()
   }, [])
 
   const getData = async () => {
