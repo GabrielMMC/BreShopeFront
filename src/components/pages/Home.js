@@ -12,12 +12,15 @@ import './Private/SideBar/styles/index.css';
 import './Private/SideBar/styles/App.scss';
 import './Private/SideBar/styles/bootstrap.css';
 import Footer from "./Footer";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const [state, setState] = React.useState({
     pageNumber: 1,
     products: [],
   })
+  const token = useSelector(state => state.AppReducer.token)
+  console.log('token', token)
 
   React.useEffect(() => {
     fetch(`${URL}api/get_all_products?page=${state.pageNumber}`, {

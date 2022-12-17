@@ -52,7 +52,7 @@
   align-items: center;
   transition: all 0.3s;
   animation: animeLeft 0.3s forwards;
-  margin-left: -5px !important;
+  /* margin-left: -5px !important; */
 }
 
 .focus {

@@ -136,6 +136,7 @@ export async function GET_FETCH(props) {
   return (fetch(`${URL}api/${props.url}`, {
     method: 'GET',
     headers: {
+      'Accept': 'application/json',
       'Authorization': `Bearer ${props.token}`
     }
   }).then(async (response) => {
@@ -163,19 +164,32 @@ export function SEED_STATE(props) {
     let state2 = { ...props.state }
     let keys = Object.keys({ ...props.state })
     keys.forEach(item => {
-      if (state2[item].value !== undefined) state2[item].value = props.respState[item]
-      if (state2[item].mask !== undefined) state2[item].mask = props.respState[item]
-      if (state2[item].url !== undefined) state2[item].url = props.respState[item]
+      if (Array.isArray(props.respState)) {
+        //If the resp state props be an array
+        props.respState.forEach(resp => {
+          if (state2[item].value !== undefined && resp[item]) state2[item].value = resp[item]
+          if (state2[item].mask !== undefined && resp[item]) state2[item].mask = resp[item]
+          if (state2[item].url !== undefined && resp[item]) state2[item].url = resp[item]
+        })
+      } else {
+        //If the resp state props not be an array
+        if (state2[item].value !== undefined) state2[item].value = props.respState[item]
+        if (state2[item].mask !== undefined) state2[item].mask = props.respState[item]
+        if (state2[item].url !== undefined) state2[item].url = props.respState[item]
+      }
 
-      if (state2[item].type === 'date') {
+
+      //If the type of input has date
+      if (state2[item].type === 'date' && props.respState[item]) {
         let array = Array.from(props.respState[item])
         const date = array.splice(0, 10).toString().replace(/,/g, "")
-        console.log('date', date)
-        state2[item].value = date
+        state2[item].value = date + 'T00:00:00.000'
+        state2[item].date = date
       }
     })
 
     if (props.setId) props.setId(props.respState.id)
+    console.log('seed state', state2)
     props.setState(state2)
     return true
   } else {

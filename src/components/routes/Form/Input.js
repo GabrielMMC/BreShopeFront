@@ -12,10 +12,10 @@ const Input = ({ state, setState, item, edit }) => {
     if (state[item].type === 'cpf') handleCpfChange(state[item].value)
     if (state[item].type === 'cep') handleCepChange(state[item].value)
     if (state[item].type === 'phone') handlePhoneChange(state[item].value)
+    if (state[item].type === 'phone+') handlePhoneChangeDDD(state[item].value, state.area_code.value)
   }, [])
 
   function handleCardChange(text = '') {
-    console.log('teste')
     text = text.replace(/ /g, '');
     let card = new Card();
     let types = Object.values(card.type);
@@ -90,6 +90,7 @@ const Input = ({ state, setState, item, edit }) => {
   function handleCpfChange(val) {
     const value = val.replace(/\D/g, '')
     let cpf;
+    let cnpj;
 
     if (Array.from(value).length <= 11) {
       cpf = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,
@@ -98,6 +99,14 @@ const Input = ({ state, setState, item, edit }) => {
         })
 
       setState({ ...state, [item]: { ...state[item], value, mask: cpf } })
+    }
+    else if (Array.from(value).length <= 14) {
+      cnpj = value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})/,
+        function (regex, argumento1, argumento2, argumento3, argumento4) {
+          return argumento1 + '.' + argumento2 + '.' + argumento3 + '/' + argumento4;
+        })
+
+      setState({ ...state, [item]: { ...state[item], value, mask: cnpj } })
     }
   }
 
@@ -119,6 +128,34 @@ const Input = ({ state, setState, item, edit }) => {
     }
     if (Array.from(value).length <= 9) {
       setState({ ...state, [item]: { ...state[item], value, mask: phone } })
+    }
+  }
+
+  function handlePhoneChangeDDD(val, area) {
+    let value = val.replace(/\D/g, '')
+    let phone; let ddd; let newValue
+    if (area) value = area + value
+
+    if (Array.from(value).length <= 10) {
+      phone = value.replace(/(\d{2})(\d{4})(\d{4})/,
+        function (regex, argumento1, argumento2, argumento3) {
+          ddd = argumento1
+          newValue = argumento2 + argumento3
+          return '(' + argumento1 + ') ' + argumento2 + '-' + argumento3;
+        })
+    }
+    else if (Array.from(value).length === 11) {
+      phone = value.replace(/(\d{2})(\d{5})(\d{4})/,
+        function (regex, argumento1, argumento2, argumento3) {
+          ddd = argumento1
+          newValue = argumento2 + argumento3
+          return '(' + argumento1 + ') ' + argumento2 + '-' + argumento3;
+        })
+    }
+    if (Array.from(value).length <= 11) {
+      setState({
+        ...state, [item]: { ...state[item], value: newValue, mask: phone }, area_code: { value: ddd, hidden: true }
+      })
     }
   }
 
@@ -273,6 +310,14 @@ const Input = ({ state, setState, item, edit }) => {
           </form>
         )
 
+      case 'phone+':
+        return (
+          <form className="form-floating">
+            <input type='text' className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item]?.mask} onChange={(e) => handlePhoneChangeDDD(e.target.value)} id={state[item].label} />
+            <label htmlFor={state[item].label}>{state[item].label}</label>
+          </form>
+        )
+
       case 'card':
         return (
           <div className="input-group" style={{ whiteSpace: 'nowrap' }}>
@@ -300,7 +345,7 @@ const Input = ({ state, setState, item, edit }) => {
       default:
         return (
           <form className="form-floating" hidden={state[item]?.hidden}>
-            <input type={state[item].type} className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => handleChange(e)} id={state[item].label} />
+            <input type={state[item].type} className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].value} onChange={(e) => handleChange(e)} id={state[item].label} hidden={state[item]?.hidden} />
             <label htmlFor={state[item].label}>{state[item].label}</label>
           </form>
         )

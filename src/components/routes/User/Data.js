@@ -15,15 +15,15 @@ const Data = () => {
   const [data, setData] = React.useState({
     birthdate: { label: 'Data de Nascimento*', value: "", error: false, col: 'col-sm-4', type: 'date', date: '' },
     gender: { label: 'Gênero*', value: "male", error: false, col: 'col-sm-4', type: 'select', fillOption: ['male', 'female'] },
-    file_path: { label: 'Imagem*', value: "", error: false, col: 'col-sm-4 d-flex', type: 'file-rounded', url: '' },
+    file: { label: 'Imagem*', value: "", error: false, col: 'col-sm-4 d-flex', type: 'file-rounded', url: '' },
     name: { label: 'Nome*', value: "", error: false, col: 'col-sm-6', type: 'text' },
     document: { label: 'CPF*', value: "", error: false, col: 'col-sm-6', type: 'cpf', mask: '' },
   })
 
   const [phone, setPhone] = React.useState({
-    country_code: { label: 'País*', value: "55", error: false, col: 'col-sm-4', type: 'number' },
-    area_code: { label: 'DDD*', value: "", error: false, col: 'col-sm-4', type: 'number' },
-    number: { label: 'Número*', value: "", error: false, col: 'col-sm-4', type: 'phone', mask: '' },
+    email: { label: 'Email*', value: "", error: false, col: 'col-sm-6', type: 'email' },
+    number: { label: 'Número*', value: "", error: false, col: 'col-sm-6', type: 'phone+', mask: '' },
+    area_code: { value: "", hidden: true },
   })
 
   React.useEffect(() => {
@@ -32,15 +32,17 @@ const Data = () => {
 
   async function getData() {
     let response = await GET_FETCH({ url: `get_user_data`, token })
-    if (response.user_data[0]) {
-      console.log('resp', response)
-      let userData = response.user_data[0]
-      let userPhone = response.user_data[0].user_phone
-
-      let editData = SEED_STATE({ state: data, respState: userData, setState: setData, setId })
-      let editPhone = SEED_STATE({ state: phone, respState: userPhone, setState: setPhone })
-      if (editData && editPhone) setEdit(true)
+    let userData; let userPhone
+    console.log(response)
+    if (response.status) {
+      userData = response.user_data
+      userData = { ...userData, ...response.customer }
+      userPhone = response.status ? response.customer.phones.mobile_phone : response.user_data
     }
+
+    let editData = SEED_STATE({ state: data, respState: userData, setState: setData, setId })
+    let editPhone = SEED_STATE({ state: phone, respState: [userData, userPhone], setState: setPhone })
+    // if (editData && editPhone) setEdit(true)
 
     setLoading(false)
   }
@@ -58,7 +60,7 @@ const Data = () => {
       default:
         return response
     }
-    setLoadingSave(false)
+    // setLoadingSave(false)
   }
 
   function mountBody() {
@@ -82,12 +84,12 @@ const Data = () => {
       {!loading ? <>
         <div className="row my-5 align-items-end">
           <Typography variant='h6'>Dados Gerais</Typography>
-          {renderInput(data, setData)}
+          {!loading && renderInput(data, setData)}
         </div>
         <Divider />
         <div className="row my-5">
           <Typography variant='h6'>Contato</Typography>
-          {renderInput(phone, setPhone)}
+          {!loading && renderInput(phone, setPhone)}
         </div>
 
         <SavePreset save={(e) => save(e)} loading={loadingSave} edit={edit} />

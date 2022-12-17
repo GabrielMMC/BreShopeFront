@@ -6,7 +6,7 @@ import Input from "../Form/Input";
 import SavePreset from "../Form/SavePreset";
 
 const Breshop = () => {
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = React.useState(false)
   const [loadingSave, setLoadingSave] = React.useState(false)
   const [edit, setEdit] = React.useState(false)
   const [id, setId] = React.useState(false)
@@ -19,7 +19,7 @@ const Breshop = () => {
   });
 
   React.useEffect(() => {
-    getData()
+    // getData()
   }, [])
 
   async function getData() {

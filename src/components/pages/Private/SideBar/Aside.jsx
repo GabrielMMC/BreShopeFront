@@ -41,11 +41,18 @@ const Aside = ({ image, collapsed, toggled, handleToggleSidebar }) => {
             </MenuItem>
           </SubMenu>
 
-          <MenuItem icon={<HiHome size='20' />}>
-            <NavLink exact to="/profile/breshop" style={{ color: '#212529' }} activeStyle={{ fontWeight: "bold" }}>
-              Loja
-            </NavLink>
-          </MenuItem>
+          <SubMenu defaultOpen style={{ color: '#212529' }} activeStyle={{ fontWeight: "bold" }} title="Usuário" icon={<HiHome size='20' />}>
+            <MenuItem >
+              <NavLink exact to="/profile/breshop" style={{ color: '#212529' }} activeStyle={{ fontWeight: "bold" }}>
+                Resumo
+              </NavLink>
+            </MenuItem>
+            <MenuItem >
+              <NavLink exact to="/profile/breshop/recipient" style={{ color: '#212529' }} activeStyle={{ fontWeight: "bold" }}>
+                Informações Bancárias
+              </NavLink>
+            </MenuItem>
+          </ SubMenu >
 
           <MenuItem icon={<FaShoppingCart size='20' />}>
             <NavLink exact to="/profile/products" style={{ color: '#212529' }} activeStyle={{ fontWeight: "bold" }}>

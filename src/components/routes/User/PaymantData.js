@@ -8,32 +8,33 @@ import SavePreset from '../Form/SavePreset'
 const PaymantData = () => {
   const [loading, setLoading] = React.useState(false)
   const [loadingSave, setLoadingSave] = React.useState(false)
+  const [edit, setEdit] = React.useState(false)
   const [id, setId] = React.useState(false)
-  const [edit, setEdit] = React.useState('')
   const token = useSelector(state => state.AppReducer.token);
 
-  const fillMonth = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
-  const fillYear = ['2023', '2024', '2025', '2026', '2027', '2028']
+  const fillMonth = ['1', '2', '3']
+  const fillYear = ['24', '25', '26']
 
   const [address, setAddress] = React.useState({
-    holder_name: { label: 'Nome do Títular*', value: "", error: false, col: 'col-sm-6', type: 'text', },
-    // holder_document: { label: 'CPF do Títular*', value: "", error: false, col: 'col-sm-6', type: 'text', },
+    holder_document: { label: 'CPF do Títular*', value: "", error: false, col: 'col-sm-6', type: 'cpf', mask: '' },
     number: { label: 'Número*', value: "", error: false, col: 'col-sm-6', type: 'card', mask: '' },
     brand: { label: 'Bandeira*', value: "visa", error: false, col: 'col-sm-12', type: 'text', hidden: true },
     exp_month: { label: 'Mês*', value: "", error: false, col: 'col-sm-4', type: 'select', fillOption: fillMonth },
     exp_year: { label: 'Ano*', value: "", error: false, col: 'col-sm-4', type: 'select', fillOption: fillYear },
     cvv: { label: 'CVV*', value: "", error: false, col: 'col-sm-4', type: 'text', length: 3 },
+    holder_name: { label: 'Nome do Títular*', value: "", error: false, col: 'col-sm-12', type: 'text', },
   })
 
   React.useEffect(() => {
-    // getData()
+    getData()
   }, [])
 
   const getData = async () => {
-    let response = await GET_FETCH({ url: 'get_user_address', token })
-    let user = response.user
+    let response = await GET_FETCH({ url: 'list_cards', token })
+    console.log('response', response)
+    let card = response.cards
 
-    let editAddress = SEED_STATE({ state: address, respState: user, setState: setAddress, setId })
+    let editAddress = SEED_STATE({ state: address, respState: card, setState: setAddress, setId })
 
     if (editAddress) setEdit(true)
     setLoading(false)
@@ -44,7 +45,7 @@ const PaymantData = () => {
     let response
 
     if (type === 'update') response = await PUT_FETCH({ url: 'update_user_address', body, token });
-    else if (type === 'add') response = await POST_FETCH({ url: `${URL}api/store_user_address`, body, token });
+    else if (type === 'add') response = await POST_FETCH({ url: `${URL}api/store_card`, body, token });
 
     if (response) setLoadingSave(false)
   }
