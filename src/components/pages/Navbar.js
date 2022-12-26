@@ -3,12 +3,15 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import { Link, useNavigate } from 'react-router-dom';
 import { logout, mudarDados } from '../../components/actions/AppActions';
 import { useDispatch, useSelector } from 'react-redux';
-
-// users
 import user4 from '../../assets/no_user.png';
 import { MdExitToApp } from 'react-icons/md';
 import { CgProfile } from 'react-icons/cg';
 import { FaBars } from 'react-icons/fa';
+import logo from '../../assets/logo.png';
+import { IconButton, Input } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const Navbar = (props) => {
   const [menu, setMenu] = useState(false);
@@ -55,7 +58,21 @@ const Navbar = (props) => {
       }}>
         <FaBars />
       </div>
-      <div className="ms-auto me-3 bg-purple">
+
+      <div className="ms-3" style={{ maxWidth: 75, maxHeight: 75 }}>
+        <img className='img-fluid' src={logo} alt='logo'></img>
+      </div>
+
+      <div className="d-flex me-3 ms-auto bg-white rounded p-1">
+        <Input fullWidth placeholder='Buscar...' endAdornment={<SearchIcon />} onChange={(e) => console.log('dev')}></Input>
+      </div>
+
+      <div className="d-flex me-3">
+        <IconButton><FavoriteIcon sx={{ color: 'white' }} /></IconButton>
+        <IconButton><ShoppingCartIcon sx={{ color: 'white' }} /></IconButton>
+      </div>
+
+      <div className="me-3 bg-purple">
         <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
           <DropdownToggle className="btn header-item waves-effect" id="page-header-user-dropdown" tag="button">
             <img className="rounded-circle header-profile-user" src={user4} onError={(e) => e.target.src = user4} height="50" width='50' style={{ objectFit: "cover", backgroundColor: '#fff' }} alt="Header Avatar" />

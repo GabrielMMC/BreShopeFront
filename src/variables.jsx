@@ -9,6 +9,19 @@ export const THIS_URL = "http://localhost:3000/"
 export const API_URL = URL + "api/";
 export const STORAGE_URL = URL + "storage/";
 
+export function VALIDATE(props) {
+  let state2 = { ...props.state }
+  let keys = Object.keys(state2)
+  let valid = true
+
+  keys.forEach(item => {
+    if (state2[item].value === '') state2[item].error = true; valid = false
+  })
+
+  props.setState(state2)
+  return valid
+}
+
 export function MOUNT_FORM_DATA(props) {
   let data = new FormData()
   let array = [...props.form]
@@ -109,6 +122,20 @@ export async function PATCH_FETCH(props) {
       'Authorization': `Bearer ${props.token}`
     },
     body: JSON.stringify({ ...props.body })
+  }).then(async (response) => {
+    const resp = await response.json()
+    return resp
+  })
+  )
+}
+
+export async function DELETE_FETCH(props) {
+  return (fetch(`${URL}api/${props.url}`, {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${props.token}`
+    }
   }).then(async (response) => {
     const resp = await response.json()
     return resp

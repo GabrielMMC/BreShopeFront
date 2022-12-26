@@ -4,7 +4,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useSelector } from 'react-redux';
 import { Button, IconButton, Input, ThemeProvider, Pagination } from '@mui/material';
 import { URL } from '../../../variables';

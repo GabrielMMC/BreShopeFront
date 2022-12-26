@@ -1,5 +1,3 @@
-import React from 'react';
-
 const INITIAL_STATE = {
     token: null,
     user: {},

@@ -5,8 +5,10 @@ import CurrencyInput from 'react-currency-input';
 import '../FileDrop/styles.css'
 import { URL, STORAGE_URL } from '../../../variables';
 import Card from '../../utilities/Card';
+import { renderToast } from '../../utilities/Alerts';
 
 const Input = ({ state, setState, item, edit }) => {
+  const [fetching, setFetching] = React.useState(false)
 
   React.useEffect(() => {
     if (state[item].type === 'cpf') handleCpfChange(state[item].value)
@@ -169,49 +171,60 @@ const Input = ({ state, setState, item, edit }) => {
         return argumento1 + '-' + argumento2;
       })
 
-    state2[item].value = value
-    state2[item].mask = newCep
-    state2[item].error = false
-    state2.state.error = false
-    state2.city.error = false
-
-    setState(state2)
-
     if (Array.from(val).length >= 8) {
-      validateCep();
-    } else if (val === '') {
+      validateCep(value);
+    }
+    if (Array.from(val).length <= 8) {
+      state2[item].value = value
+      state2[item].mask = newCep
+      state2[item].error = false
+    }
+    if (val === '') {
       clearCEP()
     }
+    setState(state2)
   }
 
-  async function validateCep() {
-    const endereco = await fetch(`https://viacep.com.br/ws/${state[item].value}/json/`)
-      .then(response => {
-        return response;
-      })
-      .catch((error) => {
+  let timeout
+  React.useEffect(() => {
+    if (fetching) timeout = setTimeout(() => { setFetching(false) }, 2000)
+  }, [fetching])
+
+  async function validateCep(value) {
+    if (!fetching) {
+      setFetching(true)
+      clearTimeout(timeout)
+
+      const endereco = await fetch(`https://viacep.com.br/ws/${value}/json/`)
+        .then(response => {
+          return response;
+        })
+        .catch((error) => {
+          clearCEP();
+          setState({ ...state, [item]: { ...state[item], value: '', error: true } })
+          renderToast({ type: 'error', error: 'CEP inválido!' })
+        })
+      const data = await endereco.json();
+      if (data.hasOwnProperty('erro')) {
         clearCEP();
-        setState({ ...state, [item]: { ...state[item], value: '', error: true, msg: 'CEP inválido' } })
-      })
-    const data = await endereco.json();
-    if (data.hasOwnProperty('erro')) {
-      clearCEP();
-      setState({ ...state, [item]: { ...state[item], value: '', error: true, msg: 'CEP não encontrado!' } })
-    } else {
-      setState({
-        ...state,
-        city: { ...state.city, value: data.localidade, disabled: true },
-        state: { ...state.state, value: data.uf, disabled: true },
-        nbhd: { ...state.nbhd, value: data.bairro, disabled: true },
-        street: { ...state.street, value: data.logradouro, disabled: true },
-      })
+        setState({ ...state, [item]: { ...state[item], value: '', error: true } })
+        renderToast({ type: 'error', error: 'CEP inválido!' })
+      } else {
+        setState({
+          ...state,
+          city: { ...state.city, value: data.localidade, error: false },
+          state: { ...state.state, value: data.uf, error: false },
+          nbhd: { ...state.nbhd, value: data.bairro, error: false },
+          street: { ...state.street, value: data.logradouro, error: false },
+        })
+      }
     }
   }
 
   function clearCEP() {
     let state2 = { ...state };
     let form = Object.keys(state2)
-    const filter = form.filter(item => item === 'cep' || item === 'state' || item === 'city')
+    const filter = form.filter(item => item === 'cep' || item === 'state' || item === 'city' || item === 'nbhd' || item === 'street')
     filter.forEach(item => {
       state2[item].value = '';
       state2[item].disabled = false;

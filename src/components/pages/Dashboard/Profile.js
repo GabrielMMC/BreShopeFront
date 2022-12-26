@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { mudarDados } from '../../actions/AppActions'
 import Aside from '../Private/SideBar/Aside'
 import Data from '../../routes/User/Data'
+import Footer from '../Footer'
 
 const Profile = () => {
   const toggled = useSelector(store => store.AppReducer.toggled)
@@ -15,11 +16,9 @@ const Profile = () => {
   const dispatch = useDispatch();
   const handleCollapsedChange = (checked) => {
     dispatch(mudarDados({ collapsed: checked }));
-
   };
 
-  const handleToggleSidebar = (value) => {
-    // setToggled(value);
+  const handleToggleSidebar = () => {
     dispatch(mudarDados({ toggled: !toggled }));
   };
 
@@ -30,29 +29,16 @@ const Profile = () => {
 
       }
       else {
-
         dispatch(mudarDados({ toggled: true, collapsed: true }));
-
       }
     };
-    window.addEventListener('resize', event)
-    if (window.innerWidth <= 768) {
-      dispatch(mudarDados({ toggled: false, collapsed: false }));
-    }
-    else {
-      dispatch(mudarDados({ toggled: true, collapsed: true }));
-    }
-    // GetRole();
 
     return () => {
       window.removeEventListener('resize', event);
-
-      // Anything in here is fired on component unmount.
     }
   }, [])
   const location = useLocation()
-  const marginLeft = (!toggled || window.innerWidth <= 768) ? 0 : (!collapsed ? 270 : 80);
-  console.log('location', toggled);
+  console.log('toggled', toggled, collapsed);
   return (
     <ThemeProvider theme={Theme}>
       <Navbar />
@@ -64,6 +50,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </ThemeProvider>
   )
 }

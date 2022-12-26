@@ -36,25 +36,13 @@ const Home = (props) => {
 
             }
         };
-        window.addEventListener('resize', event)
-        if (window.innerWidth <= 768) {
-            dispatch(mudarDados({ toggled: false, collapsed: false }));
-        }
-        else {
-            dispatch(mudarDados({ toggled: true, collapsed: true }));
-        }
-        // GetRole();
-
         return () => {
             window.removeEventListener('resize', event);
-
-            // Anything in here is fired on component unmount.
         }
     }, [])
     const location = useLocation()
-    const marginLeft = (toggled == false || window.innerWidth <= 768) ? 0 : (collapsed == false ? 270 : 80);
-    console.log(location);
-    const url = location.pathname
+    const marginLeft = (toggled === false || window.innerWidth <= 768) ? 0 : (collapsed === false ? 270 : 80);
+    console.log('toggle', toggled, collapsed);
     return (
         <div className={`app ${toggled ? 'toggled' : ''}`}>
             <Aside

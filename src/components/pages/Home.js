@@ -1,11 +1,9 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Card from './Card';
-import { Box, ThemeProvider, Typography } from "@mui/material";
+import { ThemeProvider, Typography } from "@mui/material";
 import { URL } from '../../variables';
 import Theme from '../routes/Theme/Theme';
-// import { Carousel } from 'react-responsive-carousel';
-// import Slider from "react-slick";
 import Slider from "react-slick";
 import './Styles/style-card.css';
 import './Private/SideBar/styles/index.css';
@@ -13,12 +11,22 @@ import './Private/SideBar/styles/App.scss';
 import './Private/SideBar/styles/bootstrap.css';
 import Footer from "./Footer";
 import { useSelector } from "react-redux";
+import { settings } from "../utilities/Settings";
+import { FaTshirt } from "react-icons/fa";
+import SaleCard from "./SaleCard";
 
 const Home = () => {
   const [state, setState] = React.useState({
     pageNumber: 1,
     products: [],
   })
+  const categorys = [
+    { label: 'CASUAIS', type: 'casual' }, { label: 'ESPORTIVOS', type: 'sport' }, { label: 'VINTAGE', type: 'casual' },
+    { label: 'EVENTOS', type: 'casual' }, { label: 'LUXUOSOS', type: 'casual' }, { label: 'OLDSCHOOL', type: 'casual' }, { label: 'CASUAIS', type: 'casual' }, { label: 'ESPORTIVOS', type: 'sport' }, { label: 'VINTAGE', type: 'casual' },
+    { label: 'EVENTOS', type: 'casual' }, { label: 'LUXUOSOS', type: 'casual' }, { label: 'OLDSCHOOL', type: 'casual' }, { label: 'CASUAIS', type: 'casual' }, { label: 'ESPORTIVOS', type: 'sport' }, { label: 'VINTAGE', type: 'casual' },
+    { label: 'EVENTOS', type: 'casual' }, { label: 'LUXUOSOS', type: 'casual' }, { label: 'OLDSCHOOL', type: 'casual' }, { label: 'CASUAIS', type: 'casual' }, { label: 'ESPORTIVOS', type: 'sport' }, { label: 'VINTAGE', type: 'casual' },
+    { label: 'EVENTOS', type: 'casual' }, { label: 'LUXUOSOS', type: 'casual' }, { label: 'OLDSCHOOL', type: 'casual' }
+  ]
   const token = useSelector(state => state.AppReducer.token)
   console.log('token', token)
 
@@ -36,68 +44,51 @@ const Home = () => {
     })
   }, [])
 
-  const renderProducts = () => {
-    return state.products.map(item => (
-      <div className="col-md-2 col-sm-3 col-6 m-2" style={{ padding: '0 !important' }} key={item.id}>
-        <Card product={item}></Card>
-      </div>
-    ))
-  }
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 5,
-    responsive: [
-      {
-        breakpoint: 992,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 4,
-        }
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-        }
-      },
-      {
-        breakpoint: 576,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        }
-      }
-    ]
-  }
-
   return (
     <ThemeProvider theme={Theme}>
-      <div style={{ overflowX: 'hidden', minHeight: '100vh' }}>
+      <div className="bg-gray" style={{ overflowX: 'hidden', minHeight: '100vh' }}>
         <Navbar />
-        <div className="row bg-white" style={{ height: '40vh' }}>
-          <div className="d-flex justify-content-center rounded my-3">
-            <div className="col-12 bg-light" style={{ maxWidth: 1000 }}>
-              <Typography className="m-3" variant="h5" color="text.secondary">Produtos recomendados para você</Typography>
-              <Slider {...settings}>
-                {renderProducts()}
-              </Slider>
+        <div className="content-home mt-3" style={{ minHeight: '45vh' }}>
+          <Typography className="m-3" variant="h5" color="text.secondary">Produtos recomendados para você</Typography>
+          <Slider {...settings}>
+            {state.products.map(item => (
+              <Card product={item}></Card>
+            ))}
+          </Slider>
+        </div>
+
+        <div className="content-purple">
+          <div className="row">
+            <div className="d-flex justify-content-center m-auto flex-wrap" style={{ maxWidth: 800 }}>
+              {categorys.map(item => (
+                <div className="d-flex justify-content-center align-items-center bg-white p-3 text-gray hvr-bounce-to-right" style={{ cursor: 'pointer', border: '1px solid #693B9F', width: 100 }}>
+                  <div>
+                    <div className="d-flex justify-content-center">
+                      <FaTshirt className="m-auto" size={30} />
+                    </div>
+                    <Typography className="m-auto" variant="caption">{item.label}</Typography>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="row bg-white" style={{ minHeight: '40vh' }}>
-          <div className="d-flex justify-content-center rounded my-3">
-            <div className="col-12 bg-light" style={{ maxWidth: 1000 }}>
-              <Typography className="m-3" variant="h5" color="text.secondary">Produtos postados recentemente</Typography>
-              <div className="row">
-                {renderProducts()}
-              </div>
-            </div>
+        <div className="content-home" style={{ minHeight: '40vh' }}>
+          <Typography className="m-3" variant="h5" color="text.secondary">Produtos postados recentemente</Typography>
+          <div className="d-flex flex-wrap justify-content-center">
+            {state.products.map(item => (
+              <Card sales={false} product={item}></Card>
+            ))}
+          </div>
+        </div>
+
+        <div className="content-home" style={{ minHeight: '40vh' }}>
+          <Typography className="m-3" variant="h5" color="text.secondary">Ofertas Especiais</Typography>
+          <div className="d-flex flex-wrap justify-content-center">
+            {state.products.map(item => (
+              <Card sales={true} product={item}></Card>
+            ))}
           </div>
         </div>
         <Footer />
