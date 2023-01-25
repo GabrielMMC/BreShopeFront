@@ -15,7 +15,7 @@ export function VALIDATE(props) {
   let valid = true
 
   keys.forEach(item => {
-    if (state2[item].value === '') state2[item].error = true; valid = false
+    if (item !== 'id' && state2[item].value === '') { state2[item].error = true; valid = false }
   })
 
   props.setState(state2)
@@ -93,8 +93,8 @@ export async function PUT_FETCH(props) {
     },
     body: JSON.stringify({ ...props.body })
   }).then(async (response) => {
-    const resp = await response.json()
-    return resp
+    if (response.status !== 200) return false
+    else return await response.json()
   })
   )
 }
@@ -194,6 +194,7 @@ export function SEED_STATE(props) {
       if (Array.isArray(props.respState)) {
         //If the resp state props be an array
         props.respState.forEach(resp => {
+          console.log('teste', props)
           if (state2[item].value !== undefined && resp[item]) state2[item].value = resp[item]
           if (state2[item].mask !== undefined && resp[item]) state2[item].mask = resp[item]
           if (state2[item].url !== undefined && resp[item]) state2[item].url = resp[item]

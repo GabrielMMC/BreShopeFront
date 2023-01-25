@@ -8,6 +8,7 @@ import { mudarDados } from '../../actions/AppActions'
 import Aside from '../Private/SideBar/Aside'
 import Data from '../../routes/User/Data'
 import Footer from '../Footer'
+import { ToastContent } from '../../utilities/Alerts'
 
 const Profile = () => {
   const toggled = useSelector(store => store.AppReducer.toggled)
@@ -45,12 +46,11 @@ const Profile = () => {
       <div className={`app ${toggled && 'toggled'}`}>
         <Aside collapsed={collapsed} toggled={toggled} handleToggleSidebar={handleToggleSidebar} handleCollapsedChange={handleCollapsedChange} />
         <div className="content-page">
-          <div className="container-fluid">
-            {location.pathname === '/profile' ? <Data /> : <Outlet />}
-          </div>
+          {location.pathname === '/profile' ? <Data /> : <Outlet />}
         </div>
       </div>
       <Footer />
+      <ToastContent />
     </ThemeProvider>
   )
 }

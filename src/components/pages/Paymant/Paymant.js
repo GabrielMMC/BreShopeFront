@@ -1,7 +1,7 @@
 import React from 'react'
 import Container from '../Container'
 import StepperMUI from '../Stepper'
-import { Button } from '@mui/material'
+import { Button, CircularProgress } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import SaveIcon from '@mui/icons-material/Save';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
@@ -9,12 +9,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import PayData from './PayData'
 import Confirm from './Confirm'
 import Adress from './Adress'
-import { MOUNT_JSON_BODY, POST_FETCH, URL } from '../../../variables'
+import { GET_FETCH, MOUNT_JSON_BODY, POST_FETCH, URL } from '../../../variables'
 import { useSelector } from 'react-redux'
 
 const Paymant = () => {
   const [page, setPage] = React.useState(0)
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
   const history = useNavigate();
   const params = useParams();
   const token = useSelector(state => state.AppReducer.token);
@@ -45,6 +45,15 @@ const Paymant = () => {
     quantity: { value: "" },
     code: { value: "" },
   })
+
+  React.useEffect(() => {
+    const getData = async () => {
+      const response = await GET_FETCH({ url: `get_payment_data/${params.id}`, token })
+      if (response) setLoading(false)
+      console.log('resp', response)
+    }
+    getData()
+  }, [])
 
   function verifyPage(action) {
     if (action === 'prev') {
@@ -91,9 +100,10 @@ const Paymant = () => {
   return (
     <Container>
       <StepperMUI steps={steps} page={page} />
-      <div className="row">
-        {renderPage()}
-      </div>
+      {!loading ?
+        <div className="row">
+          {renderPage()}
+        </div> : <div className="d-flex justify-content-center p-5"><CircularProgress /></div>}
       <div className="d-flex mt-5">
         <div className="align-self-center">
           <Button variant='contained' size='large' onClick={() => verifyPage('prev')} startIcon={<ReplyAllIcon />}>Voltar</Button>

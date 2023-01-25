@@ -12,6 +12,7 @@ import { IconButton, Input } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { STORAGE_URL } from '../../variables';
 
 const Navbar = (props) => {
   const [menu, setMenu] = useState(false);
@@ -60,7 +61,7 @@ const Navbar = (props) => {
       </div>
 
       <div className="ms-3" style={{ maxWidth: 75, maxHeight: 75 }}>
-        <img className='img-fluid' src={logo} alt='logo'></img>
+        <Link to={'/'}><img className='img-fluid' src={logo} alt='logo'></img></Link>
       </div>
 
       <div className="d-flex me-3 ms-auto bg-white rounded p-1">
@@ -75,7 +76,7 @@ const Navbar = (props) => {
       <div className="me-3 bg-purple">
         <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
           <DropdownToggle className="btn header-item waves-effect" id="page-header-user-dropdown" tag="button">
-            <img className="rounded-circle header-profile-user" src={user4} onError={(e) => e.target.src = user4} height="50" width='50' style={{ objectFit: "cover", backgroundColor: '#fff' }} alt="Header Avatar" />
+            <img className="rounded-circle header-profile-user" src={`${STORAGE_URL}/${user.file ? user.file : 'no_user.png'}`} onError={(e) => e.target.src = user4} height="50" width='50' style={{ objectFit: "cover", backgroundColor: '#fff' }} alt="Header Avatar" />
           </DropdownToggle>
           <DropdownMenu end>
             {user.id ?

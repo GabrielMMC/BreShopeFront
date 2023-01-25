@@ -7,13 +7,15 @@ import Footer from './Footer'
 const Container = ({ children }) => {
   return (
     <ThemeProvider theme={Theme}>
-      <div className='content'>
+      <div className="bg-gray" style={{ overflowX: 'hidden', minHeight: '100vh' }}>
         <Navbar />
-        <div className="m-auto bg-white mt-5 p-5 rounded" style={{ maxWidth: 1000 }}>
-          {children}
+        <div style={{ minHeight: 'calc(100vh - 459px)' }}>
+          <div className="content m-auto my-5" style={{ maxWidth: 1000 }}>
+            {children}
+          </div>
         </div>
         <Footer />
-      </div >
+      </div>
     </ThemeProvider >
   )
 }
