@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: dockerfile
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules # Remove this if you have pure JS dependencies
+    ports:
+      - "3000:3000"
