@@ -64,31 +64,6 @@ export default function RecipeReviewCard({ product, sales }) {
             </IconButton>
           </div>
         </div>
-        {/* <div className="m-2 text-wrap">
-            {tooltip ?
-              <Tooltip placement='top' arrow title={product.name}><Typography variant="body2" color="text.secondary">{name}</Typography></Tooltip> : <Typography variant="body2" color="text.secondary">{name}</Typography>}
-          </div>
-          <div className="d-flex">
-            {sales ? <>
-              <Typography className='me-2' variant="substring" color="text.secondary">
-                <del>R$: {product.price}</del>
-              </Typography>
-              <Typography fontSize={25} variant="substring" sx={{ color: '#ff4c4c', fontWeight: 'bold' }}>
-                R$: {product.price}
-              </Typography> </>
-              : <Typography className='m-auto' fontSize={25} variant="substring" sx={{ color: '#262626' }}>
-                R$: {product.price}
-              </Typography>}
-          </div> */}
-        {/* </CardContent> */}
-        {/* <CardActions className='d-flex' disableSpacing sx={{ padding: 0, margin: 0 }}>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
-          </IconButton>
-        </CardActions> */}
       </Card>}
     </ThemeProvider>
   );
