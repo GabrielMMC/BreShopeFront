@@ -10,7 +10,7 @@ const Container = ({ children }) => {
       <div className="bg-gray" style={{ overflowX: 'hidden', minHeight: '100vh' }}>
         <Navbar />
         <div style={{ minHeight: 'calc(100vh - 459px)' }}>
-          <div className="content m-auto my-5" style={{ maxWidth: 1000 }}>
+          <div className="content m-auto my-5" style={{ maxWidth: 1200 }}>
             {children}
           </div>
         </div>

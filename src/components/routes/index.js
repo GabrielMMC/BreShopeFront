@@ -14,6 +14,7 @@ import ListProducts from "./Product/ListProducts";
 import Address from "./User/Address";
 import PaymantData from "./User/PaymantData";
 import Recipient from "./Breshop/Recipient";
+import PaymentScreen from "../pages/Paymant/PaymentScreen";
 
 const PrivateRoute = (props) => {
   const token = useSelector((state) => state.AppReducer.token);
@@ -49,7 +50,7 @@ const RoutesContainer = () => {
       <Route path={"/login"} element={<LoginRoute />} />
       <Route path={"/register"} element={<Register />} />
       <Route path={"product/:id"} element={<Product />} />
-      <Route path={"paymant/:id"} element={<Paymant />} />
+      <Route path={"/payment"} element={<PaymentScreen />} />
       <Route path={"/home"} element={<PrivateRoute />} />
       <Route path={"/profile"} element={<Profile />}>
         <Route path={"address"} element={<Address />} />
