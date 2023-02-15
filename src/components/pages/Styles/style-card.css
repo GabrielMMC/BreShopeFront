@@ -10,7 +10,7 @@
   transition-property: transform !important;
   cursor: pointer !important;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px !important;
-  /* box-shadow: #693B9F 0px 4px 12px !important !important; */
+  /* box-shadow: #693B9F 0px 4px 12px !important; */
 }
 
 .hvr:hover {

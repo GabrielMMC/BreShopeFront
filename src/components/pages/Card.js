@@ -23,14 +23,15 @@ export default function RecipeReviewCard({ product, sales }) {
 
   return (
     <ThemeProvider theme={Theme}>
-      {product && <Card onClick={() => ''} sx={{ width: 175 }} className='m-2 hvr'>
-        <div className='position-relative' style={{ height: '150px !important', width: '100%' }}>
-          {sales && <div className='sale'>
-            <p className='h6'>15%</p>
-          </div>}
+      {product && <Card onClick={() => ''} sx={{ width: 200 }} className='m-2 hvr'>
+        <div className='position-relative' style={{ height: '200px !important', width: '100%' }}>
+          {sales &&
+            <div className='sale'>
+              <p className='h6'>15%</p>
+            </div>}
           <CardMedia
             component="img"
-            height="150"
+            height="200"
             image={`${URL}storage/${product.images[0].file}`}
             alt="Paella dish"
             onClick={() => history(`/product/${product.id}`)}
