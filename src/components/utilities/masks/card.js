@@ -1,4 +1,4 @@
-import Card from "utils/Card";
+import Card from "../Card";
 
 function cardMask(text = '') {
   text = text.replace(/\D/g, '')

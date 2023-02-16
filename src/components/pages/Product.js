@@ -2,20 +2,19 @@ import { Button, CircularProgress, Divider, Fade, Rating, ThemeProvider, Typogra
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { POST_FETCH, URL } from '../../variables'
-import Navbar from './Navbar'
-import Theme from '../routes/Theme/Theme'
 import Container from './Container'
 import { useSelector } from 'react-redux'
 
 const Product = () => {
   const [state, setState] = React.useState({
+    shop: '',
+    rating: 0,
+    comment: '',
     product: '',
-    imgSelected: '',
     loading: true,
     changeImg: true,
-    shop: '',
+    imgSelected: '',
   })
-  const [comment, setComment] = React.useState('')
   const params = useParams()
   const history = useNavigate()
   const token = useSelector(state => state.AppReducer.token)
@@ -36,7 +35,6 @@ const Product = () => {
   }, [])
 
   function renderImages() {
-    console.log('product', state.product.images)
     // setTimeout(() => { setState({ ...state, changeImg: false }) }, 200);
     return state.product.images.map(item => (
       <div className="col-sm-3 col-6 mt-2">
@@ -49,7 +47,9 @@ const Product = () => {
 
   const submitComment = async (e) => {
     e.preventDefault()
-    const response = await POST_FETCH({ url: `${URL}api/store_comment`, token, body: { product_id: params.id, comment } })
+    const response = await POST_FETCH({
+      url: `${URL}api/store_rating`, token, body: { breshop_id: state.shop.id, comment: state.comment, rating: state.rating }
+    })
     console.log('comment', response)
   }
 
@@ -117,14 +117,14 @@ const Product = () => {
                       <Typography color="text.secondary">Usuario</Typography>
                     </div>
                     <div>
-                      <Rating name="read-only" value={0} readOnly />
                     </div>
                   </div>
+                  <Rating value={state.rating} onChange={(e, value) => setState({ ...state, rating: value })} />
 
                 </div>
               </div>
               <form className="input-group" onSubmit={(e) => submitComment(e)}>
-                <input type='area' className="mt-1 comment-input" value={comment} onChange={({ target }) => setComment(target.value)} />
+                <input type='area' className="mt-1 comment-input" value={state.comment} onChange={({ target }) => setState({ ...state, comment: target.value })} />
                 <Button type='submit'>Enviar</Button>
               </form>
             </div>

@@ -21,7 +21,7 @@ const style = {
   borderRadius: '.4rem',
 };
 
-export default function CardsModal() {
+export default function CardsModal({ setCard }) {
   const [cards, setCards] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -66,13 +66,13 @@ export default function CardsModal() {
                       <img className="img-fluid" src={`${STORAGE_URL}brands/${item.brand}.png`} alt="brand" />
                     </div>
                     <div className="ms-auto">
-                      <input type="radio" name="card" />
+                      <input type="radio" name="card" onChange={() => setCard(card => { return { ...card, id: { value: item.id, hidden: true } } })} />
                     </div>
                   </div>
 
                   <div className="col-12">
+                    <p>**** **** **** {item.last_four_digits}</p>
                     <p>{item.holder_name}</p>
-                    <p>{item.number}</p>
                     <div className="d-flex" style={{ fontSize: '.8rem' }}>
                       <div className="d-flex">
                         <p className="me-2">Validade</p>

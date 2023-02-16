@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import Profile from "../pages/Dashboard/Profile";
-import Paymant from "../pages/Paymant/Paymant";
 import Home from "../pages/Home";
 import Product from "../pages/Product";
 import Breshop from "./Breshop/Breshop";
@@ -39,12 +38,16 @@ const RoutesContainer = () => {
   const dispatch = useDispatch();
   let token = localStorage.getItem("token");
   let user = localStorage.getItem("user");
+  let cartItems = localStorage.getItem("cart_items");
+
   user = JSON.parse(user);
   if (user == null || user === undefined) {
     user = {};
   }
-  console.log(token);
+
   dispatch({ type: "login", payload: { token: token, user: user } });
+  dispatch({ type: "cart_items", payload: cartItems ? JSON.parse(cartItems) : '' });
+
   return (
     <Routes>
       <Route path={"/login"} element={<LoginRoute />} />

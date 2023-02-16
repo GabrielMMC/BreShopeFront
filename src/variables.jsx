@@ -224,3 +224,27 @@ export function SEED_STATE(props) {
     return false
   }
 }
+
+export const GET_CEP = (value) => {
+  const response = fetch(`https://viacep.com.br/ws/${value}/json/`)
+    .then(async (json) => {
+      const data = await json.json();
+
+      if (data.hasOwnProperty("erro")) {
+        // clearCEP();
+        return "error";
+      } else {
+        return data;
+      }
+    })
+    .catch((error) => {
+      return error;
+      // clearCEP();
+      // setState({
+      //   ...state,
+      //   [item]: { ...state[item], value: "", error: true },
+      // });
+      // renderToast({ type: "error", error: "CEP inválido!" });
+    });
+  return response;
+};

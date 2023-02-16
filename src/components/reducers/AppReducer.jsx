@@ -33,6 +33,12 @@ export default (state = INITIAL_STATE, action) => {
                 user: action.payload.user,
 
             };
+        case 'cart_items':
+            return {
+                ...state,
+                cart_items: action.payload,
+
+            };
         default:
             return { ...state };
     }

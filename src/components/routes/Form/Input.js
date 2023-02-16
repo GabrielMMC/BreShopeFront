@@ -258,7 +258,7 @@ const Input = ({ state, setState, item, edit }) => {
         case 'cep':
           return (
             <form className="form-floating">
-              <input className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item]?.mask} onChange={(e) => handleCepChange(e.target.value)} id={state[item].label} />
+              <input className={`form-control ${state[item].error && 'is-invalid'}`} value={state[item].mask ? state[item].mask : state[item].value} onChange={(e) => handleCepChange(e.target.value)} id={state[item].label} />
               <label htmlFor={state[item].label}>{state[item].label}</label>
             </form>
           )

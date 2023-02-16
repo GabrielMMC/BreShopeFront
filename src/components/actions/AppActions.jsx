@@ -28,3 +28,10 @@ export const mudarDados = (data) => (
         payload: data
     }
 );
+
+export const cardItems = (data) => (
+    {
+        type: 'card_items',
+        payload: data
+    }
+);
