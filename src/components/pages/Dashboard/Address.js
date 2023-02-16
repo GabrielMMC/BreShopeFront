@@ -1,5 +1,4 @@
 import React from "react";
-import { DELETE, get, GET_CEP, post } from "utils/requests";
 import { API_URL } from "utils/variables";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
@@ -7,6 +6,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, Typography, IconButton, CircularProgress, } from "@mui/material";
+import { DELETE_FETCH, GET_CEP, GET_FETCH, POST_FETCH, URL } from "../../../variables";
+import { useSelector } from "react-redux";
 
 const Address = () => {
   const [loading, setLoading] = React.useState(true);
@@ -24,13 +25,14 @@ const Address = () => {
   const [shippingAddress, setShippingAddress] = React.useState(false);
   const [add, setAdd] = React.useState("");
   const history = useNavigate();
+  const token = useSelector(state => state.AppReducer.token)
 
   React.useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
-    const resp = await get(`${API_URL}/addresses`);
+    const resp = await GET_FETCH({ url: `list_address?page=1`, token });
     setData(resp.addresses); setLoading(false); setShippingAddress(() => resp.addresses.length === 0 ? false : true)
     console.log("address", resp);
   };
@@ -41,7 +43,7 @@ const Address = () => {
 
   const handleDelete = async (id) => {
     setLoading(true)
-    let response = await DELETE(`${API_URL}/addresses/delete/${id}`)
+    let response = await DELETE_FETCH(`${API_URL}/addresses/delete/${id}`)
     if (response.status) { setAdd(false); clearFields(); getData() }
     console.log('response', response, id)
     // if (response.status) {
@@ -62,11 +64,11 @@ const Address = () => {
     let response = false
 
     if (id) {
-      response = post(`${API_URL}/addresses/update`, JSON.stringify({
+      response = POST_FETCH(`${API_URL}/addresses/update`, JSON.stringify({
         state, city, street, number, id, zip_code: cep, neighborhood: nbhd, shipping_address: shippingAddress
       }))
     } else {
-      response = post(`${API_URL}/addresses/create`, JSON.stringify({
+      response = POST_FETCH(`${API_URL}/addresses/create`, JSON.stringify({
         state, city, street, number, zip_code: cep, neighborhood: nbhd, shipping_address: shippingAddress
       }))
     }

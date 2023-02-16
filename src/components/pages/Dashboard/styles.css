@@ -44,7 +44,7 @@
 
 .rounded-button {
     border-radius: 50%;
-    background-color: #FFA235;
+    background-color: #693B9F;
     color: #fff;
     border: none;
     height: 2rem;
@@ -90,18 +90,18 @@
     transform: scale(1.1);
   }
 
-  .focus {
+  /* .focus {
     transition: all 5s !important;
-    border-bottom: 1px solid #FFA235 !important;
-    border-top: 1px solid #FFA235 !important;
-    border-right: 1px solid #FFA235 !important;
+    border-bottom: 1px solid #693B9F !important;
+    border-top: 1px solid #693B9F !important;
+    border-right: 1px solid #693B9F !important;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
   }
   
   .form-control:focus {
-    border: 1px solid #FFA235 !important;
+    border: 1px solid #693B9F !important;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
-  }
+  } */
 
 /* --------------------------------------------------Card-Styles-------------------------------------------------- */
 .brand {
@@ -127,7 +127,7 @@
 
 .payment-card {
   border-radius: .6rem;
-  background-color: #FFA235;
+  background-color: #693B9F;
   /* background-color: #ff4c4c; */
   width: 400px;
   height: 200px;
@@ -179,12 +179,13 @@ h1 {
 }
 
 .user-dash li:hover{
-  background-color: #FFA235;
+  color: #FFF;
   transition: all .3s;
+  background-color: #693B9F;
 }
 
 .user-dash li span{
-  background: #FFA235;
+  background: #693B9F;
   width: 5px;
   height: auto;
   display: block;

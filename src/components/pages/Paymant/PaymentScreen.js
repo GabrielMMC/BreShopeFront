@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, CircularProgress } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { POST_FETCH } from '../../../variables';
+import { POST_FETCH, URL } from '../../../variables';
 import { moneyMask } from '../../utilities/masks/currency';
 import Container from '../Container';
 import { MdClose, MdCheck } from 'react-icons/md';
@@ -24,10 +24,11 @@ const PaymentScreen = () => {
 
   const [errors, setErrors] = React.useState({ address: false, payment: false, user: false })
   const [cartItems, setCartItems] = React.useState(useSelector(state => state.AppReducer.cart_items))
+  const token = useSelector(state => state.AppReducer.token)
 
   React.useEffect(() => {
     let tt = 0
-    cartItems.forEach(item => { tt += item.price * (100 - item.discount_price) * item.quantity })
+    cartItems && cartItems.forEach(item => { tt += item.price * (100 - item.discount_price) * item.quantity })
     setTotal(tt); setPendent(tt)
   }, [])
 
@@ -119,7 +120,7 @@ const PaymentScreen = () => {
       console.log('payment', payment, shipping, customer)
 
       const typePayment = method === 'multi_payment' ? 'multi_payment' : 'payment'
-      const response = await post(`${API_URL}/orders/create`, JSON.stringify({ items, shipping, customer, [typePayment]: payment }))
+      const response = await POST_FETCH({ url: `${URL}api/orders/create`, token, body: { items, shipping, customer, [typePayment]: payment } })
       console.log('response', response)
       // if (response) setCharge(response.order.charges[0].last_transaction)
     } else {

@@ -25,14 +25,15 @@ const UserData = ({ user, setUser }) => {
   const getUser = async () => {
 
     const resp = await GET_FETCH({ url: 'get_user_data', token })
-    const phone = `${resp.customer?.phones?.mobile_phone.area_code}${resp.customer?.phones?.mobile_phone.number}`
+    console.log('resp', resp)
+    const phone = `${resp.customer?.phones?.mobile_phone?.area_code}${resp.customer?.phones?.mobile_phone?.number}`
 
     if (resp.customer) setUser({
       filled: { value: true },
-      birth: { value: resp.customer.birthdate.substring(0, 10) },
-      phone: { value: phone, mask: phoneMask(phone).mask, length: 10 },
-      gender: { value: resp.customer.gender === 'male' ? 'Masculino' : 'Feminino' },
-      document: { value: resp.customer.document, mask: cpfMask(resp.customer.document).mask, length: 11 },
+      birth: { value: resp.customer?.birthdate ? resp.customer?.birthdate.substring(0, 10) : '' },
+      phone: { value: phone, mask: phone ? phoneMask(phone).mask : '', length: 10 },
+      gender: { value: resp.customer?.gender === 'male' ? 'Masculino' : 'Feminino' },
+      document: { value: resp.customer?.document, mask: resp.customer?.document ? cpfMask(resp.customer?.document).mask : '', length: 11 },
     })
   }
 

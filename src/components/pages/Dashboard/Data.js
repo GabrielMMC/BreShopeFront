@@ -1,10 +1,9 @@
 import React from 'react'
-import { get, post } from 'utils/requests'
-import { API_URL, STORAGE_URL } from 'utils/variables'
 import { Button, Typography, CircularProgress } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { mudarUser } from 'components/actions/AppActions'
+// import { mudarUser } from 'components/actions/AppActions'
+import { GET_FETCH, POST_FETCH_FORMDATA, URL, STORAGE_URL, API_URL } from '../../../variables'
 
 const Data = () => {
   const [loading, setLoading] = React.useState(true)
@@ -25,10 +24,10 @@ const Data = () => {
 
   React.useEffect(() => {
     const getData = async () => {
-      const resp = await get(`${API_URL}/customers`)
-      setBirthDate(resp.customer?.birthdate.substring(0, 10)); setGender(resp.customer?.gender); setFile({ url: `${STORAGE_URL}${resp.user?.file}` }); setDocumentDisabled(resp.customer.document ? true : false); setLoading(false)
-      setEmail(resp.customer?.email); setName(resp.customer?.name); handleCpfChange(resp.customer?.document); handlePhoneChange(`${resp.customer?.phones?.mobile_phone.area_code}${resp.customer?.phones?.mobile_phone.number}`)
+      const resp = await GET_FETCH({ url: `get_user_data`, token })
       console.log('customer', resp)
+      setBirthDate(resp.customer.birthdate ? resp.customer?.birthdate.substring(0, 10) : ''); setGender(resp.customer?.gender); setFile({ url: `${STORAGE_URL}${resp.user?.file}` }); setDocumentDisabled(resp.customer.document ? true : false); setLoading(false)
+      setEmail(resp.customer?.email); setName(resp.customer?.name); handleCpfChange(resp.customer?.document); handlePhoneChange(`${resp.customer?.phones?.mobile_phone.area_code}${resp.customer?.phones?.mobile_phone.number}`)
     }
 
     getData()
@@ -67,7 +66,7 @@ const Data = () => {
     form.append('number', numb)
     form.append('area_code', area)
     form.append('birthdate', birthDate)
-    const resp = await post(`${API_URL}/customers/update`, form)
+    const resp = await POST_FETCH_FORMDATA({ url: `${URL}api/update_customer`, body: form })
 
     console.log('res', resp.user)
     if (resp) {

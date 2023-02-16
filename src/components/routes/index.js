@@ -11,7 +11,7 @@ import AddProduct from "./Product/AddProduct";
 import EditProduct from "./Product/EditProduct";
 import ListProducts from "./Product/ListProducts";
 import Address from "./User/Address";
-import PaymantData from "./User/PaymantData";
+import Payment from "../pages/Dashboard/Payment";
 import Recipient from "./Breshop/Recipient";
 import PaymentScreen from "../pages/Paymant/PaymentScreen";
 
@@ -57,7 +57,7 @@ const RoutesContainer = () => {
       <Route path={"/home"} element={<PrivateRoute />} />
       <Route path={"/profile"} element={<Profile />}>
         <Route path={"address"} element={<Address />} />
-        <Route path={"paymant"} element={<PaymantData />} />
+        <Route path={"payment"} element={<Payment />} />
         <Route path={"breshop"} element={<Breshop />} />
         <Route path={"breshop/recipient"} element={<Recipient />} />
         <Route path={"products"} element={<ListProducts />} />

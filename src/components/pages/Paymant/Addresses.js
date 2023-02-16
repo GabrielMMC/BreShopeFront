@@ -23,6 +23,7 @@ const Addresses = ({ address, setAddress }) => {
 
   const getAddresses = async () => {
     const response = await GET_FETCH({ url: `list_addresses?page=1`, token });
+    console.log('resp', response)
     if (response.status) setAddresses(response.addresses.data);
   }
 

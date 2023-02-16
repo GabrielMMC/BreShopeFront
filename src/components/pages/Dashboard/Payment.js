@@ -8,6 +8,7 @@ import { Button, Typography, IconButton, CircularProgress, } from "@mui/material
 import { useNavigate } from 'react-router-dom'
 import cpfMask from 'utils/masks/cpf';
 import cardMask from 'utils/masks/card';
+import { POST_FETCH } from '../../../variables';
 
 const Payment = () => {
   const fillMonth = ['01', '02', '03', '04', '05', '06', '07', '09', '10', '11', '12']
@@ -44,7 +45,7 @@ const Payment = () => {
 
   const handleSave = async () => {
     setLoading(true); setAdd(false); clearFields()
-    const response = await post(`${API_URL}/cards/create`, JSON.stringify({
+    const response = await POST_FETCH(`${API_URL}/cards/create`, JSON.stringify({
       cvv, exp_month: month, exp_year: year, holder_name: name, holder_document: document.value, number: card.value, brand: card.brand
     }))
 
