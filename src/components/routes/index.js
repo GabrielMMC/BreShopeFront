@@ -12,6 +12,7 @@ import EditProduct from "./Product/EditProduct";
 import ListProducts from "./Product/ListProducts";
 import Address from "./User/Address";
 import Payment from "../pages/Dashboard/Payment";
+import Orders from "../pages/Dashboard/Order/Order";
 import Recipient from "./Breshop/Recipient";
 import PaymentScreen from "../pages/Paymant/PaymentScreen";
 
@@ -58,6 +59,7 @@ const RoutesContainer = () => {
       <Route path={"/profile"} element={<Profile />}>
         <Route path={"address"} element={<Address />} />
         <Route path={"payment"} element={<Payment />} />
+        <Route path={"orders"} element={<Orders />} />
         <Route path={"breshop"} element={<Breshop />} />
         <Route path={"breshop/recipient"} element={<Recipient />} />
         <Route path={"products"} element={<ListProducts />} />

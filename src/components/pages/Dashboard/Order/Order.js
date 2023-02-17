@@ -3,11 +3,11 @@ import MoreInfo from './MoreInfo'
 // import Filter from 'utils/Filter'
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, InputAdornment, Pagination, TextField, Typography } from '@mui/material'
-import { API_URL } from 'utils/variables'
-import { get } from 'utils/requests';
-import { moneyMask } from 'utils/masks/currency';
-import dateMask from 'utils/masks/date';
-import Filter from 'utils/Filter';
+import { GET_FETCH } from '../../../../variables';
+import { moneyMask } from '../../../utilities/masks/currency';
+import dateMask from '../../../utilities/masks/date';
+import Filter from '../../../utilities/Filter';
+import { useSelector } from 'react-redux'
 
 const Order = () => {
   const [orders, setOrders] = React.useState('')
@@ -25,6 +25,7 @@ const Order = () => {
     canceled: { value: false, label: 'Cancelado', checked: false },
     pending: { value: false, label: 'Pendente', checked: false },
   })
+  const token = useSelector(state => state.AppReducer.token)
 
   React.useEffect(() => {
     const getData = async () => {
@@ -33,7 +34,10 @@ const Order = () => {
 
       const status = getStatus()
       console.log('statr', status)
-      const response = await get(`${API_URL}/orders/?page=${pagination.pageNumber + 1}&status=${status ? status : ''}&dateOf=${dateOf ? dateOf : ''}&dateFor=${dateFor ? dateFor : ''}&search=${search}`)
+      const response = await GET_FETCH({
+        url: `orders/?page=${pagination.pageNumber + 1}&status=${status ? status : ''}&dateOf=${dateOf ? dateOf : ''}
+        &dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
+      })
 
       console.log('resp', response)
       setOrders(response.orders); setLoading(false)
@@ -114,7 +118,7 @@ const Order = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((item, index) => {
+            {orders && orders.map((item, index) => {
               const { style, status } = handleStatus(item.status)
               return (
                 <tr key={index} style={{ whiteSpace: 'nowrap' }}>
@@ -122,7 +126,7 @@ const Order = () => {
                   <td><span className='row m-auto status' style={style}>{status}</span></td>
                   <td>{moneyMask(item.amount)}</td>
                   <td>{dateMask(item.created_at)}</td>
-                  <td><MoreInfo id={item.id} /></td>
+                  <td><MoreInfo id={item.id} token={token} /></td>
                 </tr>
               )
             }
@@ -130,7 +134,7 @@ const Order = () => {
           </tbody>
         </table>
         : <div className='d-flex justify-content-center p-5'><CircularProgress color='inherit' /></div>}
-      {pagination.totalItems &&
+      {pagination && pagination.totalItems &&
         <div className='d-flex justify-content-end'>
           <Pagination shape="rounded" count={Math.ceil(pagination.totalItems / pagination.perPage)} page={pagination.pageNumber + 1} onChange={(e, page) => {
             window.scrollTo(0, 0); setPagination({ ...pagination, pageNumber: page - 1 }); setAllow(true)

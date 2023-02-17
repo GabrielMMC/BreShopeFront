@@ -14,7 +14,7 @@ const Profile = () => {
         <div className='col-3'>
           <Aside />
         </div>
-        <div className='col-9'>
+        <div className='col-9 p-sm-3'>
           {location.pathname === '/profile' ? <Data /> : <Outlet />}
         </div>
       </div>

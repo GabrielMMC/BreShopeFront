@@ -1,28 +1,30 @@
 import React from "react";
 import { ProSidebar, Menu, MenuItem, SidebarFooter, SidebarContent, SubMenu } from "react-pro-sidebar";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 // import { useSelector, useDispatch } from 'react-redux';
 
 const Aside = ({ collapsed }) => {
+  const history = useNavigate()
   // let user = useSelector(store => store.AppReducer.user);
 
   return (
     <nav className="user-dash">
       <ul>
-        <li className='hvr-grow'>
+        <li className='hvr-grow' onClick={() => history('/profile')}>
           <span />
-          <a className='small'><NavLink exact to="/profile" style={{ color: "#212529" }} activeStyle={{ fontWeight: "bold" }}>Dados Gerais</NavLink></a>
+          <a className='small' style={{ color: 'black' }}>Dados Gerais</a>
         </li>
-        <li className='hvr-grow'>
+        <li className='hvr-grow' onClick={() => history('/profile/address')}>
           <span />
-          <a className='small'><NavLink exact to="/profile/address" style={{ color: "#212529" }} activeStyle={{ fontWeight: "bold" }}>Endereços</NavLink></a>
+          <a className='small' style={{ color: 'black' }}>Endereços</a>
         </li>
-        <li className='hvr-grow'>
+        <li className='hvr-grow' onClick={() => history('/profile/payment')}>
           <span />
-          <a className='small'><NavLink exact to="/profile/payment" style={{ color: "#212529" }} activeStyle={{ fontWeight: "bold" }}>Cartões</NavLink></a></li>
-        <li className='hvr-grow'>
+          <a className='small' style={{ color: 'black' }}>Cartões</a></li>
+        <li className='hvr-grow' onClick={() => history('/profile/orders')}>
           <span />
-          <a className='small'><NavLink exact to="/profile/orders" style={{ color: "#212529" }} activeStyle={{ fontWeight: "bold" }}>Pedidos</NavLink></a></li>
+          <a className='small' style={{ color: 'black' }}>Pedidos</a></li>
       </ul>
     </nav>
   );

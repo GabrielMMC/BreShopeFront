@@ -1,14 +1,13 @@
 import React from 'react'
-import { DELETE, get, post } from 'utils/requests'
-import { API_URL, STORAGE_URL } from 'utils/variables'
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, Typography, IconButton, CircularProgress, } from "@mui/material";
 import { useNavigate } from 'react-router-dom'
-import cpfMask from 'utils/masks/cpf';
-import cardMask from 'utils/masks/card';
-import { POST_FETCH } from '../../../variables';
+import { DELETE_FETCH, GET_FETCH, POST_FETCH, URL, STORAGE_URL } from '../../../variables';
+import { useSelector } from 'react-redux'
+import cpfMask from '../../utilities/masks/cpf'
+import cardMask from '../../utilities/masks/card'
 
 const Payment = () => {
   const fillMonth = ['01', '02', '03', '04', '05', '06', '07', '09', '10', '11', '12']
@@ -27,15 +26,16 @@ const Payment = () => {
   const [year, setYear] = React.useState('01')
   const [month, setMonth] = React.useState('2023')
   const [card, setCard] = React.useState({ value: '', mask: '', length: 16, cvv: 3 })
+  const token = useSelector(state => state.AppReducer.token)
 
   React.useEffect(() => {
     getData()
   }, [])
 
   const getData = async () => {
-    const response = await get(`${API_URL}/cards`)
+    const response = await GET_FETCH({ url: `list_cards`, token })
 
-    setData(() => response.cards.data.map(item => {
+    setData(() => response.cards && response.cards.data.map(item => {
       let firstDigits = Array.from(item.first_six_digits)
       let card = firstDigits.splice(0, 4).toString().replace(/,/g, '') + ' ' + firstDigits.toString().replace(/,/g, '') + '** **** ' + item.last_four_digits
       return { ...item, card }
@@ -45,9 +45,11 @@ const Payment = () => {
 
   const handleSave = async () => {
     setLoading(true); setAdd(false); clearFields()
-    const response = await POST_FETCH(`${API_URL}/cards/create`, JSON.stringify({
-      cvv, exp_month: month, exp_year: year, holder_name: name, holder_document: document.value, number: card.value, brand: card.brand
-    }))
+    const response = await POST_FETCH({
+      url: `${URL}api/cards/create`, token, body: {
+        cvv, exp_month: month, exp_year: year, holder_name: name, holder_document: document.value, number: card.value, brand: card.brand
+      }
+    })
 
     if (response) getData()
     console.log('reps', response)
@@ -55,7 +57,7 @@ const Payment = () => {
 
   const handleDelete = async (id) => {
     setLoading(true); setAdd(false); clearFields()
-    const response = await DELETE(`${API_URL}/cards/delete/${id}`)
+    const response = await DELETE_FETCH({ url: `cards/delete/${id}` })
     if (response) getData()
   }
 
@@ -113,7 +115,8 @@ const Payment = () => {
             <div className="row align-items-end">
               <div className="col-6">
                 <div className="form-floating">
-                  <input className="form-control" id="name" type="text" value={name} onChange={({ target }) => setName(target.value)} required />
+                  <input className="form-control" id="name" type="text" value={name}
+                    onChange={({ target }) => setName(target.value)} required />
                   <label htmlFor="name">Nome do Títular*</label>
                 </div>
               </div>
@@ -121,7 +124,8 @@ const Payment = () => {
               <div className="col-6">
                 <div className='input-group'>
                   <div className="form-floating">
-                    <input className="form-control" id="card" type="text" value={card?.mask} onChange={({ target }) => { setCard(() => cardMask(target.value)); setCvv('') }} required />
+                    <input className="form-control" id="card" type="text" value={card?.mask}
+                      onChange={({ target }) => { setCard(() => cardMask(target.value)); setCvv('') }} required />
                     <label htmlFor="card">Cartão*</label>
                   </div>
                   <div className='brand'><img src={`${STORAGE_URL}brands/${card.brand ? card.brand : 'nocard'}.png`} alt='brand'></img></div>
@@ -131,7 +135,8 @@ const Payment = () => {
 
             <div className='col-12 mt-4'>
               <div className="form-floating">
-                <input className="form-control" id="document" type="text" value={document?.mask} onChange={({ target }) => setDocument(() => cpfMask(target.value))} required />
+                <input className="form-control" id="document" type="text" value={document?.mask}
+                  onChange={({ target }) => setDocument(() => cpfMask(target.value))} required />
                 <label htmlFor="document">CPF do Títular*</label>
               </div>
             </div>
@@ -139,7 +144,8 @@ const Payment = () => {
             <div className="row mt-4">
               <div className="col-3">
                 <div className="form-floating">
-                  <select className="form-control" id="month" type="text" value={month} onChange={({ target }) => setMonth(target.value)} required>
+                  <select className="form-control" id="month" type="text" value={month}
+                    onChange={({ target }) => setMonth(target.value)} required>
                     {fillMonth.map(item => (
                       <option key={item} value={item}>{item}</option>
                     ))}
@@ -150,7 +156,8 @@ const Payment = () => {
 
               <div className="col-6">
                 <div className="form-floating">
-                  <select className="form-control" id="year" type="text" value={year} onChange={({ target }) => setYear(target.value)} required>
+                  <select className="form-control" id="year" type="text" value={year}
+                    onChange={({ target }) => setYear(target.value)} required>
                     {fillYear.map(item => (
                       <option key={item} value={item}>{item}</option>
                     ))}
@@ -161,7 +168,8 @@ const Payment = () => {
 
               <div className="col-3">
                 <div className="form-floating">
-                  <input className="form-control" id="cvv" type="number" value={cvv} onChange={({ target }) => handleCvvChange(target.value)} />
+                  <input className="form-control" id="cvv" type="number" value={cvv}
+                    onChange={({ target }) => handleCvvChange(target.value)} />
                   <label htmlFor="cvv">CVV*</label>
                 </div>
               </div>

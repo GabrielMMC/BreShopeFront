@@ -4,15 +4,14 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { CircularProgress, IconButton } from "@mui/material";
-import { API_URL, STORAGE_URL } from "utils/variables";
 import CloseIcon from "@mui/icons-material/Close";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { GET_FETCH, STORAGE_URL } from "../../../../variables";
+import dateMask from "../../../utilities/masks/date";
+import { moneyMask } from "../../../utilities/masks/currency";
 // import './styles.css';
-import { moneyMask } from "utils/masks/currency";
-import { get } from "utils/requests";
-import dateMask from "utils/masks/date";
 
 const style = {
   position: "absolute",
@@ -33,7 +32,7 @@ export default function MoreInfo(props) {
 
   React.useEffect(() => {
     const getData = async () => {
-      const response = await get(`${API_URL}/orders/${props.id}`);
+      const response = await GET_FETCH({ url: `list_orders/${props.id}`, token: props.token });
       setOrder(response.order);
     };
 
