@@ -50,7 +50,7 @@ const Home = () => {
         <div className="content-home mt-3" style={{ minHeight: '45vh' }}>
           <Typography className="m-3" variant="h5" color="text.secondary">Produtos recomendados para você</Typography>
           <Slider {...settings}>
-            {state.products.map(item => (
+            {state.products && state.products.map(item => (
               <Card product={item}></Card>
             ))}
           </Slider>
@@ -76,7 +76,7 @@ const Home = () => {
         <div className="content-home" style={{ minHeight: '40vh' }}>
           <Typography className="m-3" variant="h5" color="text.secondary">Produtos postados recentemente</Typography>
           <div className="d-flex flex-wrap justify-content-center">
-            {state.products.map(item => (
+            {state.products && state.products.map(item => (
               <Card sales={false} product={item}></Card>
             ))}
           </div>
@@ -85,7 +85,7 @@ const Home = () => {
         <div className="content-home" style={{ minHeight: '40vh' }}>
           <Typography className="m-3" variant="h5" color="text.secondary">Ofertas Especiais</Typography>
           <div className="d-flex flex-wrap justify-content-center">
-            {state.products.map(item => (
+            {state.products && state.products.map(item => (
               <Card sales={true} product={item}></Card>
             ))}
           </div>

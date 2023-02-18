@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { POST_FETCH, URL } from '../../variables'
 import Container from './Container'
 import { useSelector } from 'react-redux'
+import { MdClose } from 'react-icons/md'
 
 const Product = () => {
   const [state, setState] = React.useState({
@@ -15,9 +16,12 @@ const Product = () => {
     changeImg: true,
     imgSelected: '',
   })
+  const [ratings, setRatings] = React.useState('')
+  const [ratingsFilter, setRatingsFilter] = React.useState('')
   const params = useParams()
   const history = useNavigate()
   const token = useSelector(state => state.AppReducer.token)
+  const user = useSelector(state => state.AppReducer.user)
 
   React.useEffect(() => {
     fetch(`${URL}api/get_public_product/${params.id}`, {
@@ -30,6 +34,7 @@ const Product = () => {
       .then(async (response) => {
         const resp = await response.json();
         setState({ ...state, product: resp.product, loading: false, shop: resp.product.owner })
+        setRatings(resp.product.owner.ratings); setRatingsFilter(resp.product.owner.ratings)
         console.log('product', resp)
       })
   }, [])
@@ -51,6 +56,17 @@ const Product = () => {
       url: `${URL}api/store_rating`, token, body: { breshop_id: state.shop.id, comment: state.comment, rating: state.rating }
     })
     console.log('comment', response)
+  }
+
+  const getRating = (value) => {
+    const rating = ratings.filter(item => item.rating === value).length
+    return rating
+  }
+
+  const handleFilterRating = (value) => {
+    const newRatings = ratings.filter(item => item.rating === value)
+    if (value) setRatingsFilter(newRatings)
+    else setRatingsFilter(ratings)
   }
 
   return (
@@ -103,32 +119,68 @@ const Product = () => {
               </div>
             </div>
             <Divider className='my-5' />
+
+            {/* -------------------------Comments-Section------------------------- */}
             <div className="row">
               <div className="d-flex justify-content-center mb-5">
-                <Typography color="text.secondary" variant='h5'>Comentários</Typography>
+                <Typography color="text.secondary" variant='h5'>Comentários da Loja</Typography>
               </div>
-              <div className='col-12'>
+
+              {ratings.length > 0 ?
+                <>
+                  <div className="mb-5">
+                    <span className="lead ms-2">Filtrar por:</span>
+                    <span className="lead ms-2" onClick={() => handleFilterRating("1")}>Uma estrela ({getRating("1")}), </span>
+                    <span className="lead ms-2" onClick={() => handleFilterRating("2")}>Duas estrelas ({getRating("2")}), </span>
+                    <span className="lead ms-2" onClick={() => handleFilterRating("3")}>Três estrelas ({getRating("3")}), </span>
+                    <span className="lead ms-2" onClick={() => handleFilterRating("4")}>Quatro estrelas ({getRating("4")}), </span>
+                    <span className="lead ms-2" onClick={() => handleFilterRating("5")}>Cinco estrelas ({getRating("5")})</span>
+                    <div className="d-flex align-items-center" onClick={() => handleFilterRating(null)}>
+                      <span className='lead ms-2' style={{ color: '#FF0000' }}>Eliminar filtro</span>
+                      <MdClose color='red' />
+                    </div>
+                  </div>
+
+                  {ratingsFilter.map(item => (
+                    <div className="row  my-3" key={item.id}>
+                      <div className="d-flex justify-content-start">
+                        <div>
+                          <img className='m-auto' style={{ width: 75, height: 75 }}
+                            src={`${URL}storage/photos/${item.user.file ? item.user.file : 'no_user.png'}`} alt="subject" />
+                        </div>
+                        <div className='ms-2'>
+                          <Typography className='ms-1' color="text.secondary">{item.user.name}</Typography>
+                          <Rating value={item.rating} />
+                        </div>
+                      </div>
+
+                      <div className="col-12">
+                        <Typography>{item.comment}</Typography>
+                      </div>
+                    </div>
+                  )
+                  )}
+                </> : <Typography>Loja sem nenhum comentário registrado</Typography>}
+
+              {/* -------------------------Do-a-comment-Section------------------------- */}
+              <div className='col-12 my-5'>
                 <div className="d-flex justify-content-start">
                   <div>
-                    <img className='m-auto' style={{ width: 75, height: 75 }} src={`${URL}storage/photos/no_user.png`} alt="subject" />
+                    <img className='m-auto' style={{ width: 75, height: 75 }} src={`${URL}storage/photos/${user.file ? user.file : 'no_user.png'}`} alt="subject" />
                   </div>
-                  <div>
-                    <div className='d-flex mb-2'>
-                      <Typography color="text.secondary">Usuario</Typography>
-                    </div>
-                    <div>
-                    </div>
+                  <div className='ms-2'>
+                    <Typography className='ms-1' color="text.secondary">{user.name}</Typography>
+                    <Rating value={state.rating} onChange={(e, value) => setState({ ...state, rating: value })} />
                   </div>
-                  <Rating value={state.rating} onChange={(e, value) => setState({ ...state, rating: value })} />
-
                 </div>
+                <form className="input-group" onSubmit={(e) => submitComment(e)}>
+                  <input type='area' className="mt-1 comment-input" value={state.comment} onChange={({ target }) => setState({ ...state, comment: target.value })} />
+                  <Button type='submit'>Enviar</Button>
+                </form>
               </div>
-              <form className="input-group" onSubmit={(e) => submitComment(e)}>
-                <input type='area' className="mt-1 comment-input" value={state.comment} onChange={({ target }) => setState({ ...state, comment: target.value })} />
-                <Button type='submit'>Enviar</Button>
-              </form>
             </div>
 
+            {/* -------------------------Buttons-Section------------------------- */}
             <div className="row mt-5">
               <div className="d-flex mt-3">
                 <div className="justify-content-start">
