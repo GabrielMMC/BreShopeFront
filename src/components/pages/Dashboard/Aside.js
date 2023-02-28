@@ -1,6 +1,4 @@
 import React from "react";
-import { ProSidebar, Menu, MenuItem, SidebarFooter, SidebarContent, SubMenu } from "react-pro-sidebar";
-import { NavLink } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'
 // import { useSelector, useDispatch } from 'react-redux';
 
@@ -13,18 +11,28 @@ const Aside = ({ collapsed }) => {
       <ul>
         <li className='hvr-grow' onClick={() => history('/profile')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Dados Gerais</a>
+          <p className='small' style={{ color: 'black' }}>Dados Gerais</p>
         </li>
         <li className='hvr-grow' onClick={() => history('/profile/address')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Endereços</a>
+          <p className='small' style={{ color: 'black' }}>Endereços</p>
         </li>
         <li className='hvr-grow' onClick={() => history('/profile/payment')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Cartões</a></li>
+          <p className='small' style={{ color: 'black' }}>Cartões</p>
+        </li>
         <li className='hvr-grow' onClick={() => history('/profile/orders')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Pedidos</a></li>
+          <p className='small' style={{ color: 'black' }}>Pedidos</p>
+        </li>
+        <li className='hvr-grow' onClick={() => history('/profile/breshop')}>
+          <span />
+          <p className='small' style={{ color: 'black' }}>Breshop</p>
+        </li>
+        <li className='hvr-grow' onClick={() => history('/profile/products')}>
+          <span />
+          <p className='small' style={{ color: 'black' }}>Produtos</p>
+        </li>
       </ul>
     </nav>
   );

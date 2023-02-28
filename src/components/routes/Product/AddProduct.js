@@ -1,7 +1,7 @@
 import { Button, ThemeProvider, Typography } from '@mui/material';
 import React from 'react';
 import { FileDrop } from 'react-file-drop';
-import { URL } from '../../../variables';
+import { GET_FETCH, URL } from '../../../variables';
 import Input from '../Form/Input';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -11,19 +11,11 @@ import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Theme from '../Theme/Theme';
+import Container from '../../pages/Container';
+import FormProduct from './FormProduct';
 
 const AddProduct = ({ edit }) => {
-  const [form, setForm] = React.useState({
-    name: { label: 'Nome*', value: "", error: false, col: 'col-sm-12', type: 'text' },
-    price: { label: 'Preço*', value: "", error: false, col: 'col-sm-6', type: 'price', },
-    material: { label: 'Material*', value: "", error: false, col: 'col-sm-6', type: 'text' },
-    description: { label: 'Descrição*', value: "", error: false, col: 'col-sm-12', type: 'multiline', },
-    quantity: { label: 'Quantidade*', value: "", error: false, col: 'col-sm-12', type: 'number' },
-    damage: { label: 'Avaria', value: "", error: false, col: 'col-sm-12', type: 'text' },
-    files: [{ value: '', url: '' }, { value: '', url: '' }, { value: '', url: '' }, { value: '', url: '' }, { value: '', url: '' }],
-    loading: true,
-    loading_save: false,
-  })
+  const [form, setForm] = React.useState('')
   const [size, setSize] = React.useState({
     pp: false,
     p: false,
@@ -36,19 +28,6 @@ const AddProduct = ({ edit }) => {
   const token = useSelector(state => state.AppReducer.token);
   let user = localStorage.getItem('user');
   user = JSON.parse(user);
-
-  function renderInput() {
-    const form2 = { ...form }
-    let keys = Object.keys(form2)
-    keys = keys.filter(item => item === 'name' || item === 'material' || item === 'description' || item === 'damage' || item === 'price' || item === 'quantity')
-    return (
-      keys.map(item => (
-        <div key={form[item].label} className={`${form[item].col} col-12 my-2`}>
-          <Input state={form} setState={(e) => setForm(e)} item={item} />
-        </div>
-      ))
-    )
-  }
 
   function renderSize() {
     const sizes = { ...size }
@@ -129,90 +108,52 @@ const AddProduct = ({ edit }) => {
   }
 
   return (
-    <ThemeProvider theme={Theme}>
-      <div className='card m-auto' style={{ maxWidth: 1000 }}>
-        <div className="card-body">
-          <div className="row mt-3">
-            <Typography variant='h5'>CADASTRO DE PRODUTO</Typography>
-            <div className="col-md-6 col-12 m-auto my-2">
-              <div className="col-12">
-                <div style={{ height: 350 }}>
-                  <FileDrop onDrop={(files, event) => changeFile(files[0], 0)}>
-                    <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                      {!form.files[0].url && <Typography variant='p' style={{ color: '#666666' }}>Arraste a foto ou escolha um arquivo</Typography>}
-                      {form.files[0].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[0].url ? form.files[0].url : `${URL}storage/products/no_product.jpg`}></img>}
-                      <input hidden onChange={(e) => changeFile(e.target.files[0], 0)} accept="image/*" multiple type="file" />
-                    </Button>
-                  </FileDrop>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-sm-3 col-6 mt-2 m-auto">
-                  <div style={{ height: 100 }}>
-                    <FileDrop style={{ height: "100px !important" }} onDrop={(files, event) => changeFile(files[0], 1)}>
-                      <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                        {!form.files[1].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
-                        {form.files[1].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[1].url ? form.files[1].url : `${URL}storage/products/no_product.jpg`}></img>}
-                        <input hidden onChange={(e) => changeFile(e.target.files[0], 1)} accept="image/*" multiple type="file" />
-                      </Button>
-                    </FileDrop>
-                  </div>
-                </div>
-                <div className="col-sm-3 col-6 mt-2 m-auto">
-                  <div style={{ height: 100 }}>
-                    <FileDrop style={{ height: "100px !important" }} onDrop={(files, event) => changeFile(files[0], 2)}>
-                      <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                        {!form.files[2].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
-                        {form.files[2].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[2].url ? form.files[2].url : `${URL}storage/products/no_product.jpg`}></img>}
-                        <input hidden onChange={(e) => changeFile(e.target.files[0], 2)} accept="image/*" multiple type="file" />
-                      </Button>
-                    </FileDrop>
-                  </div>
-                </div>
-                <div className="col-sm-3 col-6 mt-2 m-auto">
-                  <div style={{ height: 100 }}>
-                    <FileDrop style={{ height: "100px !important" }} onDrop={(files, event) => changeFile(files[0], 3)}>
-                      <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                        {!form.files[3].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
-                        {form.files[3].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[3].url ? form.files[3].url : `${URL}storage/products/no_product.jpg`}></img>}
-                        <input hidden onChange={(e) => changeFile(e.target.files[0], 3)} accept="image/*" multiple type="file" />
-                      </Button>
-                    </FileDrop>
-                  </div>
-                </div>
-                <div className="col-sm-3 col-6 mt-2 m-auto">
-                  <div style={{ height: 100 }}>
-                    <FileDrop style={{ height: "100px !important" }} onDrop={(files, event) => changeFile(files[0], 4)}>
-                      <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                        {!form.files[4].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha uma foto</Typography>}
-                        {form.files[4].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[4].url ? form.files[4].url : `${URL}storage/products/no_product.jpg`}></img>}
-                        <input hidden onChange={(e) => changeFile(e.target.files[0], 4)} accept="image/*" multiple type="file" />
-                      </Button>
-                    </FileDrop>
-                  </div>
-                </div>
-                <Typography className='mt-2' variant='p'>Recomendamos o uso de imagens com 450p X 450px</Typography>
-              </div>
-            </div>
+    <div className="row mt-3">
+      <Typography variant='h5'>CADASTRO DE PRODUTO</Typography>
 
-            <div className="col-md-6 col-12">
-              <div className="row">
-                {renderInput()}
-                {renderSize()}
-              </div>
-            </div>
+
+
+      <FormProduct form={form} setForm={setForm} token={token} />
+
+      {/* <div className="col-md-6 col-12 m-auto my-2">
+        <div className="col-12">
+          <div style={{ height: 350 }}>
+            <FileDrop onDrop={(files, event) => changeFile(files[0], 0)}>
+              <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
+                {!form.files[0].url && <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha a capa do produto</Typography>}
+                {form.files[0].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[0].url ? form.files[0].url : `${URL}storage/products/no_product.jpg`}></img>}
+                <input hidden onChange={(e) => changeFile(e.target.files[0], 0)} accept="image/*" multiple type="file" />
+              </Button>
+            </FileDrop>
           </div>
         </div>
-        <div className="d-flex m-2">
-          <div className="align-self-center">
-            <Button variant='contained' size='large' onClick={() => history('/home/products')} startIcon={<ReplyAllIcon />}> Voltar</Button>
-          </div>
-          <div className="align-self-center ms-auto">
-            <LoadingButton variant='contained' size='large' loading={form.loading_save} onClick={() => edit ? store_product('update') : store_product('add')} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
-          </div>
+
+        <div className="col-12 mt-3">
+          <Button fullWidth sx={{ backgroundColor: '#e8e8e8' }} component="label">
+            {!form.files[0].url && <Typography variant='p' style={{ color: '#666666' }}>Escolha o restante das imagens</Typography>}
+            {form.files[0].url && <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.files[0].url ? form.files[0].url : `${URL}storage/products/no_product.jpg`}></img>}
+            <input hidden onChange={(e) => changeFile(e.target.files[0], 0)} accept="image/*" multiple type="file" />
+          </Button>
         </div>
-      </div >
-    </ThemeProvider>
+        <Typography className='mt-2' variant='p'>Recomendamos o uso de imagens com 450p X 450px</Typography>
+      </div>
+
+      <div className="col-md-6 col-12">
+        <div className="row">
+          {renderInput()}
+          {renderSize()}
+        </div>
+      </div>
+
+      <div className="d-flex m-2">
+        <div className="align-self-center">
+          <Button variant='contained' size='large' onClick={() => history('/home/products')} startIcon={<ReplyAllIcon />}> Voltar</Button>
+        </div>
+        <div className="align-self-center ms-auto">
+          <LoadingButton variant='contained' size='large' loading={form.loading_save} onClick={() => edit ? store_product('update') : store_product('add')} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
+        </div>
+      </div> */}
+    </div >
   )
 }
 
