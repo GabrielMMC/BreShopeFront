@@ -41,29 +41,18 @@ const FormProduct = ({ form, setForm, token }) => {
     getData()
   }, [])
 
-  console.log('file', form.files)
   function changeFile(files) {
-    console.log('files', files[0])
-    let file2 = { ...form }
+    let form2 = { ...form }
 
-    for (let i; i++; i < files.length) {
-      console.log('asasfasf', files[i])
+    for (let i = 0; i < files.length; i++) {
       let fr = new FileReader()
       fr.onload = (e) => {
-        console.log('onload', { value: files[i], url: e.target.result })
-        file2.files = [...file2.files, { value: files[i], url: e.target.result }]
+        form2.files = [...form2.files, { value: files[i], url: e.target.result }]
       }
       fr.readAsDataURL(files[i])
     }
-    // files.forEach(file => {
-    //   let fr = new FileReader()
-    //   fr.onload = (e) => {
-    //     file2.files = [...file2.files, { value: file, url: e.target.result }]
-    //   }
-    //   fr.readAsDataURL(file)
-    // })
-    console.log('file2', file2)
-    // setForm(file2)
+    console.log('form2', form2)
+    setForm(form2)
   }
 
   const handleSizeChange = (item) => {
@@ -72,13 +61,13 @@ const FormProduct = ({ form, setForm, token }) => {
   }
 
   return (
-    <div>
+    <>
       {form.filled &&
         <>
-          <div className="mb-4">
-            <div className="col-12">
-              <div style={{ height: 350, width: 350 }}>
-                <FileDrop onDrop={(files, event) => changeFile(files[0], 0)}>
+          <div className="row mb-4">
+            <div className="col-md-6">
+              <div style={{ height: 400, width: 400 }}>
+                <FileDrop onDrop={(files, event) => changeFile(files[0])}>
                   <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
                     {!form.thumb.url &&
                       <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha a capa do produto</Typography>}
@@ -87,6 +76,19 @@ const FormProduct = ({ form, setForm, token }) => {
                     <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
                   </Button>
                 </FileDrop>
+              </div>
+            </div>
+
+            <div className="col-md-6 rounded" style={{ border: '2px dashed #666' }}>
+              <div className="d-flex flex-wrap">
+                {form.files.map(item => {
+                  console.log('item', item)
+                  return (
+                    <div className='bg-gray rounded m-2' style={{ width: 120, height: 120 }}>
+                      <img className='img-fluid rounded' alt='file' src={item.url} />
+                    </div>
+                  )
+                })}
               </div>
             </div>
 
@@ -182,7 +184,7 @@ const FormProduct = ({ form, setForm, token }) => {
             <div className="col-12 mt-3">
               <div className="form-check form-switch">
                 <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
-                <label className="form-check-label" for="flexSwitchCheckDefault">Possui avaria</label>
+                <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Possui avaria</label>
               </div>
 
               <div className="form-floating">
@@ -192,10 +194,12 @@ const FormProduct = ({ form, setForm, token }) => {
                 <label htmlFor="description">Avaria*</label>
               </div>
             </div>
+
+            <Button onClick={handleSave}>Salvar</Button>
           </div>
         </>
       }
-    </div>
+    </>
   )
 }
 
