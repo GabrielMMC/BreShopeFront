@@ -1,9 +1,10 @@
-import { Button, Typography } from '@mui/material';
+import { Button, IconButton, Typography } from '@mui/material';
 import React from 'react';
 import { FileDrop } from 'react-file-drop';
 import { GET_FETCH, URL } from '../../../variables';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import MdClose, { MdClosedCaptionOff, MdOutlineClose } from 'react-icons/md'
 import SaveIcon from '@mui/icons-material/Save';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import { LoadingButton } from '@mui/lab';
@@ -128,24 +129,53 @@ const AddProduct = ({ edit }) => {
                     {!form.thumb.url &&
                       <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha a capa do produto</Typography>}
                     {form.thumb.url &&
-                      <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.thumb.url ? form.thumb.url : `${URL}storage/products/no_product.jpg`}></img>}
+                      <img className='w-100 h-100 rounded' alt='product' src={form.thumb.url ? form.thumb.url : `${URL}storage/products/no_product.jpg`}></img>}
                     <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
                   </Button>
                 </FileDrop>
               </div>
             </div>
 
-            <div className="col-md-6 rounded" style={{ border: '2px dashed #666' }}>
-              <div className="d-flex flex-wrap">
+            <div className="col-md-6 rounded">
+              <div style={{ height: 400, width: 400 }}>
+                <FileDrop onDrop={(files, event) => changeFile(files)}>
+                  <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
+                    {form.files.length === 0 &&
+                      <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha até quatro imagens</Typography>}
+                    {form.files.lenght !== 0 &&
+                      <div className="row h-100">
+                        {form.files.map(item => {
+                          return (
+                            <div className='col-6'>
+                              <div className="d-flex h-100">
+                                <img alt='file' src={item.url} className='h-100 w-100 rounded' />
+                                <div className="p-absolute">
+                                  <button className='close-absolute' onClick={() => console.log('teste')}><MdOutlineClose size={20} /></button>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    }
+                    <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
+                  </Button>
+                </FileDrop>
+              </div>
+              {/* <div className="row h-100">
                 {form.files.map(item => {
-                  console.log('item', item)
                   return (
-                    <div className='bg-gray rounded m-2' style={{ width: 120, height: 120 }}>
-                      <img className='img-fluid rounded' alt='file' src={item.url} />
+                    <div className='rounded col-6' style={{ backgorundColor: '#ECEAEE' }}>
+                      <img alt='file' src={item.url} className='h-100 w-100 rounded' />
                     </div>
+
+                    
                   )
                 })}
-              </div>
+
+                                      <img className='w-100 h-100 rounded' alt='product' src={form.thumb.url ? form.thumb.url : `${URL}storage/products/no_product.jpg`}></img>}
+                    <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
+              </div> */}
             </div>
 
             <div className="col-12 my-3">
