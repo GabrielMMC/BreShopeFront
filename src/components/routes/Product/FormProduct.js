@@ -1,19 +1,13 @@
-import { Button, IconButton, Typography } from '@mui/material';
-import React from 'react';
-import { FileDrop } from 'react-file-drop';
-import { GET_FETCH, URL } from '../../../variables';
+import { Button, Typography } from '@mui/material'
+import React from 'react'
+import { GET_FETCH } from '../../../variables'
+import setError from '../../utilities/Error'
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import MdClose, { MdClosedCaptionOff, MdOutlineClose } from 'react-icons/md'
-import SaveIcon from '@mui/icons-material/Save';
-import ReplyAllIcon from '@mui/icons-material/ReplyAll';
-import { LoadingButton } from '@mui/lab';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import setError from '../../utilities/Error';
 import { moneyMask } from '../../utilities/masks/currency';
+import { FileDrop } from 'react-file-drop';
 
-const AddProduct = ({ edit }) => {
+const FormProduct = ({ form, setForm, token }) => {
   const [size, setSize] = React.useState({
     pp: false,
     p: false,
@@ -23,25 +17,24 @@ const AddProduct = ({ edit }) => {
     xg: false
   })
 
-  const [form, setForm] = React.useState({
-    filled: { value: true },
-    name: { value: "", error: false },
-    size: { value: "", error: false },
-    damage: { value: "", error: false },
-    quantity: { value: "", error: false },
-    description: { value: "", error: false },
-    price: { value: "", mask: "", error: false },
-    type: { value: "", error: false },
-    style: { value: "", error: false },
-    material: { value: "", error: false },
-    thumb: { value: "", url: "" },
-    files: [],
-  })
-
   React.useEffect(() => {
     const getData = async () => {
       const response = await GET_FETCH({ url: 'get_data', token })
-      setForm({ ...form, type: { fillOption: response.types }, style: { fillOption: response.types }, material: { fillOption: response.types } })
+      setForm({
+        ...form,
+        filled: { value: true },
+        name: { value: "", error: false },
+        size: { value: "", error: false },
+        damage: { value: "", error: false },
+        quantity: { value: "", error: false },
+        description: { value: "", error: false },
+        price: { value: "", mask: "", error: false },
+        type: { value: "", error: false, fillOption: response.types },
+        style: { value: "", error: false, fillOption: response.styles },
+        material: { value: "", error: false, fillOption: response.materials },
+        thumb: { value: "", url: "" },
+        files: [],
+      })
       console.log('resp', response)
     }
 
@@ -66,59 +59,9 @@ const AddProduct = ({ edit }) => {
     setSize({ ...size, [item]: !size[item] })
     setForm({ ...form, size: { ...form.size, value: item, error: false } })
   }
-  const history = useNavigate();
-  const token = useSelector(state => state.AppReducer.token);
-
-
-  function handleSave() {
-    let data = new FormData()
-    // data.append('user_id', user.id)
-    // data.append('name', form.name.value)
-    // data.append('price', parseFloat(price))
-    // data.append('material', form.material.value)
-    // data.append('damage', form.damage.value)
-    // data.append('description', form.description.value)
-    // data.append('quantity', form.quantity.value)
-
-    // data.append('pp', size.pp)
-    // data.append('p', size.p)
-    // data.append('m', size.m)
-    // data.append('g', size.g)
-    // data.append('gg', size.gg)
-    // data.append('xg', size.xg)
-
-    Object.keys({ ...form }).forEach(item => data.append(item, form[item].value))
-    console.log('data', data)
-
-    form.files.forEach(item => {
-      data.append('files[]', item.value)
-    })
-
-    // let keys = Object.keys({ ...size })
-    // keys.forEach(item => {
-    //   data.append('sizes[]', JSON.stringify({ [item]: size[item] }))
-    // })
-
-    console.log('sizes', data.getAll('sizes[]'))
-
-    fetch(`${URL}api/store_product`, {
-      method: 'POST',
-      headers: {
-        // 'Content-Type': 'application-json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: (data),
-    }).then(async (response) => {
-      const resp = response.json()
-      console.log('resp', resp)
-      setForm({ ...form, loading_save: false })
-    })
-  }
 
   return (
-    <div className="row mt-3">
-      <Typography variant='h5'>CADASTRO DE PRODUTO</Typography>
-
+    <>
       {form.filled &&
         <>
           <div className="row mb-4">
@@ -129,53 +72,24 @@ const AddProduct = ({ edit }) => {
                     {!form.thumb.url &&
                       <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha a capa do produto</Typography>}
                     {form.thumb.url &&
-                      <img className='w-100 h-100 rounded' alt='product' src={form.thumb.url ? form.thumb.url : `${URL}storage/products/no_product.jpg`}></img>}
+                      <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.thumb.url ? form.thumb.url : `${URL}storage/products/no_product.jpg`}></img>}
                     <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
                   </Button>
                 </FileDrop>
               </div>
             </div>
 
-            <div className="col-md-6 rounded">
-              <div style={{ height: 400, width: 400 }}>
-                <FileDrop onDrop={(files, event) => changeFile(files)}>
-                  <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
-                    {form.files.length === 0 &&
-                      <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha até quatro imagens</Typography>}
-                    {form.files.lenght !== 0 &&
-                      <div className="row h-100">
-                        {form.files.map(item => {
-                          return (
-                            <div className='col-6'>
-                              <div className="d-flex h-100">
-                                <img alt='file' src={item.url} className='h-100 w-100 rounded' />
-                                <div className="p-absolute">
-                                  <button className='close-absolute' onClick={() => console.log('teste')}><MdOutlineClose size={20} /></button>
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    }
-                    <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
-                  </Button>
-                </FileDrop>
-              </div>
-              {/* <div className="row h-100">
+            <div className="col-md-6 rounded" style={{ border: '2px dashed #666' }}>
+              <div className="d-flex flex-wrap">
                 {form.files.map(item => {
+                  console.log('item', item)
                   return (
-                    <div className='rounded col-6' style={{ backgorundColor: '#ECEAEE' }}>
-                      <img alt='file' src={item.url} className='h-100 w-100 rounded' />
+                    <div className='bg-gray rounded m-2' style={{ width: 120, height: 120 }}>
+                      <img className='img-fluid rounded' alt='file' src={item.url} />
                     </div>
-
-                    
                   )
                 })}
-
-                                      <img className='w-100 h-100 rounded' alt='product' src={form.thumb.url ? form.thumb.url : `${URL}storage/products/no_product.jpg`}></img>}
-                    <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
-              </div> */}
+              </div>
             </div>
 
             <div className="col-12 my-3">
@@ -281,12 +195,12 @@ const AddProduct = ({ edit }) => {
               </div>
             </div>
 
-            <Button className='mt-5' onClick={handleSave}>Salvar</Button>
+            <Button onClick={handleSave}>Salvar</Button>
           </div>
         </>
       }
-    </div >
+    </>
   )
 }
 
-export default AddProduct
+export default FormProduct
