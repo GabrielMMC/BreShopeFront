@@ -1,8 +1,9 @@
 import React from 'react'
-import Theme from '../routes/Theme/Theme'
-import { ThemeProvider } from '@mui/material'
 import Navbar from './Navbar'
 import Footer from './Footer'
+import Theme from '../routes/Theme/Theme'
+import { ThemeProvider } from '@mui/material'
+import { ToastContent } from '../utilities/Alerts'
 
 const Container = ({ children }) => {
   return (
@@ -15,6 +16,7 @@ const Container = ({ children }) => {
           </div>
         </div>
         <Footer />
+        <ToastContent />
       </div>
     </ThemeProvider >
   )

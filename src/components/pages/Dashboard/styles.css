@@ -1,3 +1,12 @@
+/* --------------------------------------------------Principal-Styles-------------------------------------------------- */
+h1, h2, h3, h4, h5, h6, p, span{
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+ }
+
 .content{
     width: 100%;
     min-height: 100vh;
@@ -12,7 +21,7 @@
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
-.container{
+.box{
     max-width: 1200px;
     border-radius: .2rem;
     background-color: #FFF;
@@ -21,6 +30,48 @@
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
+@media(max-width: 1200px){
+  .box{
+    margin: 1rem
+  }
+}
+
+@media(max-width: 576px){
+  .box{
+    margin: auto
+  }
+}
+
+.bg-gray{
+  background-color: #E8E8E8;
+}
+
+.payment-methods{
+  display: flex;
+  justify-content: space-around;
+  margin-top: .2rem;
+}
+
+.payment-icons{
+  width: 50px;
+  height: 50px;
+  margin: auto;
+}
+
+@media(max-width: 576px){
+  .payment-methods{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .payment-icons{
+    width: 35px;
+    height: 35px;
+    margin: 0;
+  }
+}
+
+/* --------------------------------------------------File-Styles-------------------------------------------------- */
 .file-button{
     color: #666666 !important;
     width: 100% !important;
@@ -38,13 +89,10 @@
     margin: 0;
 }
 
-.bg-gray{
-    background-color: #E8E8E8;
-}
-
+/* --------------------------------------------------Animations-------------------------------------------------- */
 .rounded-button {
     border-radius: 50%;
-    background-color: #693B9F;
+    background-color: #FFA235;
     color: #fff;
     border: none;
     height: 2rem;
@@ -72,6 +120,7 @@
     }
   }
   
+  /* --------------------------------------------------Hover-Effects-------------------------------------------------- */
   .hvr-grow {
     display: inline-block;
     vertical-align: middle;
@@ -88,6 +137,19 @@
   .hvr-grow:active {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
+  }
+
+  .focus {
+    transition: all 5s !important;
+    border-bottom: 1px solid #FFA235 !important;
+    border-top: 1px solid #FFA235 !important;
+    border-right: 1px solid #FFA235 !important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
+  }
+  
+  .form-control:focus {
+    border: 1px solid #FFA235 !important;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
   }
 
 /* --------------------------------------------------Card-Styles-------------------------------------------------- */
@@ -114,7 +176,7 @@
 
 .payment-card {
   border-radius: .6rem;
-  background-color: #693B9F;
+  background-color: #FFA235;
   /* background-color: #ff4c4c; */
   width: 400px;
   height: 200px;
@@ -136,7 +198,7 @@ h1 {
 }
 
 
-/* --------------------------------------------------Dashboard-Styles-------------------------------------------------- */
+/* --------------------------------------------------User-Dashboard-------------------------------------------------- */
 .user-dash{
   height: calc(100vh - 172px);
   border-right: 1px solid #E8E8E8
@@ -168,16 +230,12 @@ h1 {
 }
 
 .user-dash li:hover{
+  background-color: #FFA235;
   transition: all .3s;
-  cursor: pointer;
-}
-
-.user-dash NavLink{
-  color:#212529
 }
 
 .user-dash li span{
-  background: #693B9F;
+  background: #FFA235;
   width: 5px;
   height: auto;
   display: block;

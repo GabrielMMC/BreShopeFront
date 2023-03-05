@@ -4,13 +4,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, Typography, IconButton, CircularProgress, } from "@mui/material";
 import { useNavigate } from 'react-router-dom'
-import { DELETE_FETCH, GET_FETCH, POST_FETCH, URL, STORAGE_URL } from '../../../variables';
+import { DELETE_FETCH, GET_FETCH, POST_FETCH, URL, STORAGE_URL, API_URL } from '../../../variables';
 import { useSelector } from 'react-redux'
 import cpfMask from '../../utilities/masks/cpf'
 import cardMask from '../../utilities/masks/card'
+import { renderAlert, renderToast } from '../../utilities/Alerts';
+import swal from "sweetalert";
 
 const Payment = () => {
-  const fillMonth = ['01', '02', '03', '04', '05', '06', '07', '09', '10', '11', '12']
+  // -------------------------------------------------------------------
+  //********************************************************************
+  // -------------------------States------------------------------------
+  const fillMonth = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
   const fillYear = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033']
   const history = useNavigate()
 
@@ -18,6 +23,7 @@ const Payment = () => {
   const [loadingSave, setLoadingSave] = React.useState(false)
   const [data, setData] = React.useState('')
   const [add, setAdd] = React.useState(false)
+  const [hasAddresses, setHasAddresses] = React.useState(false)
 
   const [cvv, setCvv] = React.useState('')
   const [name, setName] = React.useState('')
@@ -26,82 +32,131 @@ const Payment = () => {
   const [year, setYear] = React.useState('01')
   const [month, setMonth] = React.useState('2023')
   const [card, setCard] = React.useState({ value: '', mask: '', length: 16, cvv: 3 })
+
   const token = useSelector(state => state.AppReducer.token)
 
   React.useEffect(() => {
     getData()
   }, [])
 
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Getting-data----------------------------
   const getData = async () => {
-    const response = await GET_FETCH({ url: `list_cards`, token })
+    const response = await GET_FETCH({ url: `cards`, token })
 
-    setData(() => response.cards && response.cards.data.map(item => {
-      let firstDigits = Array.from(item.first_six_digits)
-      let card = firstDigits.splice(0, 4).toString().replace(/,/g, '') + ' ' + firstDigits.toString().replace(/,/g, '') + '** **** ' + item.last_four_digits
-      return { ...item, card }
-    }))
+    // If the request returns true status, an anonymous function is used to save the card number formated with firsts and last digits only
+    if (response.status) {
+      setData(() => response.cards.data.map(item => {
+        let firstDigits = Array.from(item.first_six_digits)
+        let card = firstDigits.splice(0, 4).toString().replace(/,/g, '') + ' ' + firstDigits.toString().replace(/,/g, '') + '** **** ' + item.last_four_digits
+        return { ...item, card }
+      }))
+      setHasAddresses(response.has_addresses.length === 0 ? false : true)
+
+      // If it returns false status, is generated the toast with error message
+    } else {
+      renderToast({ type: 'error', msg: 'Erro ao buscar cartões, tente novamente mais tarde!' })
+    }
+
     setLoading(false)
   }
 
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Saving-data-----------------------------
   const handleSave = async () => {
     setLoading(true); setAdd(false); clearFields()
     const response = await POST_FETCH({
-      url: `${URL}api/cards/create`, token, body: {
+      url: `${API_URL}/cards/create`, body: {
         cvv, exp_month: month, exp_year: year, holder_name: name, holder_document: document.value, number: card.value, brand: card.brand
       }
     })
 
-    if (response) getData()
-    console.log('reps', response)
+    // If it returns true status, is generated the toast with successful message and data is obtained against
+    if (response.status) {
+      getData()
+      renderToast({ type: 'success', msg: 'Cartão salvo com sucesso!' })
+    } else {
+      renderToast({ type: 'error', msg: 'Erro ao salvar cartão, certifique-se que é um cartão válido!' })
+    }
+
+    setLoading(false)
   }
 
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Deleting-data---------------------------
   const handleDelete = async (id) => {
     setLoading(true); setAdd(false); clearFields()
-    const response = await DELETE_FETCH({ url: `cards/delete/${id}` })
+    const response = await DELETE_FETCH(`${API_URL}/cards/delete/${id}`)
+
+    // If it returns true status, is generated the toast with successful message and data is obtained against
     if (response) getData()
   }
 
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Other-functions-------------------------
   const handleCvvChange = (value) => {
-    console.log('cvv', card.cvv)
+    // The value is converted an array to be compared with the definied length, the value will only be saved if it is smaller
     if (Array.from(value).length <= card.cvv) setCvv(value)
   }
 
-  const handleAdd = () => { setAdd(!add); clearFields() }
-  const clearFields = () => { setName(''); setCard(''); setBrand(''); setDocument(''); setMonth(''); setYear(''); setCvv('') }
+  //Showing filds for adding a card
+  const handleAdd = () => {
+    if (hasAddresses) { setAdd(!add); clearFields() }
+    else {
+      swal({
+        title: `Dados incompletos`,
+        text: `Por questões de segurança, preencha os dados de usuário e adicione algum endereço antes de prosseguir com o cadastro de cartão!`,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+    }
+  }
+  //Cleaning up fields after remove them from the screen
+  const clearFields = () => { setName(''); setCard(''); setBrand(''); setDocument(''); setMonth('01'); setYear('2023'); setCvv('') }
+
 
   return (
+    // -------------------------Cards-Content-------------------------
     <div>
       <Typography className="small" style={{ fontSize: "1.2em" }}>CARTÕES</Typography>
       {!loading ? <div className="d-flex flex-wrap">
-        {data && data.map((item, index) => (
-          <div key={index} className="row payment-card mb-5 m-auto">
-            <div className="col-12 mt-4 bg-dark" style={{ height: '2rem' }}></div>
+        {data.length > 0
+          ? data.map((item, index) => (
+            <div key={index} className="row payment-card mb-5 m-auto">
+              <div className="col-md-12 my-2 mt-4 bg-dark" style={{ height: '2rem' }}></div>
 
-            <div className="d-flex">
-              <div style={{ width: '75px', marginTop: 5 }}>
-                <img className='img-fluid' src={`${STORAGE_URL}brands/${item.brand}.png`} alt='brand' />
+              <div className="d-flex">
+                <div style={{ width: '75px', marginTop: 5 }}>
+                  <img className='img-fluid' src={`${URL}/brands/${item.brand.toLowerCase()}.png`} alt='brand' />
+                </div>
+                <div className="ms-auto">
+                  <IconButton onClick={() =>
+                    renderAlert({ id: item.id, item: 'cartão', article: 'o', deleteFunction: handleDelete })}><CloseIcon />
+                  </IconButton>
+                </div>
               </div>
-              <div className="ms-auto">
-                <IconButton onClick={() => handleDelete(item.id)}><CloseIcon />
-                </IconButton>
-              </div>
-            </div>
 
-            <div className="col-12">
-              <p>{item.holder_name}</p>
-              <p>{item.number}</p>
-              <div className="d-flex" style={{ fontSize: '.8rem' }}>
-                <div className='d-flex'>
-                  <p className='me-2'>Validade</p>
-                  <p>{item.exp_month}/{item.exp_year}</p>
+              <div className="col-md-12 my-2">
+                <p>{item.holder_name}</p>
+                <p>{item.number}</p>
+                <div className="d-flex" style={{ fontSize: '.8rem' }}>
+                  <div className='d-flex'>
+                    <p className='me-2'>Validade</p>
+                    <p>{item.exp_month}/{item.exp_year}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )
-        )}
+          ))
+          : <p>Sem cartões cadastrados</p>}
       </div> : <div className="d-flex justify-content-center p-5"><CircularProgress color='inherit' /></div>}
 
+      {/* -------------------------Card-fields-section------------------------- */}
       <div className="row my-5">
         <div className="d-flex align-items-center">
           <Typography variant='h6'>Adicionar Cartão</Typography>
@@ -110,39 +165,40 @@ const Payment = () => {
           </button>
         </div>
         {
+          // -------------------------Name----------------------------------
           add &&
           <form className='anime-left mt-3' onSubmit={(e) => { handleSave(e) }}>
             <div className="row align-items-end">
-              <div className="col-6">
+              <div className="col-md-6 my-2">
                 <div className="form-floating">
                   <input className="form-control" id="name" type="text" value={name}
                     onChange={({ target }) => setName(target.value)} required />
                   <label htmlFor="name">Nome do Títular*</label>
                 </div>
               </div>
-
-              <div className="col-6">
+              {/* -------------------------Card-------------------------- */}
+              <div className="col-md-6 my-2">
                 <div className='input-group'>
                   <div className="form-floating">
-                    <input className="form-control" id="card" type="text" value={card?.mask}
+                    <input className="form-control" id="card" type="text" value={card.mask}
                       onChange={({ target }) => { setCard(() => cardMask(target.value)); setCvv('') }} required />
                     <label htmlFor="card">Cartão*</label>
                   </div>
-                  <div className='brand'><img src={`${STORAGE_URL}brands/${card.brand ? card.brand : 'nocard'}.png`} alt='brand'></img></div>
+                  <div className='brand'><img src={`${URL}/brands/${card.brand ? card.brand.toLowerCase() : 'nocard'}.png`} alt='brand'></img></div>
                 </div>
               </div>
             </div>
-
-            <div className='col-12 mt-4'>
+            {/* -------------------------Document------------------------ */}
+            <div className='col-md-12 mt-4'>
               <div className="form-floating">
                 <input className="form-control" id="document" type="text" value={document?.mask}
                   onChange={({ target }) => setDocument(() => cpfMask(target.value))} required />
                 <label htmlFor="document">CPF do Títular*</label>
               </div>
             </div>
-
+            {/* -------------------------Month--------------------------- */}
             <div className="row mt-4">
-              <div className="col-3">
+              <div className="col-md-3 my-2">
                 <div className="form-floating">
                   <select className="form-control" id="month" type="text" value={month}
                     onChange={({ target }) => setMonth(target.value)} required>
@@ -153,8 +209,8 @@ const Payment = () => {
                   <label htmlFor="month">Mês*</label>
                 </div>
               </div>
-
-              <div className="col-6">
+              {/* -------------------------Year-------------------------- */}
+              <div className="col-md-6 my-2">
                 <div className="form-floating">
                   <select className="form-control" id="year" type="text" value={year}
                     onChange={({ target }) => setYear(target.value)} required>
@@ -165,8 +221,8 @@ const Payment = () => {
                   <label htmlFor="year">Ano*</label>
                 </div>
               </div>
-
-              <div className="col-3">
+              {/* -------------------------CVV--------------------------- */}
+              <div className="col-md-3 my-2">
                 <div className="form-floating">
                   <input className="form-control" id="cvv" type="number" value={cvv}
                     onChange={({ target }) => handleCvvChange(target.value)} />
@@ -175,12 +231,13 @@ const Payment = () => {
               </div>
             </div>
 
+            {/* -------------------------Buttons-section------------------------- */}
             <div className="d-flex mt-5">
-              <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", }} className="normal-archor special" onClick={() => history("/")}>
+              <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", }} className="normal-archor special" onClick={() => history("/profile")}>
                 Voltar
               </button>
               <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", }} className="normal-archor special ms-auto" type="submit" disabled={loadingSave}>
-                {loadingSave ? <CircularProgress size={20} color='inherit' /> : 'Enviar'}
+                {loadingSave ? <CircularProgress size={20} color='inherit' /> : 'Salvar'}
               </button>
             </div>
           </form>

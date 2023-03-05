@@ -1,10 +1,13 @@
-import * as React from 'react';
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-import Counter from './Counter';
+import * as React from 'react'
+import Counter from './Counter'
+import Box from '@mui/material/Box'
+import Fade from '@mui/material/Fade'
+import Modal from '@mui/material/Modal'
+import Backdrop from '@mui/material/Backdrop'
 
+// --------------------------------------------------------------------
+//*********************************************************************
+// -------------------------Styles-------------------------------------
 const style = {
  position: 'absolute',
  top: '50%',
@@ -25,28 +28,20 @@ const style = {
  },
 };
 
+//Props coming from the PaymentScreen
 export default function ChargeModal({ charge, method }) {
- const [cards, setCards] = React.useState('')
+ // -------------------------------------------------------------------
+ //********************************************************************
+ // -------------------------States------------------------------------
  const [open, setOpen] = React.useState(true);
- const handleOpen = () => setOpen(true);
  const handleClose = () => setOpen(false);
-
- // **********Charge*Functions**********
 
  return (
   <div>
-   <Modal
-    aria-labelledby="transition-modal-title"
-    aria-describedby="transition-modal-description"
-    open={open}
-    onClose={handleClose}
-    closeAfterTransition
-    BackdropComponent={Backdrop}
-    BackdropProps={{
-     timeout: 500,
-    }}
-   >
+   <Modal aria-labelledby="transition-modal-title" aria-describedby="transition-modal-description" open={open} onClose={handleClose}
+    closeAfterTransitionBackdropComponent={Backdrop} BackdropProps={{ timeout: 500 }}>
     <Fade in={open}>
+     {/* --------------------------Payment-Section-------------------------- */}
      <Box sx={style}>
       <div className="row text-center">
        <p className='display-6'>Pedido gerado com sucesso</p>
@@ -55,6 +50,7 @@ export default function ChargeModal({ charge, method }) {
         <div style={{ width: 250, height: 250, margin: 'auto' }}>
          <img className='m-auto' src={charge.qr_code_url} alt='qr_code'></img>
         </div>}
+       {/* --------------------------Counter-------------------------- */}
        <Counter handleClose={handleClose} />
       </div>
      </Box>

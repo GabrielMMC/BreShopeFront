@@ -1,30 +1,36 @@
 import React from 'react'
 import MoreInfo from './MoreInfo'
-// import Filter from 'utils/Filter'
 import SearchIcon from '@mui/icons-material/Search';
-import { CircularProgress, InputAdornment, Pagination, TextField, Typography } from '@mui/material'
+import { CircularProgress, Pagination, Typography } from '@mui/material'
 import { GET_FETCH } from '../../../../variables';
 import { moneyMask } from '../../../utilities/masks/currency';
 import dateMask from '../../../utilities/masks/date';
 import Filter from '../../../utilities/Filter';
 import { useSelector } from 'react-redux'
+import { renderToast } from '../../../utilities/Alerts';
 
 const Order = () => {
+  // -------------------------------------------------------------------
+  //********************************************************************
+  // -------------------------States------------------------------------
   const [orders, setOrders] = React.useState('')
   const [search, setSearch] = React.useState('')
   const [dateOf, setDateOf] = React.useState('')
   const [dateFor, setDateFor] = React.useState('')
-  const [loading, setLoading] = React.useState(true)
+
   const [allow, setAllow] = React.useState(true)
+  const [loading, setLoading] = React.useState(true)
   const [pagination, setPagination] = React.useState({
     totalItems: '', pageNumber: 0, perPage: 10
   })
+
   const [options, setOptions] = React.useState({
     paid: { value: false, label: 'Pago', checked: false },
     failed: { value: false, label: 'Falha', checked: false },
     canceled: { value: false, label: 'Cancelado', checked: false },
     pending: { value: false, label: 'Pendente', checked: false },
   })
+
   const token = useSelector(state => state.AppReducer.token)
 
   React.useEffect(() => {
@@ -47,7 +53,36 @@ const Order = () => {
     if (allow) getData()
   }, [pagination.pageNumber, search, allow])
 
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Getting-data----------------------------
+  const getData = async () => {
+    setAllow(false); setLoading(true)
 
+    //Passing all values ​​to the search api, if they are empty they are ignored
+    const status = getStatus()
+    const response = await GET_FETCH({
+      url: `orders/?page=${pagination.pageNumber + 1}&status=${status ? status : ''}
+    &dateOf=${dateOf ? dateOf : ''}&dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
+    })
+    // console.log('resp', response)
+
+    // With status true, orders are saved, and they have item records, pagination is active
+    if (response.status) {
+      setOrders(response.orders)
+      if (!pagination.totalItems) setPagination({ ...pagination, totalItems: response.pagination.total })
+    }
+    // With false status, the error toast is called
+    else {
+      renderToast({ type: 'error', msg: 'Erro ao buscar pedidos, tente novamente mais tarde!' })
+    }
+
+    setLoading(false)
+  }
+
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Other-functions-------------------------
   const handleStatus = (status) => {
     switch (status) {
       case "pending":
@@ -67,13 +102,15 @@ const Order = () => {
     }
   }
 
+  //Replacing the true value of each key of the options object by its own name, so that they can be used in the Pagar.me request
   const getStatus = () => {
-    let keys = { ...options }; let status = ''
-    keys = Object.keys(keys)
-    keys.forEach(item => { if (options[item].value) status = item })
+    let status = ''
+    Object.keys({ ...options }).forEach(item => { if (options[item].value) status = item })
     return status
   }
 
+  //Timeout function to control each user polling interval, each time a new value is entered in the input, the count is reset, so
+  // there has to be a pause to reset the pagination and set a new search value
   let timer
   const handleSearch = (value) => {
     clearTimeout(timer)
@@ -82,6 +119,7 @@ const Order = () => {
 
   return (
     <div className="row">
+      {/* -------------------------search-and-filter------------------------- */}
       <div className="col-md-4 col-12">
         <div className="d-flex">
           <div>
@@ -106,6 +144,7 @@ const Order = () => {
         </div>
       </div>
       <hr />
+      {/* -------------------------Orders-table------------------------- */}
       {!loading ?
         <table className='table table-striped table-hover lead'>
           <thead>
@@ -119,6 +158,7 @@ const Order = () => {
           </thead>
           <tbody>
             {orders && orders.map((item, index) => {
+              //Getting the status and style for order status
               const { style, status } = handleStatus(item.status)
               return (
                 <tr key={index} style={{ whiteSpace: 'nowrap' }}>
@@ -126,20 +166,20 @@ const Order = () => {
                   <td><span className='row m-auto status' style={style}>{status}</span></td>
                   <td>{moneyMask(item.amount)}</td>
                   <td>{dateMask(item.created_at)}</td>
-                  <td><MoreInfo id={item.id} token={token} /></td>
+                  <td><MoreInfo id={item.id} /></td>
                 </tr>
               )
             }
             )}
           </tbody>
         </table>
-        : <div className='d-flex justify-content-center p-5'><CircularProgress color='inherit' /></div>}
+        : <div className='d-flex justify-content-center p-5'><CircularProgress color='inherit' /></div>
+      }
+      {/* -------------------------Pagination------------------------- */}
       {pagination && pagination.totalItems &&
         <div className='d-flex justify-content-end'>
-          <Pagination shape="rounded" count={Math.ceil(pagination.totalItems / pagination.perPage)} page={pagination.pageNumber + 1} onChange={(e, page) => {
-            window.scrollTo(0, 0); setPagination({ ...pagination, pageNumber: page - 1 }); setAllow(true)
-          }
-          } />
+          <Pagination shape="rounded" count={Math.ceil(pagination.totalItems / pagination.perPage)} page={pagination.pageNumber + 1}
+            onChange={(e, page) => { window.scrollTo(0, 0); setPagination({ ...pagination, pageNumber: page - 1 }); setAllow(true) }} />
         </div>
       }
     </div>

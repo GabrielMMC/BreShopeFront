@@ -10,7 +10,7 @@ import GuestRoutes from "./GuestRoutes";
 import AddProduct from "./Product/AddProduct";
 import EditProduct from "./Product/EditProduct";
 import ListProducts from "./Product/ListProducts";
-import Address from "./User/Address";
+import Address from "../pages/Dashboard/Address";
 import Payment from "../pages/Dashboard/Payment";
 import Orders from "../pages/Dashboard/Order/Order";
 import Recipient from "./Breshop/Recipient";

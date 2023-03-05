@@ -1,10 +1,10 @@
 import * as React from "react";
-import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
-import { CircularProgress, IconButton } from "@mui/material";
+import Modal from "@mui/material/Modal";
+import Backdrop from "@mui/material/Backdrop";
 import CloseIcon from "@mui/icons-material/Close";
+import { CircularProgress, IconButton } from "@mui/material";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -24,6 +24,9 @@ const style = {
 };
 
 export default function MoreInfo(props) {
+  // -------------------------------------------------------------------
+  //********************************************************************
+  // -------------------------States------------------------------------
   const [open, setOpen] = React.useState(false);
   const [order, setOrder] = React.useState("");
 
@@ -31,14 +34,22 @@ export default function MoreInfo(props) {
   const handleClose = () => setOpen(false);
 
   React.useEffect(() => {
-    const getData = async () => {
-      const response = await GET_FETCH({ url: `list_orders/${props.id}`, token: props.token });
-      setOrder(response.order);
-    };
-
     if (open) getData();
-  }, [open]);
+  }, [open])
 
+
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Getting-data----------------------------
+  const getData = async () => {
+    const response = await GET_FETCH({ url: `list_orders/${props.id}`, token: props.token });
+    setOrder(response.order);
+  };
+
+
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Other-functions-------------------------
   const handleStatus = (status) => {
     switch (status) {
       case "pending":
@@ -56,16 +67,26 @@ export default function MoreInfo(props) {
       default:
         return null;
     }
-  };
+  }
 
   const handleMethod = (method) => {
     switch (method) {
       case "credit_card":
-        return "Crédito";
+        return "Crédito"
+
+      case "debit_card":
+        return "Débito"
+
+      case "boleto":
+        return "Boleto"
+
+      case "pix":
+        return "Pix"
+
       default:
         return method;
     }
-  };
+  }
 
   return (
     <div>
@@ -89,7 +110,7 @@ export default function MoreInfo(props) {
             <div className="d-flex">
               <div>
                 <span className="lead">Detalhes do Pedido</span>
-                <p className="text-muted">Saiba mais sobre o seu pedido!</p>
+                <p className="text-muted">Visualize detalhes sobre o pedido!</p>
               </div>
               <div className="ms-auto">
                 <IconButton onClick={handleClose}>
@@ -132,7 +153,7 @@ export default function MoreInfo(props) {
                 })}
 
                 {order.products.map((item, index) => (
-                  <div key={index} className={`col-11 py-3 m-auto rounded mt-3`} style={{ backgroundColor: "#DCDCDC" }}>
+                  <div key={index} className={`col-12 py-3 m-auto rounded mt-3`} style={{ backgroundColor: "#DCDCDC" }}>
                     <p className="lead">{item.product?.name}</p>
                     <div className="d-flex">
                       {item.images.map(img => (

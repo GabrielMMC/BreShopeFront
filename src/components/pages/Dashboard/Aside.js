@@ -21,10 +21,20 @@ const Aside = ({ collapsed }) => {
         </li>
         <li className='hvr-grow' onClick={() => history('/profile/payment')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Cartões</a></li>
+          <a className='small' style={{ color: 'black' }}>Cartões</a>
+        </li>
         <li className='hvr-grow' onClick={() => history('/profile/orders')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Pedidos</a></li>
+          <a className='small' style={{ color: 'black' }}>Pedidos</a>
+        </li>
+        <li className='hvr-grow' onClick={() => history('/profile/breshop')}>
+          <span />
+          <a className='small' style={{ color: 'black' }}>Minha loja</a>
+        </li>
+        <li className='hvr-grow' onClick={() => history('/profile/products')}>
+          <span />
+          <a className='small' style={{ color: 'black' }}>Meus produtos</a>
+        </li>
       </ul>
     </nav>
   );

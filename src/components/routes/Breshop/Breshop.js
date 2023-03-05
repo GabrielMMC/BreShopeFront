@@ -63,7 +63,7 @@ const Breshop = () => {
   }
 
   return (
-    <div className="content mt-5 m-auto">
+    <div className="mt-5 m-auto">
       {!loading ? <>
         <div className="row my-5">
           <Typography variant='h6'>Dados da sua Loja</Typography>

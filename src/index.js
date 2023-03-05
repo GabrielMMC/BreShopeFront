@@ -8,7 +8,8 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import reducers from './components/reducers';
 import ReduxThunk from 'redux-thunk';
-import 'bootstrap/dist/js/bootstrap'
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.js';
 
 const queryClient = new QueryClient();
 

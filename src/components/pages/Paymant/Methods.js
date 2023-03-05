@@ -1,17 +1,19 @@
 import React from 'react'
-import CardsModal from './CardsModal';
-import mastercard from '../../../assets/master.png'
+import CardPayment from './CardPayment'
+import MultiPayment from './MultiPayment'
 import visa from '../../../assets/visa.png'
-import pix from '../../../assets/qr-code.png';
-import boleto from '../../../assets/boleto.png';
-import credit_card from '../../../assets/discover.png';
-import debit_card from '../../../assets/debit_card.png';
-import CardPayment from './CardPayment';
-import MultiPayment from './MultiPayment';
-import { moneyMask } from '../../utilities/masks/currency';
-import Installments from '../../utilities/Installments';
+import pix from '../../../assets/qr-code.png'
+import boleto from '../../../assets/boleto.png'
+import mastercard from '../../../assets/master.png'
+import credit_card from '../../../assets/discover.png'
+import debit_card from '../../../assets/debit_card.png'
+import { getInterest } from '../../utilities/Installments'
 
-const Methods = ({ card, setCard, method, setMethod, total }) => {
+//Props coming from the PaymentScreen
+const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent, setInterest }) => {
+  // -------------------------------------------------------------------
+  //********************************************************************
+  // -------------------------States------------------------------------
   let cardPreset = {
     filled: { value: true },
     brand: { value: "visa", error: false },
@@ -32,8 +34,8 @@ const Methods = ({ card, setCard, method, setMethod, total }) => {
     cvv: { value: "", error: false, length: 3 },
     number: { value: "", error: false, mask: '', length: 16 },
     holder_document: { value: "", error: false, mask: '', length: 11 },
-    installments: { value: "", error: false, total: Installments(total / 2) },
-    amount: { value: (total / 2) * (16.37 / 100), error: false, mask: moneyMask((total / 2) * (1 + 16.37 / 100), true) },
+    installments: { value: "", error: false, total: [], interest: 0 },
+    amount: { value: '', error: false, mask: '' },
   },
   {
     filled: { value: true },
@@ -44,67 +46,67 @@ const Methods = ({ card, setCard, method, setMethod, total }) => {
     cvv: { value: "", error: false, length: 3 },
     number: { value: "", error: false, mask: '', length: 16 },
     holder_document: { value: "", error: false, mask: '', length: 11 },
-    installments: { value: "", error: false, total: Installments(total / 2) },
-    amount: { value: (total / 2) * (16.37 / 100), error: false, mask: moneyMask((total / 2) * (1 + 16.37 / 100), true) },
+    installments: { value: "", error: false, total: [], interest: 0 },
+    amount: { value: '', error: false, mask: '' },
   }]
 
   return (
     <>
-      <form className="d-flex justify-content-around mt-2">
+      <form className="payment-methods">
         {/* -------------------------Pix-Radio------------------------- */}
-        <div className="form-check pointer" onClick={() => setMethod('pix')}>
-          <div className="d-flex m-auto" style={{ width: 50, height: 50 }}>
-            <img src={pix} alt={'pix'} className="img-fluid ms-1" htmlFor={'pix'} onChange={() => ''} />
+        <div className="form-check pointer my-2" onClick={() => { setMethod('pix'); setCard(''); setInterest(getInterest("1", total)) }}>
+          <div className="d-flex payment-icons">
+            <img src={pix} alt={'pix'} className="img-fluid ms-1" htmlFor={'pix'} />
           </div>
           <label htmlFor={'pix'}>Pix</label>
-          <input className="ms-2" id={'pix'} type="radio" name="defaultRadio" checked={method === 'pix'} />
+          <input className="ms-2" id={'pix'} type="radio" name="defaultRadio" checked={method === 'pix'} onChange={() => ''} />
         </div>
 
         {/* -------------------------Debit-Radio------------------------- */}
-        <div className="form-check pointer" onClick={() => { setCard(cardPreset); setMethod('debit_card') }}>
-          <div className="d-flex m-auto" style={{ width: 50, height: 50 }}>
-            <img src={debit_card} alt={'debit_card'} className="img-fluid ms-1" htmlFor={'debit_card'} onChange={() => ''} />
+        <div className="form-check pointer my-2" onClick={() => { setCard(cardPreset); setMethod('debit_card') }}>
+          <div className="d-flex payment-icons">
+            <img src={debit_card} alt={'debit_card'} className="img-fluid ms-1" htmlFor={'debit_card'} />
           </div>
           <label htmlFor={'debit_card'}>Débito</label>
-          <input className="ms-2" id={'debit_card'} type="radio" name="defaultRadio" checked={method === 'debit_card'} />
+          <input className="ms-2" id={'debit_card'} type="radio" name="defaultRadio" checked={method === 'debit_card'} onChange={() => ''} />
         </div>
 
         {/* -------------------------Boleto-Radio------------------------- */}
-        <div className="form-check pointer" onClick={() => setMethod('boleto')}>
-          <div className="d-flex m-auto" style={{ width: 50, height: 50 }}>
-            <img src={boleto} alt={'boleto'} className="img-fluid ms-1" htmlFor={'boleto'} onChange={() => ''} />
+        <div className="form-check pointer my-2" onClick={() => { setMethod('boleto'); setCard(''); setInterest(getInterest("1", total)) }}>
+          <div className="d-flex payment-icons">
+            <img src={boleto} alt={'boleto'} className="img-fluid ms-1" htmlFor={'boleto'} />
           </div>
           <label htmlFor={'boleto'}>Boleto</label>
-          <input className="ms-2" id={'boleto'} type="radio" name="defaultRadio" checked={method === 'boleto'} />
+          <input className="ms-2" id={'boleto'} type="radio" name="defaultRadio" checked={method === 'boleto'} onChange={() => ''} />
         </div>
 
         {/* -------------------------Credit-Radio------------------------- */}
-        <div className="form-check pointer" onClick={() => { setCard({ ...cardPreset, installments: { value: 1, error: false } }); setMethod('credit_card') }}>
-          <div className="d-flex m-auto" style={{ width: 50, height: 50 }}>
-            <img src={credit_card} alt={'credit_card'} className="img-fluid ms-1" htmlFor={'credit_card'} onChange={() => ''} />
+        <div className="form-check pointer my-2" onClick={() => { setCard({ ...cardPreset, installments: { value: 1, error: false } }); setMethod('credit_card') }}>
+          <div className="d-flex payment-icons">
+            <img src={credit_card} alt={'credit_card'} className="img-fluid ms-1" htmlFor={'credit_card'} />
           </div>
           <label htmlFor={'credit_card'}>Crédito</label>
-          <input className="ms-2" id={'credit_card'} type="radio" name="defaultRadio" checked={method === 'credit_card'} />
+          <input className="ms-2" id={'credit_card'} type="radio" name="defaultRadio" checked={method === 'credit_card'} onChange={() => ''} />
         </div>
 
         {/* -------------------------Multi-Payment-Radio------------------------- */}
-        <div className="form-check pointer" onClick={() => { setCard(multiPreset); setMethod('multi_payment') }}>
+        <div className="form-check pointer my-2" onClick={() => { setCard(multiPreset); setMethod('multi_payment') }}>
           <div className="d-flex">
-            <div className="d-flex m-auto" style={{ width: 50, height: 50 }}>
-              <img src={visa} alt={'multi_payment'} className="img-fluid ms-1" htmlFor={'multi_payment'} onChange={() => ''} />
+            <div className="d-flex payment-icons">
+              <img src={visa} alt={'multi_payment'} className="img-fluid ms-1" htmlFor={'multi_payment'} />
             </div>
 
-            <div className="d-flex m-auto" style={{ width: 50, height: 50 }}>
-              <img src={mastercard} alt={'multi_payment'} className="img-fluid ms-1" htmlFor={'multi_payment'} onChange={() => ''} />
+            <div className="d-flex payment-icons">
+              <img src={mastercard} alt={'multi_payment'} className="img-fluid ms-1" htmlFor={'multi_payment'} />
             </div>
           </div>
           <label htmlFor={'multi_payment'}>Multi Pagamento</label>
-          <input className="ms-2" id={'multi_payment'} type="radio" name="defaultRadio" checked={method === 'multi_payment'} />
+          <input className="ms-2" id={'multi_payment'} type="radio" name="defaultRadio" checked={method === 'multi_payment'} onChange={() => ''} />
         </div>
       </form>
 
-      <MultiPayment method={method} card={card} setCard={setCard} />
-      <CardPayment method={method} card={card} setCard={setCard} total={total} />
+      <CardPayment method={method} card={card} setCard={setCard} total={total} setInterest={setInterest} />
+      <MultiPayment method={method} card={card} setCard={setCard} total={total} pendent={pendent} setPendent={setPendent} />
     </>
   )
 }

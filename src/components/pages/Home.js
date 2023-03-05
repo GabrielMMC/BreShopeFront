@@ -7,7 +7,7 @@ import Theme from '../routes/Theme/Theme';
 import Slider from "react-slick";
 import './Styles/style-card.css';
 import './Private/SideBar/styles/index.css';
-import './Private/SideBar/styles/bootstrap.css';
+// import './Private/SideBar/styles/bootstrap.css';
 import Footer from "./Footer";
 import { useSelector } from "react-redux";
 import { settings } from "../utilities/Settings";

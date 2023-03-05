@@ -15,4 +15,19 @@ const Installments = (total) => {
  ]
 }
 
+export const getInterest = (value, total) => {
+ if (value === "1") return (total * (4.49 / 100))
+ if (value === "2") return (total * (6.47 / 100))
+ if (value === "3") return (total * (7.46 / 100))
+ if (value === "4") return (total * (8.45 / 100))
+ if (value === "5") return (total * (9.44 / 100))
+ if (value === "6") return (total * (10.43 / 100))
+ if (value === "7") return (total * (11.42 / 100))
+ if (value === "8") return (total * (12.41 / 100))
+ if (value === "9") return (total * (13.40 / 100))
+ if (value === "10") return (total * (14.39 / 100))
+ if (value === "11") return (total * (15.38 / 100))
+ if (value === "12") return (total * (16.37 / 100))
+}
+
 export default Installments

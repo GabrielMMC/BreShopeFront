@@ -2,62 +2,77 @@ import React from 'react'
 import { Button, Typography, CircularProgress } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-// import { mudarUser } from 'components/actions/AppActions'
 import { GET_FETCH, POST_FETCH_FORMDATA, URL, STORAGE_URL, API_URL } from '../../../variables'
+import phoneMask, { splitNumber } from '../../utilities/masks/phone'
+import cpfMask from '../../utilities/masks/cpf'
+import { renderToast } from '../../utilities/Alerts'
 
 const Data = () => {
+  // -------------------------------------------------------------------
+  //********************************************************************
+  // -------------------------States------------------------------------
   const [loading, setLoading] = React.useState(true)
   const [loadingSave, setLoadingSave] = React.useState(false)
 
   const [name, setName] = React.useState('')
-  const [document, setDocument] = React.useState('')
-  const [documentDisabled, setDocumentDisabled] = React.useState(false)
-  const [birthDate, setBirthDate] = React.useState('')
-  const [gender, setGender] = React.useState('')
   const [file, setFile] = React.useState('')
+  const [gender, setGender] = React.useState('')
+  const [document, setDocument] = React.useState('')
+  const [birthDate, setBirthDate] = React.useState('')
+  const [errorDate, setErrorDate] = React.useState(false)
+  const [documentDisabled, setDocumentDisabled] = React.useState(false)
 
   const [email, setEmail] = React.useState('')
   const [number, setNumber] = React.useState('')
+
   const history = useNavigate()
   const dispatch = useDispatch()
   const token = useSelector(state => state.AppReducer.token)
 
-  React.useEffect(() => {
-    const getData = async () => {
-      const resp = await GET_FETCH({ url: `get_user_data`, token })
-      console.log('customer', resp)
-      setBirthDate(resp.customer.birthdate ? resp.customer?.birthdate.substring(0, 10) : ''); setGender(resp.customer?.gender); setFile({ url: `${STORAGE_URL}${resp.user?.file}` }); setDocumentDisabled(resp.customer.document ? true : false); setLoading(false)
-      setEmail(resp.customer?.email); setName(resp.customer?.name); handleCpfChange(resp.customer?.document); handlePhoneChange(`${resp.customer?.phones?.mobile_phone.area_code}${resp.customer?.phones?.mobile_phone.number}`)
-    }
 
+  React.useEffect(() => {
     getData()
-    console.log('token', token)
   }, [])
 
-  const handleFileChange = (file) => {
-    let fr = new FileReader()
-    fr.onload = (e) => {
-      setFile({ value: file, url: e.target.result })
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Getting-data----------------------------
+  const getData = async () => {
+    const resp = await GET_FETCH({ url: `customers`, token })
+
+    if (resp.status) {
+      //Merging DDD with phone number
+      const phone = `${resp.customer?.phones?.mobile_phone?.area_code}${resp.customer?.phones?.mobile_phone?.number}`
+      const birthdate = resp.customer?.birthdate
+
+      //Setting states with request data
+      setName(resp.customer?.name)
+      setEmail(resp.customer?.email)
+      setGender(resp.customer?.gender)
+      setFile({ url: resp.user.file ? `${STORAGE_URL}${resp.user.file}` : '' })
+      //Getting values and masks with mask functions
+      setBirthDate(birthdate && birthdate.substring(0, 10))
+      setDocumentDisabled(resp.customer.document ? true : false)
+      setNumber({ value: phoneMask(phone).value, mask: phoneMask(phone).mask })
+      setDocument(resp.customer.document ? { value: cpfMask(resp.customer?.document).value, mask: cpfMask(resp.customer?.document).mask } : { value: '', mask: '' })
+
+    } else {
+      //Error toast
+      renderToast({ type: 'error', msg: 'Erro ao buscar dados, tente novamente mais tarde!' })
     }
-    fr.readAsDataURL(file)
+
+    setLoading(false)
   }
 
-  const handleCpfChange = (value) => {
-    value = value.replace(/\D/g, '')
-    if (Array.from(value).length <= 11) { setDocument({ value, mask: value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, '$1.$2.$3-$4') }) }
-  }
-
-  const handlePhoneChange = (value) => {
-    value = value.replace(/\D/g, '')
-    if (Array.from(value).length <= 10) { setNumber({ value, mask: value.replace(/(\d{2})(\d{4})(\d{4})/g, '($1) $2 - $3') }) }
-    if (Array.from(value).length === 11) { setNumber({ value, mask: value.replace(/(\d{2})(\d{5})(\d{4})/g, '($1) $2 - $3') }) }
-  }
-
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Saving-data-----------------------------
   const handleSave = async (e) => {
     e.preventDefault(); setLoadingSave(true)
     let form = new FormData()
     const { area, numb } = splitNumber(number)
 
+    //Appending values for request
     form.append('name', name)
     form.append('document', document.value)
     form.append('gender', gender)
@@ -66,95 +81,124 @@ const Data = () => {
     form.append('number', numb)
     form.append('area_code', area)
     form.append('birthdate', birthDate)
-    const resp = await POST_FETCH_FORMDATA({ url: `${URL}api/update_customer`, body: form })
+    const resp = await POST_FETCH_FORMDATA({ url: `${API_URL}customers/update`, body: form, token })
 
-    console.log('res', resp.user)
-    if (resp) {
+    if (resp.status) {
+      //If the request status is true, an object with the new user's response will be set in local storage and redux storage
       localStorage.setItem("user", JSON.stringify(resp.user))
       dispatch({ type: "user", payload: (resp.user) });
       setLoadingSave(false)
+
+      //Toasts of status
+      renderToast({ type: 'success', msg: 'Informações atualizadas com sucesso!' })
+    } else {
+      renderToast({ type: 'error', msg: 'Erro ao atualizar os dados, tente novamente mais tarde!' })
     }
   }
 
-  const splitNumber = (value) => {
-    console.log('value', value)
-    const area = value.mask.match(/\([^)\d]*(\d+)[^)\d]*\)/g)[0].replace(/\D/g, '')
-    const numb = value.mask.substring(value.mask.indexOf(")") + 1).replace(/\D/g, '')
-
-    return { area, numb }
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Other-functions-------------------------
+  const handleFileChange = (file) => {
+    //Function to load an image with FileReader
+    let fr = new FileReader()
+    fr.onload = (e) => {
+      //When load, an image URL is generated
+      setFile({ value: file, url: e.target.result })
+    }
+    fr.readAsDataURL(file)
   }
 
   return (
     <>
+      {/* -------------------------Account-section------------------------- */}
       <Typography className="small" style={{ fontSize: "1.2em" }}>RESUMO DA CONTA</Typography>
       {!loading ? <form onSubmit={(e) => { handleSave(e) }}>
         <div className='row align-items-end'>
-          <div className='col-4'>
+          {/* -------------------------Name------------------------- */}
+          <div className='col-md-4 my-2'>
             <div className='form-floating'>
-              <input className='form-control' id='name' type='text' value={name} onChange={({ target }) => setName(target.value)} required />
+              <input className='form-control' id='name' type='text' value={name}
+                onChange={({ target }) => setName(target.value)} required />
               <label htmlFor='name'>Nome*</label>
             </div>
           </div>
-
-          <div className='col-4'>
+          {/* -------------------------Email------------------------- */}
+          <div className='col-md-4 my-2'>
             <div className='form-floating'>
-              <input className='form-control' id='email' type='email' value={email} onChange={({ target }) => setEmail(target.value)} required />
+              <input className='form-control' id='email' type='email' value={email}
+                onChange={({ target }) => setEmail(target.value)} required />
               <label htmlFor='email'>Email*</label>
             </div>
           </div>
-
-          <div className='col-4'>
+          {/* -------------------------Image------------------------- */}
+          <div className='col-md-4 my-2'>
             <div style={{ width: 100, height: 100, margin: 'auto' }}>
-
               <Button className='file-button' component="label">
                 {file?.url
-                  ? <img src={file.url} className='file-img' alt='profile' />
-                  : <p className='m-auto text-center'>Escolher Imagem</p>}
+                  ? <img src={file.url} className='file-img' />
+                  : <p className='m-auto text-center'>Sua foto aqui</p>}
                 <input hidden onChange={(e) => handleFileChange(e.target.files[0])} accept="image/*" multiple type="file" />
               </Button>
-
             </div>
           </div>
         </div>
-
-        <div className='col-12 mt-4'>
+        {/* -------------------------Document------------------------- */}
+        <div className='col-md-12 my-2 mt-4'>
           <div className='form-floating'>
-            <input className='form-control' id='doc' type='text' value={document?.mask} disabled={documentDisabled ? true : false} onChange={({ target }) => handleCpfChange(target.value)} required />
+            <input className='form-control' id='doc' type='text' value={document?.mask} disabled={documentDisabled ? true : false}
+              onChange={({ target }) => setDocument({ value: cpfMask(target.value).value, mask: cpfMask(target.value).mask })} required />
             <label htmlFor='doc'>CPF*</label>
           </div>
         </div>
-
+        {/* -------------------------Birthdate------------------------- */}
         <div className='row mt-4'>
-          <div className='col-4'>
+          <div className='col-md-4 my-2'>
             <div className='form-floating'>
-              <input className='form-control' id='birth' type='date' value={birthDate} onChange={({ target }) => setBirthDate(target.value)} required />
+              <input className='form-control' id='birth' type='date' value={birthDate}
+                onChange={({ target }) => {
+                  //Comparing the selected date with the current one along with its size
+                  //Ff it is greater or invalid, its value will be zeroed and the error appears to the user
+                  if (new Date(target.value) > new Date() || Array.from(target.value).length > 10) {
+                    setBirthDate('')
+                    setErrorDate(true)
+                  } else {
+                    setBirthDate(target.value)
+                    setErrorDate(false)
+                  }
+                }} required />
               <label htmlFor='birth'>Nascimento*</label>
+              {errorDate && <p className='small' style={{ color: '#FF0000' }}>Data maior que a atual!</p>}
             </div>
           </div>
-          <div className='col-4'>
+          {/* -------------------------Gender------------------------- */}
+          <div className='col-md-4 my-2'>
             <div className='form-floating'>
-              <select className='form-control' id='gender' type='text' value={gender} onChange={({ target }) => setGender(target.value)} required>
+              <select className='form-control' id='gender' type='text'
+                onChange={({ target }) => setGender(target.value)} required>
                 <option value='male'>Masculino</option>
                 <option value='female'>Feminino</option>
+                <option value='male'>Não identificar</option>
               </select>
               <label htmlFor='gender'>Sexo*</label>
             </div>
           </div>
-
-          <div className='col-4'>
+          {/* -------------------------Phone------------------------- */}
+          <div className='col-md-4 my-2'>
             <div className='form-floating'>
-              <input className='form-control' id='number' type='text' value={number?.mask} onChange={({ target }) => handlePhoneChange(target.value)} required />
+              <input className='form-control' id='number' type='text' value={number?.mask}
+                onChange={({ target }) => setNumber({ value: phoneMask(target.value).value, mask: phoneMask(target.value).mask })} required />
               <label htmlFor='number'>Telefone*</label>
             </div>
           </div>
         </div>
-
+        {/* -------------------------Buttons-section------------------------- */}
         <div className='d-flex mt-5'>
           <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: '1rem' }} className="normal-archor special" onClick={() => history('/')}>
             Voltar
           </button>
           <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: '1rem' }} className="normal-archor special ms-auto" type="submit">
-            {loadingSave ? <CircularProgress color='inherit' size={20} /> : 'Enviar'}
+            {loadingSave ? <CircularProgress color='inherit' size={20} /> : 'Salvar'}
           </button>
         </div>
       </form> : <div className="d-flex justify-content-center p-5"><CircularProgress color='inherit' /></div>}

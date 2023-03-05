@@ -1,7 +1,7 @@
-import { CircularProgress, Typography } from '@mui/material'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { GET_FETCH, URL } from '../../../variables'
+import { CircularProgress, Typography } from '@mui/material'
 
 const Confirm = (props) => {
   const [product, setProduct] = React.useState('')
