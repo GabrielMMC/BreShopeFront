@@ -41,7 +41,7 @@ const FormProduct = ({ form, setForm, token }) => {
     getData()
   }, [])
 
-  function changeFile(files) {
+  const handleChangeFile = (files) => {
     let form2 = { ...form }
 
     for (let i = 0; i < files.length; i++) {
@@ -52,6 +52,18 @@ const FormProduct = ({ form, setForm, token }) => {
       fr.readAsDataURL(files[i])
     }
     console.log('form2', form2)
+    setForm(form2)
+  }
+
+  const handleChangeThumb = (file) => {
+    let form2 = { ...form }
+
+    let fr = new FileReader()
+    fr.onload = (e) => {
+      form2.thumb = [...form2.thumb, { value: file, url: e.target.result }]
+    }
+    fr.readAsDataURL(file)
+
     setForm(form2)
   }
 
@@ -67,19 +79,20 @@ const FormProduct = ({ form, setForm, token }) => {
           <div className="row mb-4">
             <div className="col-md-6">
               <div style={{ height: 400, width: 400 }}>
-                <FileDrop onDrop={(files, event) => changeFile(files[0])}>
+                <FileDrop onDrop={(files, event) => handleChangeThumb(files[0])}>
                   <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
                     {!form.thumb.url &&
-                      <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha a capa do produto</Typography>}
+                      <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha a capa do produtooo</Typography>}
                     {form.thumb.url &&
                       <img style={{ width: '100%', height: '100%', borderRadius: 5 }} alt='product' src={form.thumb.url ? form.thumb.url : `${URL}storage/products/no_product.jpg`}></img>}
-                    <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
+                    <input hidden onChange={(e) => handleChangeThumb(e.target.files[0])} accept="image/*" multiple type="file" />
                   </Button>
                 </FileDrop>
               </div>
             </div>
 
-            <div className="col-md-6 rounded" style={{ border: '2px dashed #666' }}>
+            <div className="col-md-6 rounded">
+              
               <div className="d-flex flex-wrap">
                 {form.files.map(item => {
                   console.log('item', item)
@@ -95,7 +108,7 @@ const FormProduct = ({ form, setForm, token }) => {
             <div className="col-12 my-3">
               <Button fullWidth sx={{ backgroundColor: '#e8e8e8' }} component="label">
                 {<Typography variant='p' style={{ color: '#666666' }}>Escolha o restante das imagens</Typography>}
-                <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
+                <input hidden onChange={(e) => handleChangeFile(e.target.files)} accept="image/*" multiple type="file" />
               </Button>
               <Typography className='mt-2' variant='p'>Recomendamos o uso de imagens com 450p X 450px</Typography>
             </div>

@@ -78,8 +78,16 @@ h1, h2, h3, h4, h5, h6, p, span{
     height: 100% !important;
     border-radius: 50% !important;
     background-color: #E8E8E8 !important;
-    border: 2px dashed black !important;
+    border: 2px dashed #333 !important;
     padding: 0 !important;
+}
+
+.square-file-button{
+  color: #666666 !important;
+  height: 100% !important;
+  background-color: #E8E8E8 !important;
+  border: 2px dashed #333 !important;
+  padding: 0 !important;
 }
 
 .file-img{

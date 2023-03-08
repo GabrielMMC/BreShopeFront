@@ -1,7 +1,7 @@
 import { Button, CircularProgress, Divider, Fade, Rating, ThemeProvider, Typography } from '@mui/material'
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { POST_FETCH, URL } from '../../variables'
+import { API_URL, POST_FETCH, URL } from '../../variables'
 import Container from './Container'
 import { useSelector } from 'react-redux'
 import { MdClose } from 'react-icons/md'
@@ -67,6 +67,12 @@ const Product = () => {
     const newRatings = ratings.filter(item => item.rating === value)
     if (value) setRatingsFilter(newRatings)
     else setRatingsFilter(ratings)
+  }
+
+  const handleAddCart = async () => {
+    window.scrollTo(0, 0)
+    const response = await POST_FETCH({ url: `${API_URL}cart/create`, body: { product_id: state.product.id, quantity: 1 }, token })
+    console.log('resp', response)
   }
 
   return (
@@ -188,7 +194,7 @@ const Product = () => {
                 </div>
 
                 <div className="ms-auto">
-                  <Button variant='contained' className='mx-2'>Adicionar ao carrinho</Button>
+                  <Button variant='contained' className='mx-2' onClick={handleAddCart}>Adicionar ao carrinho</Button>
                   <Button variant='contained' onClick={() => history(`/paymant/${params.id}`)}>Comprar agora</Button>
                 </div>
               </div>

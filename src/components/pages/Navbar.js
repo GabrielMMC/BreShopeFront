@@ -10,16 +10,18 @@ import { FaBars } from 'react-icons/fa';
 import logo from '../../assets/logo.png';
 import { IconButton, Input } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { STORAGE_URL } from '../../variables';
+import { GET_FETCH, STORAGE_URL } from '../../variables';
+import Cart from './Cart';
 
 const Navbar = (props) => {
   const [menu, setMenu] = useState(false);
+  const [cart, setCart] = useState(false);
   const history = useNavigate()
   const dispatch = useDispatch();
   const user = useSelector(store => store.AppReducer.user);
 
+  const token = useSelector(state => state.AppReducer.token)
   const toggled = useSelector(store => store.AppReducer.toggled)
   const collapsed = useSelector(store => store.AppReducer.collapsed)
 
@@ -32,6 +34,14 @@ const Navbar = (props) => {
     // setToggled(value);
     dispatch(mudarDados({ toggled: value }));
   };
+
+  const handleToggleCart = async () => {
+    setCart(!cart)
+    if (cart) {
+      const response = await GET_FETCH({ url: 'cart', token })
+      console.log('resp cart', response)
+    }
+  }
 
   const toggle = useCallback(() => {
     setMenu(!menu)
@@ -70,7 +80,7 @@ const Navbar = (props) => {
 
       <div className="d-flex me-3">
         <IconButton><FavoriteIcon sx={{ color: 'white' }} /></IconButton>
-        <IconButton><ShoppingCartIcon sx={{ color: 'white' }} /></IconButton>
+        <Cart open={cart} handleToggleCart={handleToggleCart} />
       </div>
 
       <div className="me-3 bg-purple">

@@ -19,19 +19,19 @@ const Aside = ({ collapsed }) => {
         </li>
         <li className='hvr-grow' onClick={() => history('/profile/payment')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Cartões</a>
+          <p className='small' style={{ color: 'black' }}>Cartões</p>
         </li>
         <li className='hvr-grow' onClick={() => history('/profile/orders')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Pedidos</a>
+          <p className='small' style={{ color: 'black' }}>Pedidos</p>
         </li>
         <li className='hvr-grow' onClick={() => history('/profile/breshop')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Minha loja</a>
+          <p className='small' style={{ color: 'black' }}>Minha loja</p>
         </li>
         <li className='hvr-grow' onClick={() => history('/profile/products')}>
           <span />
-          <a className='small' style={{ color: 'black' }}>Meus produtos</a>
+          <p className='small' style={{ color: 'black' }}>Meus produtos</p>
         </li>
       </ul>
     </nav>

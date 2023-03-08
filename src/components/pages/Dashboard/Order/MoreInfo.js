@@ -13,6 +13,9 @@ import dateMask from "../../../utilities/masks/date";
 import { moneyMask } from "../../../utilities/masks/currency";
 // import './styles.css';
 
+// -------------------------------------------------------------------
+//********************************************************************
+// -------------------------Styles------------------------------------
 const style = {
   position: "absolute",
   left: "50%",

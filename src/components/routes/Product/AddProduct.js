@@ -1,7 +1,7 @@
 import { Button, IconButton, Typography } from '@mui/material';
 import React from 'react';
 import { FileDrop } from 'react-file-drop';
-import { GET_FETCH, URL } from '../../../variables';
+import { API_URL, GET_FETCH, POST_FETCH_FORMDATA, URL } from '../../../variables';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import MdClose, { MdClosedCaptionOff, MdOutlineClose } from 'react-icons/md'
@@ -14,6 +14,9 @@ import setError from '../../utilities/Error';
 import { moneyMask } from '../../utilities/masks/currency';
 
 const AddProduct = ({ edit }) => {
+  // -------------------------------------------------------------------
+  //********************************************************************
+  // -------------------------States------------------------------------
   const [size, setSize] = React.useState({
     pp: false,
     p: false,
@@ -24,41 +27,97 @@ const AddProduct = ({ edit }) => {
   })
 
   const [form, setForm] = React.useState({
-    filled: { value: true },
     name: { value: "", error: false },
-    size: { value: "", error: false },
     damage: { value: "", error: false },
     quantity: { value: "", error: false },
     description: { value: "", error: false },
     price: { value: "", mask: "", error: false },
     type: { value: "", error: false },
-    style: { value: "", error: false },
-    material: { value: "", error: false },
+    styles: { value: "", error: false, selected: [] },
+    materials: { value: "", error: false, selected: [] },
     thumb: { value: "", url: "" },
     files: [],
   })
 
+  const history = useNavigate();
+  const token = useSelector(state => state.AppReducer.token);
+
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Getting-data----------------------------
   React.useEffect(() => {
     const getData = async () => {
       const response = await GET_FETCH({ url: 'get_data', token })
-      setForm({ ...form, type: { fillOption: response.types }, style: { fillOption: response.types }, material: { fillOption: response.types } })
+      setForm({
+        ...form,
+        filled: { value: true },
+        type: { ...form.type, fillOption: response.types },
+        styles: { ...form.styles, fillOption: response.styles },
+        materials: { ...form.materials, fillOption: response.materials },
+      })
       console.log('resp', response)
     }
 
     getData()
   }, [])
 
-  function changeFile(files) {
-    let form2 = { ...form }
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Saving-data-----------------------------
+  const handleSave = async () => {
+    let formData = new FormData()
+    Object.keys({ ...form }).forEach(item => formData.append(item, form[item].value))
 
-    for (let i = 0; i < files.length; i++) {
+    form.files.forEach(item => {
+      formData.append('files[]', item.value)
+    })
+
+    Object.keys({ ...size }).forEach(item => {
+      formData.append('sizes[]', JSON.stringify({ [item]: size[item] }))
+    })
+
+    form.styles.selected.forEach(item => {
+      const name = form.styles.fillOption.filter(style => style.id === item)[0].name
+      formData.append('styles[]', item)
+    })
+
+    form.materials.selected.forEach(item => {
+      const name = form.materials.fillOption.filter(material => material.id === item)[0].name
+      formData.append('materials[]', item)
+    })
+
+    const response = await POST_FETCH_FORMDATA({ url: `${API_URL}store_product`, body: formData, token })
+    console.log('resp', response)
+  }
+
+  // -----------------------------------------------------------------
+  //******************************************************************
+  // -------------------------Other-functions-------------------------
+  function handleChangeFile(files) {
+    let form2 = { ...form }
+    form2.files = []
+
+    for (let i = 0; i < 4; i++) {
       let fr = new FileReader()
       fr.onload = (e) => {
         form2.files = [...form2.files, { value: files[i], url: e.target.result }]
       }
       fr.readAsDataURL(files[i])
     }
-    console.log('form2', form2)
+
+    setForm(form2)
+  }
+
+
+  const handleChangeThumb = (file) => {
+    let form2 = { ...form }
+
+    let fr = new FileReader()
+    fr.onload = (e) => {
+      form2.thumb = { ...form2.thumb, value: file, url: e.target.result }
+    }
+    fr.readAsDataURL(file)
+
     setForm(form2)
   }
 
@@ -66,53 +125,12 @@ const AddProduct = ({ edit }) => {
     setSize({ ...size, [item]: !size[item] })
     setForm({ ...form, size: { ...form.size, value: item, error: false } })
   }
-  const history = useNavigate();
-  const token = useSelector(state => state.AppReducer.token);
 
+  const handleArrayChange = (value, type) => {
+    let selected = form[type].selected
+    if (selected.filter(item => item === value).length === 0) selected = [...selected, value]
 
-  function handleSave() {
-    let data = new FormData()
-    // data.append('user_id', user.id)
-    // data.append('name', form.name.value)
-    // data.append('price', parseFloat(price))
-    // data.append('material', form.material.value)
-    // data.append('damage', form.damage.value)
-    // data.append('description', form.description.value)
-    // data.append('quantity', form.quantity.value)
-
-    // data.append('pp', size.pp)
-    // data.append('p', size.p)
-    // data.append('m', size.m)
-    // data.append('g', size.g)
-    // data.append('gg', size.gg)
-    // data.append('xg', size.xg)
-
-    Object.keys({ ...form }).forEach(item => data.append(item, form[item].value))
-    console.log('data', data)
-
-    form.files.forEach(item => {
-      data.append('files[]', item.value)
-    })
-
-    // let keys = Object.keys({ ...size })
-    // keys.forEach(item => {
-    //   data.append('sizes[]', JSON.stringify({ [item]: size[item] }))
-    // })
-
-    console.log('sizes', data.getAll('sizes[]'))
-
-    fetch(`${URL}api/store_product`, {
-      method: 'POST',
-      headers: {
-        // 'Content-Type': 'application-json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: (data),
-    }).then(async (response) => {
-      const resp = response.json()
-      console.log('resp', resp)
-      setForm({ ...form, loading_save: false })
-    })
+    setForm({ ...form, [type]: { ...form[type], value, selected, error: false } })
   }
 
   return (
@@ -121,24 +139,25 @@ const AddProduct = ({ edit }) => {
 
       {form.filled &&
         <>
+          {/* -------------------------Thumb-image------------------------- */}
           <div className="row mb-4">
             <div className="col-md-6">
               <div style={{ height: 400, width: 400 }}>
-                <FileDrop onDrop={(files, event) => changeFile(files[0])}>
+                <FileDrop onDrop={(files, event) => handleChangeThumb(files[0])}>
                   <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
                     {!form.thumb.url &&
                       <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha a capa do produto</Typography>}
                     {form.thumb.url &&
                       <img className='w-100 h-100 rounded' alt='product' src={form.thumb.url ? form.thumb.url : `${URL}storage/products/no_product.jpg`}></img>}
-                    <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
+                    <input hidden onChange={(e) => handleChangeThumb(e.target.files[0])} accept="image/*" multiple type="file" />
                   </Button>
                 </FileDrop>
               </div>
             </div>
-
+            {/* -------------------------Other-images------------------------- */}
             <div className="col-md-6 rounded">
               <div style={{ height: 400, width: 400 }}>
-                <FileDrop onDrop={(files, event) => changeFile(files)}>
+                <FileDrop onDrop={(files, event) => handleChangeFile(files)}>
                   <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
                     {form.files.length === 0 &&
                       <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha até quatro imagens</Typography>}
@@ -148,7 +167,7 @@ const AddProduct = ({ edit }) => {
                           return (
                             <div className='col-6'>
                               <div className="d-flex h-100">
-                                <img alt='file' src={item.url} className='h-100 w-100 rounded' />
+                                <img alt='file' src={item.url} className='img-fluid rounded' />
                                 <div className="p-absolute">
                                   <button className='close-absolute' onClick={() => console.log('teste')}><MdOutlineClose size={20} /></button>
                                 </div>
@@ -158,35 +177,22 @@ const AddProduct = ({ edit }) => {
                         })}
                       </div>
                     }
-                    <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
+                    <input hidden onChange={(e) => handleChangeFile(e.target.files)} accept="image/*" multiple type="file" />
                   </Button>
                 </FileDrop>
               </div>
-              {/* <div className="row h-100">
-                {form.files.map(item => {
-                  return (
-                    <div className='rounded col-6' style={{ backgorundColor: '#ECEAEE' }}>
-                      <img alt='file' src={item.url} className='h-100 w-100 rounded' />
-                    </div>
-
-                    
-                  )
-                })}
-
-                                      <img className='w-100 h-100 rounded' alt='product' src={form.thumb.url ? form.thumb.url : `${URL}storage/products/no_product.jpg`}></img>}
-                    <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
-              </div> */}
             </div>
-
+            {/* -------------------------Button-image------------------------- */}
             <div className="col-12 my-3">
               <Button fullWidth sx={{ backgroundColor: '#e8e8e8' }} component="label">
                 {<Typography variant='p' style={{ color: '#666666' }}>Escolha o restante das imagens</Typography>}
-                <input hidden onChange={(e) => changeFile(e.target.files)} accept="image/*" multiple type="file" />
+                <input hidden onChange={(e) => handleChangeFile(e.target.files)} accept="image/*" multiple type="file" />
               </Button>
               <Typography className='mt-2' variant='p'>Recomendamos o uso de imagens com 450p X 450px</Typography>
             </div>
           </div>
 
+          {/* -------------------------Types------------------------- */}
           <div className="row">
             <div className="col-sm-4">
               <div className="form-floating">
@@ -197,28 +203,60 @@ const AddProduct = ({ edit }) => {
                 <label htmlFor='type'>Tipo de roupa</label>
               </div>
             </div>
-
+            {/* -------------------------Styles------------------------- */}
             <div className="col-sm-4">
               <div className="form-floating">
-                <select id='style' className={`form-control ${form.style.error && 'is-invalid'}`} value={form.style.value}
-                  onChange={(e) => setForm({ ...form, style: { ...form.style, value: e.target.value, error: false } })}>
-                  {form.style.fillOption && form.style.fillOption.map(item => (<option key={item.id} value={item.id}>{item.name}</option>))}
+                <select id='style' className={`form-control ${form.styles.error && 'is-invalid'}`} value={form.styles.value}
+                  onChange={(e) => handleArrayChange(e.target.value, 'styles')}>
+                  {form.styles.fillOption && form.styles.fillOption.map(item => (<option key={item.id} value={item.id}>{item.name}</option>))}
                 </select>
                 <label htmlFor='style'>Estilo da roupa</label>
               </div>
             </div>
-
+            {/* -------------------------Materials------------------------- */}
             <div className="col-sm-4">
               <div className="form-floating">
-                <select id='material' className={`form-control ${form.material.error && 'is-invalid'}`} value={form.material.value}
-                  onChange={(e) => setForm({ ...form, material: { ...form.material, value: e.target.value, error: false } })}>
-                  {form.material.fillOption && form.material.fillOption.map(item => (<option key={item.id} value={item.id}>{item.name}</option>))}
+                <select id='material' className={`form-control ${form.materials.error && 'is-invalid'}`} value={form.materials.value}
+                  onChange={(e) => handleArrayChange(e.target.value, 'materials')}>
+                  {form.materials.fillOption && form.materials.fillOption.map(item => (<option key={item.id} value={item.id}>{item.name}</option>))}
                 </select>
                 <label htmlFor='material'>Material</label>
               </div>
             </div>
           </div>
-
+          {/* -------------------------Selected-styles------------------------- */}
+          {form.styles.selected.length > 0 &&
+            <div className="d-flex mt-3 align-items-center flex-wrap">
+              <Typography className='me-3'>Estilos selecionados: </Typography>
+              {form.styles.selected.map(item => {
+                const name = form.styles.fillOption.filter(style => style.id === item)[0].name
+                return (
+                  <div key={item} className="d-flex align-items-center bg-gray px-2 my-2 me-2 rounded" style={{ backgroundColor: '#f1f1f1' }}>
+                    <span className='small' key={item}>{name.toUpperCase()}</span>
+                    <IconButton color='error' onClick={() => setForm({ ...form, styles: { ...form.styles, selected: form.styles.selected.filter(style => style !== item) } })}>
+                      <MdOutlineClose size={20} />
+                    </IconButton>
+                  </div>
+                )
+              })}
+            </div>}
+          {/* -------------------------Selected-materials------------------------- */}
+          {form.materials.selected.length > 0 &&
+            <div className="d-flex mt-3 align-items-center flex-wrap">
+              <Typography className='me-3'>Materiais selecionados: </Typography>
+              {form.materials.selected.map(item => {
+                const name = form.materials.fillOption.filter(material => material.id === item)[0].name
+                return (
+                  <div key={item} className="d-flex align-items-center bg-gray px-2 me-2 rounded" style={{ backgroundColor: '#f1f1f1' }}>
+                    <span className='small' key={item}>{name.toUpperCase()}</span>
+                    <IconButton color='error' onClick={() => setForm({ ...form, materials: { ...form.materials, selected: form.materials.selected.filter(style => style !== item) } })}>
+                      <MdOutlineClose size={20} />
+                    </IconButton>
+                  </div>
+                )
+              })}
+            </div>}
+          {/* -------------------------Name------------------------- */}
           <div className="row my-3">
             <div className="col-sm-6">
               <div className="form-floating">
@@ -228,16 +266,16 @@ const AddProduct = ({ edit }) => {
                 <label htmlFor="name">Nome*</label>
               </div>
             </div>
-
+            {/* -------------------------Price------------------------- */}
             <div className="col-sm-4">
               <div className="form-floating">
                 <input className={`form-control ${form.price.error && 'is-invalid'}`} id="price" type="text" value={form.price.mask}
-                  onChange={({ target }) => setForm({ ...form, price: { ...form.price, value: target.value, mask: moneyMask(target.value), error: false } })}
+                  onChange={({ target }) => setForm({ ...form, price: { ...form.price, value: target.value.replace(/\D/g, ''), mask: moneyMask(target.value), error: false } })}
                   onBlur={() => setError('price', form, setForm)} required />
                 <label htmlFor="price">Preço*</label>
               </div>
             </div>
-
+            {/* -------------------------Quantity------------------------- */}
             <div className="col-sm-2">
               <div className="form-floating">
                 <input className={`form-control ${form.quantity.error && 'is-invalid'}`} id="quantity" type="number" value={form.quantity.value}
@@ -247,7 +285,7 @@ const AddProduct = ({ edit }) => {
               </div>
             </div>
           </div>
-
+          {/* -------------------------Description------------------------- */}
           <div className="row my-3">
             <div className="col-12">
               <div className="form-floating">
@@ -257,7 +295,7 @@ const AddProduct = ({ edit }) => {
                 <label htmlFor="description">Descrição*</label>
               </div>
             </div>
-
+            {/* -------------------------Sizes------------------------- */}
             {Object.keys({ ...size }).map((item, index) => (
               <div className="col-2 text-center rounded my-3" key={index}>
                 <Button fullWidth color={size[item] ? 'success' : 'error'} sx={{ backgroundColor: '#f1f1f1' }} endIcon={size[item] ? <CheckIcon /> : <CloseIcon />}
@@ -266,13 +304,13 @@ const AddProduct = ({ edit }) => {
                 </Button>
               </div>
             ))}
-
+            {/* -------------------------Damage-description-check------------------------- */}
             <div className="col-12 mt-3">
               <div className="form-check form-switch">
                 <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
                 <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Possui avaria</label>
               </div>
-
+              {/* -------------------------Damage-description------------------------- */}
               <div className="form-floating">
                 <textarea className={`form-control ${form.damage.error && 'is-invalid'}`} name="text" id="description" rows="10" value={form.damage.value}
                   onChange={({ target }) => setForm({ ...form, damage: { ...form.damage, value: target.value, error: false } })}
@@ -280,7 +318,7 @@ const AddProduct = ({ edit }) => {
                 <label htmlFor="description">Avaria*</label>
               </div>
             </div>
-
+            {/* -------------------------Buttons------------------------- */}
             <Button className='mt-5' onClick={handleSave}>Salvar</Button>
           </div>
         </>

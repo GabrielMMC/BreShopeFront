@@ -30,7 +30,12 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
       {!Array.isArray(card) && (method === 'debit_card' || method === 'credit_card') && (
         <div className='mt-5'>
           <div className="d-flex">
-            <CardsModal card={card} setCard={setCard} /><span className='ms-2'> ou </span><span className='link-p ms-2' onClick={handleOpenInput}>adicione um agora!</span>
+            {method === 'credit_card' &&
+              <>
+                <CardsModal card={card} setCard={setCard} /><span className='ms-2'> ou </span>
+                <span className='link-p ms-2' onClick={handleOpenInput}>adicione um agora!</span>
+              </>
+            }
           </div>
           {/* --------------------------Card-Fields-Section-------------------------- */}
           {card && !card.id &&

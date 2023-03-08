@@ -2,7 +2,7 @@ import React from 'react'
 import CardsModal from './CardsModal'
 import setError from '../../utilities/Error'
 import cpfMask from '../../utilities/masks/cpf'
-import { STORAGE_URL } from '../../../variables'
+import { STORAGE_URL, URL } from '../../../variables'
 import cardMask from '../../utilities/masks/card'
 import { moneyMask } from '../../utilities/masks/currency'
 import Installments, { getInterest } from '../../utilities/Installments'
@@ -147,7 +147,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                         onBlur={() => setError('number', card, setCard, indexCard)} required />
                       <label htmlFor="card">Cartão*</label>
                     </div>
-                    <div className='brand'><img src={`${STORAGE_URL}brands/${card[indexCard].brand.value ? card[indexCard].brand.value : 'nocard'}.png`} alt='brand'></img></div>
+                    <div className='brand'><img src={`${URL}/brands/${card[indexCard].brand.value ? card[indexCard].brand.value : 'nocard'}.png`} alt='brand'></img></div>
                   </div>
                 </div>
               </div>

@@ -50,6 +50,10 @@ export default function ChargeModal({ charge, method }) {
         <div style={{ width: 250, height: 250, margin: 'auto' }}>
          <img className='m-auto' src={charge.qr_code_url} alt='qr_code'></img>
         </div>}
+       {/* {method === 'boleto' &&
+        <div style={{ width: '100%', height: 500 }}>
+         <iframe className='m-auto' src={charge.pdf} alt='bill'></iframe>
+        </div>} */}
        {/* --------------------------Counter-------------------------- */}
        <Counter handleClose={handleClose} />
       </div>

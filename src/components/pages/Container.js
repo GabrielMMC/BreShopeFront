@@ -8,7 +8,7 @@ import { ToastContent } from '../utilities/Alerts'
 const Container = ({ children }) => {
   return (
     <ThemeProvider theme={Theme}>
-      <div className="bg-gray" style={{ overflowX: 'hidden', minHeight: '100vh' }}>
+      <div style={{ overflowX: 'hidden', minHeight: '100vh', backgroundColor: '#f4f4f4' }}>
         <Navbar />
         <div style={{ minHeight: 'calc(100vh - 459px)' }}>
           <div className="container my-5 m-auto" style={{ maxWidth: 1200 }}>

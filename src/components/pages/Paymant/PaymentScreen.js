@@ -7,12 +7,12 @@ import ChargeModal from './ChargeModal'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { MdClose, MdCheck } from 'react-icons/md'
-import { POST_FETCH, URL } from '../../../variables'
+import { API_URL, POST_FETCH, STORAGE_URL, URL } from '../../../variables'
 import { renderToast } from '../../utilities/Alerts'
 import { splitNumber } from '../../utilities/masks/phone'
 import { moneyMask } from '../../utilities/masks/currency'
 import { getInterest } from '../../utilities/Installments'
-import { Typography, CircularProgress } from '@mui/material'
+import { Typography, CircularProgress, Skeleton } from '@mui/material'
 import './styles.css';
 
 const PaymentScreen = () => {
@@ -23,6 +23,7 @@ const PaymentScreen = () => {
   const [pendent, setPendent] = React.useState('')
   const [interest, setInterest] = React.useState('')
   const [loadingSave, setLoadingSave] = React.useState(false)
+  const [loadingShipping, setLoadingShipping] = React.useState(true)
   const [shippingsTotal, setShippingsTotal] = React.useState([])
 
   //Each state will be filled in its section
@@ -32,44 +33,49 @@ const PaymentScreen = () => {
   const [address, setAddress] = React.useState('')
   const [charge, setCharge] = React.useState('')
 
+  const [cartItems, setCartItems] = React.useState('')
   const [errors, setErrors] = React.useState({ address: false, payment: false, user: false })
-  const [cartItems, setCartItems] = React.useState(useSelector(state => state.AppReducer.cart_items))
-  if (!cartItems) setCartItems([])
+
+  const token = useSelector(state => state.AppReducer.token)
+  // if (!cartItems) setCartItems([])
 
   const history = useNavigate()
-  const token = useSelector(state => state.AppReducer.token)
   // console.log('cart_items', cartItems)
 
   // -----------------------------------------------------------------
   //******************************************************************
   // -------------------------Getting-data----------------------------
   React.useEffect(() => {
-    let tt = 0
-    //Object to filter and group sales products
-    let shipping = {
-      temp: [],
-      result: []
-    }
-
-    cartItems.forEach(item => {
-      //Sum of price with discount and quantity
-      tt += ((item.price * (100 - item.discount_price)) * (item.quantity ? item.quantity : 1))
-
-      // Shipping.temp does not contain the promotion id, it is added and created an item object within shipping.result
-      if (!shipping.temp.includes(item.provider_sale_id)) {
-        //Adding delivery price to total
-        tt += Number(item.delivery_price.replace('.', ''))
-        shipping.temp.push(item.provider_sale_id)
-        shipping.result.push({ name: item.name, amount: item.delivery_price, id: item.product_id })
+    if (cartItems.length > 0) {
+      let tt = 0
+      //Object to filter and group sales products
+      let shipping = {
+        temp: [],
+        result: []
       }
-    })
-    //Setting states
-    setTotal(tt)
-    setInterest(getInterest("1", tt))
-    setShippingsTotal(shipping.result)
-    //Creating objects with total value in case the multipayment option is chosen
-    setPendent([{ value: tt, total: 0 }, { value: tt, total: 0 }])
-  }, [])
+
+      cartItems.forEach(item => {
+        //Sum of price with discount and quantity
+        // tt += ((item.price * (100 - item.discount_price)) * (item.quantity ? item.quantity : 1))
+        tt += ((item.price * item.quantity))
+
+        // Shipping.temp does not contain the promotion id, it is added and created an item object within shipping.result
+        // if (!shipping.temp.includes(item.provider_sale_id)) {
+        //   //Adding delivery price to total
+        //   tt += Number(item.delivery_price.replace('.', ''))
+        //   shipping.temp.push(item.provider_sale_id)
+        //   shipping.result.push({ description: item.sale.name, amount: item.delivery_price, id: item.product_id })
+        // }
+      })
+      //Setting states
+      setTotal(tt)
+      setInterest(getInterest("1", tt))
+      setShippingsTotal(shipping.result)
+      //Creating objects with total value in case the multipayment option is chosen
+      setPendent([{ value: tt, total: 0 }, { value: tt, total: 0 }])
+      setLoadingShipping(false)
+    }
+  }, [cartItems])
 
   // -----------------------------------------------------------------
   //******************************************************************
@@ -88,13 +94,12 @@ const PaymentScreen = () => {
 
     //validating the user section, case has empty or wrong values is returned true for error variable
     let errorUser = !verifyData(user, setUser, true)
-    Object.keys(user).forEach(item => { if (user[item].error && !user.id) errorUser = true })
+    Object.keys(user).forEach(item => { if (user[item].error && !user?.id) errorUser = true })
 
 
     //validating the multi payment section, case has empty or wrong values is returned true for error variable
     if (method === 'multi_payment') {
       if (Number(pendent[0].total) + Number(pendent[1].total) !== total) {
-        console.log('error', Number(pendent[0].total) + Number(pendent[1].total), total, pendent)
         errorPayment = true
         renderToast({ type: 'error', msg: 'Verifique o saldo utilizado no multi pagamento!' })
       }
@@ -129,7 +134,6 @@ const PaymentScreen = () => {
       //Spliting the area code from number
       const { area, numb } = splitNumber(user.phone)
       customer = { ...customer, area, number: numb }
-      // console.log('customer', customer)
 
       let payment = {}
       let shipping = {}
@@ -199,13 +203,21 @@ const PaymentScreen = () => {
 
       //Request with objects and methods created above
       const typePayment = method === 'multi_payment' ? 'multi_payment' : 'payment'
-      const response = await POST_FETCH({ url: `${URL}api/orders/create`, token, body: { items, shipping, customer, [typePayment]: payment } })
+      const response = await POST_FETCH({ url: `${API_URL}orders/create`, body: { items, shipping, customer, [typePayment]: payment }, token })
       // console.log('response', response)
 
       //If it work, will be opened the payment modal if the method was pix or bill
-      if (response.status) { setCharge(response.order.charges[0].last_transaction) }
-      // history('/profile/orders')
-      else renderToast({ type: 'error', msg: 'Erro ao gerar pedido, tente novamente mais tarde!' })
+      if (response.status) {
+        if (method === 'pix' || method === 'boleto') {
+          setCharge(response.order.charges[0].last_transaction)
+        }
+        else {
+          renderToast({ type: 'success', msg: 'Pedido gerado com sucesso!' });
+          history('/profile/orders')
+        }
+      }
+
+      else renderToast({ type: 'error', msg: response.message })
       setTimeout(setLoadingSave(false), 2000)
 
     } else {
@@ -283,151 +295,175 @@ const PaymentScreen = () => {
 
   return (
     <Container>
-      <div className="row box">
-        <div className="col-lg-9 col-12 p-4 divider">
-          <p className='display-6'>Dados do pagamento</p>
-          <hr />
+      <div className="box">
+        <div className="row">
 
-          {/* --------------------------Address-Section-------------------------- */}
-          <div className="accordion" id="accordionExample">
-            <div>
-              <h2 className="accordion-header" id="headingOne">
-                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                  <span>Endereço de entrega</span>
-                  {verifyData(address, false)
-                    ? <MdCheck size={20} color='#4BB543' />
-                    : <MdClose size={20} color='#FF0000' />}
-                  {errors.address && <span className='small ms-2' style={{ color: '#FF0000' }}>Verifique todos os campos!</span>}
-                </button>
-              </h2>
-              <div id="collapseOne" className='accordion-collapse collapse' aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                <div className="accordion-body">
-                  <Addresses address={address} setAddress={setAddress} />
+          <div className="col-lg-9 col-12 p-4 divider">
+            <p className='display-6'>Dados do pagamento</p>
+            <hr />
+
+            {/* --------------------------Address-Section-------------------------- */}
+            <div className="accordion" id="accordionExample">
+              <div>
+                <h2 className="accordion-header" id="headingOne">
+                  <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    <span>Endereço de entrega</span>
+                    {verifyData(address, false)
+                      ? <MdCheck size={20} color='#4BB543' />
+                      : <MdClose size={20} color='#FF0000' />}
+                    {errors.address && <span className='small ms-2' style={{ color: '#FF0000' }}>Verifique todos os campos!</span>}
+                  </button>
+                </h2>
+                <div id="collapseOne" className='accordion-collapse collapse' aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                  <div className="accordion-body">
+                    <Addresses address={address} setAddress={setAddress} />
+                  </div>
+                </div>
+                <hr />
+              </div>
+
+              {/* --------------------------Payment-Section-------------------------- */}
+              <div>
+                <h2 className="accordion-header" id="headingTwo">
+                  <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <span>Formas de pagamento</span>
+                    {(method === 'credit_card' || method === 'debit_card' || method === 'multi_payment') && (verifyData(card, false)
+                      ? <MdCheck size={20} color='#4BB543' />
+                      : <MdClose size={20} color='#FF0000' />
+                    )}
+                    {(method !== 'credit_card' && method !== 'debit_card' && method !== 'multi_payment') && (method !== ''
+                      ? <MdCheck size={20} color='#4BB543' />
+                      : <MdClose size={20} color='#FF0000' />
+                    )}
+                    {errors.payment && <span className='small ms-2' style={{ color: '#FF0000' }}>Verifique todos os campos!</span>}
+                  </button>
+                </h2>
+                <div id="collapseTwo" className='accordion-collapse collapsing' aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                  <div className="accordion-body">
+                    <Methods card={card} setCard={setCard} method={method} setMethod={setMethod} total={total} pendent={pendent} setPendent={setPendent} setInterest={setInterest} />
+                  </div>
                 </div>
               </div>
               <hr />
-            </div>
 
-            {/* --------------------------Payment-Section-------------------------- */}
-            <div>
-              <h2 className="accordion-header" id="headingTwo">
-                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  <span>Formas de pagamento</span>
-                  {(method === 'credit_card' || method === 'debit_card' || method === 'multi_payment') && (verifyData(card, false)
-                    ? <MdCheck size={20} color='#4BB543' />
-                    : <MdClose size={20} color='#FF0000' />
-                  )}
-                  {(method !== 'credit_card' && method !== 'debit_card' && method !== 'multi_payment') && (method !== ''
-                    ? <MdCheck size={20} color='#4BB543' />
-                    : <MdClose size={20} color='#FF0000' />
-                  )}
-                  {errors.payment && <span className='small ms-2' style={{ color: '#FF0000' }}>Verifique todos os campos!</span>}
-                </button>
-              </h2>
-              <div id="collapseTwo" className='accordion-collapse collapsing' aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div className="accordion-body">
-                  <Methods card={card} setCard={setCard} method={method} setMethod={setMethod} total={total} pendent={pendent} setPendent={setPendent} setInterest={setInterest} />
-                </div>
-              </div>
-            </div>
-            <hr />
-
-            {/* --------------------------Group-Section-------------------------- */}
-            <div>
-              <h2 className="accordion-header" id="headingThree">
-                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                  <span>Dados Gerais</span>
-                  {verifyData(user, false)
-                    ? <MdCheck size={20} color='#4BB543' />
-                    : <MdClose size={20} color='#FF0000' />}
-                  {errors.user && <span className='small ms-2' style={{ color: '#FF0000' }}>Verifique todos os campos!</span>}
-                </button>
-              </h2>
-              <div id="collapseThree" className='accordion-collapse collapse show' aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div className="accordion-body">
-                  <UserData user={user} setUser={setUser} />
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        {/* --------------------------Products-Section-------------------------- */}
-        <div className='d-flex align-content-between flex-wrap col-lg-3 p-4'>
-          <div className='w-100'>
-            <Typography>Produtos do carrinho</Typography>
-            {cartItems && cartItems.map(item => (
-              <div className='product' key={item.id}>
-                <div className="d-flex">
-                  <div className='rounded' style={{ width: '40%', height: '40%', maxWidth: 150 }}>
-                    <img src={JSON.parse(item.images)[0]} className='img-fluid' alt="product" />
+              {/* --------------------------Group-Section-------------------------- */}
+              <div>
+                <h2 className="accordion-header" id="headingThree">
+                  <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                    <span>Dados Gerais</span>
+                    {verifyData(user, false)
+                      ? <MdCheck size={20} color='#4BB543' />
+                      : <MdClose size={20} color='#FF0000' />}
+                    {errors.user && <span className='small ms-2' style={{ color: '#FF0000' }}>Verifique todos os campos!</span>}
+                  </button>
+                </h2>
+                <div id="collapseThree" className='accordion-collapse collapse show' aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                  <div className="accordion-body">
+                    <UserData user={user} setUser={setUser} setCart={setCartItems} />
                   </div>
-                  <span className='small m-auto'>{item.description}</span>
                 </div>
-
-                <div className='d-flex justify-content-around'>
-                  <span className='small'>{item.name}</span>
-                  <span className="small">{moneyMask(item.price * (100 - item.discount_price))} x {item.quantity}Un</span>
-                </div>
-
               </div>
-            ))}
+
+            </div>
           </div>
 
-          {/* --------------------------Shipping-Section-------------------------- */}
-          <div className='my-3'>
-            <div className="row">
-              <span className='col-12'>Entregas das promoções:</span>
-              <span className='small col-12'>{getAddress()}</span>
-            </div>
-            <div className="row">
-              {shippingsTotal.map(item => (
-                <span className='small col-12' key={item.id}>{item.name}: {moneyMask(item.amount)}</span>
-              ))}
+          {/* --------------------------Products-Section-------------------------- */}
+          <div className='d-flex align-content-between flex-wrap col-lg-3 p-4'>
+            <div className='w-100'>
+              <Typography>Produtos do carrinho</Typography>
+              {console.log('cart', cartItems)}
+              {!loadingShipping ?
+                cartItems.map(item => (
+                  <div className='product' key={item.id}>
+                    <div className="d-flex">
+                      <div className='rounded' style={{ width: '40%', height: '40%', maxWidth: 150 }}>
+                        <img src={`${STORAGE_URL + item.thumb}`} className='img-fluid' alt="product" />
+                      </div>
+                      <span className='small m-auto'>{item.description}</span>
+                    </div>
+
+                    <div className='d-flex justify-content-around'>
+                      <span className='small'>{item.name}</span>
+                      <span className="small">{moneyMask(item.price * (100 - item.discount_price))} x {item.quantity}Un</span>
+                    </div>
+
+                  </div>
+                ))
+                : <Skeleton className='product' variant="rectangular" height={100} />}
             </div>
 
-            {/* --------------------------Interest-Section-------------------------- */}
-            {card && Array.isArray(card) &&
-              <div className='row my-3'>
-                <span>Créditos: </span>
-                {card.map((item, index) => (
-                  <span className='small col-12' key={index}>{moneyMask(item.amount.value)} + {moneyMask(item.installments.interest)}</span>))}
-              </div>
-            }
-            {card && !Array.isArray(card) && <div className="row my-2">
-              <span>Créditos: </span>
-              <span className='small col-12'>{moneyMask(total)} + {moneyMask(interest)}</span>
-            </div>
-            }
+            {/* --------------------------Shipping-Section-------------------------- */}
+            <div className='m-1 row'>
+              {!loadingShipping ?
+                <>
+                  <div className="row">
+                    <span className='col-12'>Entregas das promoções:</span>
+                    <span className='small col-12'>{getAddress()}</span>
+                  </div>
+                  <div className="row">
+                    {shippingsTotal.map(item => (
+                      <span className='small col-12' key={item.id}>{item.description}: {moneyMask(item.amount)}</span>
+                    ))}
+                  </div>
+                </>
+                :
+                <div className="row">
+                  <Skeleton className='rounded' variant="rectangular" />
+                  <Skeleton className='rounded col-6 mt-2' variant="rectangular" height={20} />
+                </div>}
 
-            {/* --------------------------Total-Section-------------------------- */}
-            <div className="my-3">
-              <span>Produtos + frete: </span>
-              <p className='m-auto small'>{moneyMask(total)}</p>
-            </div>
-
-            <div className="my-2 lead" style={{ fontWeight: 'bold' }}>
-              {method !== 'credit_card' && method !== 'multi_payment'
-                ? <p className='m-auto'>Total: {moneyMask(total)}</p>
-                : <p className='m-auto'>Total: {moneyMask((Array.isArray(card) ? card[0].installments.interest + card[1].installments.interest + total : total + interest))}</p>
+              {/* --------------------------Interest-Section-------------------------- */}
+              {card && Array.isArray(card) &&
+                <div className='row my-3'>
+                  <span>Créditos: </span>
+                  {card.map((item, index) => (
+                    <span className='small col-12' key={index}>{moneyMask(item.amount.value)} + {moneyMask(item.installments.interest)}</span>))}
+                  <span className='small'>Em pendente: {moneyMask(total - (Number(card[0].amount.value) + Number(card[1].amount.value)))}</span>
+                </div>
               }
-            </div>
-            <hr />
+              {card && !Array.isArray(card) && <div className="row my-2">
+                <span>Créditos: </span>
+                <span className='small col-12'>{moneyMask(total)} + {moneyMask(interest)}</span>
+              </div>
+              }
 
-            {/* --------------------------Button-Section-------------------------- */}
-            <div className='ms-auto d-flex'>
-              <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", }} className="normal-archor special ms-auto" disabled={loadingSave} onClick={handleSave}>
-                {loadingSave ? <CircularProgress size={20} color='inherit' /> : 'Finalizar'}
-              </button>
+              {/* --------------------------Total-Section-------------------------- */}
+              {!loadingShipping ?
+                <>
+                  <div className="my-3">
+                    <span>Produtos + frete: </span>
+                    <p className='m-auto small'>{moneyMask(total)}</p>
+                  </div>
+
+                  <div className="my-2 lead" style={{ fontWeight: 'bold' }}>
+                    {method !== 'credit_card' && method !== 'multi_payment'
+                      ? <p className='m-auto'>Total: {moneyMask(total)}</p>
+                      : <p className='m-auto'>Total: {moneyMask((Array.isArray(card) ? card[0].installments.interest + card[1].installments.interest + total : total + interest))}</p>
+                    }
+                  </div>
+                </>
+                : <div className="row my-3">
+                  <Skeleton className='rounded' variant="rectangular" />
+                  <Skeleton className='rounded col-6 mt-2' variant="rectangular" height={20} />
+
+                  <Skeleton className='rounded mt-4' variant="rectangular" height={30} />
+                </div>}
+              <hr />
+
+              {/* --------------------------Button-Section-------------------------- */}
+              <div className='ms-auto d-flex'>
+                <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", minWidth: 137, minHeight: 60 }} className="normal-archor special ms-auto" disabled={loadingSave} onClick={handleSave}>
+                  {loadingSave ? <CircularProgress className='m-auto' size={20} color='inherit' /> : 'Finalizar'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {charge && <ChargeModal charge={charge} method={method} />}
+          {charge && <ChargeModal charge={charge} method={method} />}
+        </div>
       </div>
     </Container>
   )
-};
+}
 
-export default PaymentScreen;
+export default PaymentScreen

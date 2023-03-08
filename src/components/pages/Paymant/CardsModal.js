@@ -4,7 +4,7 @@ import Fade from '@mui/material/Fade'
 import Modal from '@mui/material/Modal'
 import { useSelector } from 'react-redux'
 import Backdrop from '@mui/material/Backdrop'
-import { GET_FETCH, STORAGE_URL } from '../../../variables'
+import { GET_FETCH, STORAGE_URL, URL } from '../../../variables'
 import CircularProgress from '@mui/material/CircularProgress'
 
 // --------------------------------------------------------------------
@@ -42,7 +42,7 @@ export default function CardsModal({ card, setCard, indexCard }) {
   //********************************************************************
   // -------------------------Getting-data------------------------------
   const getCards = async () => {
-    const response = await GET_FETCH({ url: 'list_cards', token });
+    const response = await GET_FETCH({ url: 'cards', token })
     if (response.status) setCards(response.cards.data)
   }
 
@@ -95,7 +95,7 @@ export default function CardsModal({ card, setCard, indexCard }) {
 
                       <div className="d-flex">
                         <div style={{ width: '75px', marginTop: 5 }}>
-                          <img className='img-fluid' src={`${STORAGE_URL}brands/${item.brand}.png`} alt='brand' />
+                          <img className='img-fluid' src={`${URL}/brands/${item.brand.toLowerCase()}.png`} alt='brand' />
                         </div>
                         <div className="ms-auto">
                           <input type='radio' name='card' checked={isChecked(item)} onChange={() => ''} />

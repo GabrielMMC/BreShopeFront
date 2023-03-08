@@ -10,6 +10,7 @@ import reducers from './components/reducers';
 import ReduxThunk from 'redux-thunk';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
+import './index.css';
 
 const queryClient = new QueryClient();
 
