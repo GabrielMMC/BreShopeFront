@@ -119,10 +119,11 @@ const PaymentScreen = () => {
       cartItems.forEach(item => {
         items = [...items, {
           "id": item.product_id,
+          "breshop_id": item.breshop_id,
           "description": item.description,
           "shipping_amount": item.delivery_price,
           "quantity": item.quantity ? item.quantity : 1,
-          "amount": item.price * (100 - item.discount_price),
+          "amount": Number(item.price),
         }]
       })
 

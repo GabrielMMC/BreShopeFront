@@ -114,6 +114,21 @@ export async function PATCH_FETCH_FORMDATA(props) {
   )
 }
 
+export async function PUT_FETCH_FORMDATA(props) {
+  return (fetch(`${URL}api/${props.url}`, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${props.token}`
+    },
+    body: props.body
+  }).then(async (response) => {
+    const resp = await response.json()
+    return resp
+  })
+  )
+}
+
 export async function PATCH_FETCH(props) {
   return (fetch(props.url, {
     method: 'POST',
