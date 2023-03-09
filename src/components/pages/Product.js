@@ -64,6 +64,7 @@ const Product = () => {
   }
 
   const handleFilterRating = (value) => {
+    console.log('ativou')
     const newRatings = ratings.filter(item => item.rating === value)
     if (value) setRatingsFilter(newRatings)
     else setRatingsFilter(ratings)

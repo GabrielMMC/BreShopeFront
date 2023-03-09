@@ -120,7 +120,7 @@ const Order = () => {
   return (
     <div className="row">
       {/* -------------------------search-and-filter------------------------- */}
-      <div className="col-md-4 col-12">
+      <div className="col-md-6 col-12">
         <div className="d-flex">
           <div>
             <div className='d-flex'>
