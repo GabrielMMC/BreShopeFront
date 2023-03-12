@@ -2,96 +2,144 @@ import React from "react";
 import Navbar from "./Navbar";
 import Card from './Card';
 import { ThemeProvider, Typography } from "@mui/material";
-import { URL } from '../../variables';
+import { GET_PUBLIC_FETCH, URL } from '../../variables';
 import Theme from '../routes/Theme/Theme';
 import Slider from "react-slick";
-import './Styles/style-card.css';
 import './Private/SideBar/styles/index.css';
-// import './Private/SideBar/styles/bootstrap.css';
 import Footer from "./Footer";
 import { useSelector } from "react-redux";
 import { settings } from "../utilities/Settings";
 import { FaTshirt } from "react-icons/fa";
+import { RiTShirt2Line } from "react-icons/ri";
+import { GiDress } from "react-icons/gi";
+import { GiGuitar } from "react-icons/gi";
+import { GiUnderwearShorts } from "react-icons/gi";
+import { IoIosGlasses } from "react-icons/io";
 import SaleCard from "./SaleCard";
+import art from '../../assets/art.png'
+import Accordion from "./Accordion/Accordion";
 
 const Home = () => {
   const [state, setState] = React.useState({
     pageNumber: 1,
     products: [],
   })
-  const categorys = [
-    { label: 'CASUAIS', type: 'casual' }, { label: 'ESPORTIVOS', type: 'sport' }, { label: 'VINTAGE', type: 'casual' },
-    { label: 'EVENTOS', type: 'casual' }, { label: 'LUXUOSOS', type: 'casual' }, { label: 'OLDSCHOOL', type: 'casual' }, { label: 'CASUAIS', type: 'casual' }, { label: 'ESPORTIVOS', type: 'sport' }, { label: 'VINTAGE', type: 'casual' },
-    { label: 'EVENTOS', type: 'casual' }, { label: 'LUXUOSOS', type: 'casual' }, { label: 'OLDSCHOOL', type: 'casual' }, { label: 'CASUAIS', type: 'casual' }, { label: 'ESPORTIVOS', type: 'sport' }, { label: 'VINTAGE', type: 'casual' },
-    { label: 'EVENTOS', type: 'casual' }, { label: 'LUXUOSOS', type: 'casual' }, { label: 'OLDSCHOOL', type: 'casual' }, { label: 'CASUAIS', type: 'casual' }, { label: 'ESPORTIVOS', type: 'sport' }, { label: 'VINTAGE', type: 'casual' },
-    { label: 'EVENTOS', type: 'casual' }, { label: 'LUXUOSOS', type: 'casual' }, { label: 'OLDSCHOOL', type: 'casual' }
-  ]
-  const token = useSelector(state => state.AppReducer.token)
-  console.log('token', token)
+  const [types, setTypes] = React.useState('')
+  const [styles, setStyles] = React.useState('')
+  const [products, setProducts] = React.useState('')
+  const [materials, setMaterials] = React.useState('')
+
+  const [type, setType] = React.useState('')
+  const [style, setStyle] = React.useState('')
+  const [price, setPrice] = React.useState('')
+  const [rating, setRating] = React.useState('')
+  const [material, setMaterial] = React.useState('')
 
   React.useEffect(() => {
-    fetch(`${URL}api/get_all_products?page=${state.pageNumber}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json'
-        // 'Content-Type': 'application/json'
-      }
-    }).then(async (response) => {
-      let resp = await response.json()
-      setState({ ...state, products: resp.products })
-      console.log('resp', resp)
-    })
+    getData()
   }, [])
+
+  const getData = async () => {
+    const response = await GET_PUBLIC_FETCH({ url: `${URL}api/get_all_products?page=${state.pageNumber}` })
+    if (response.status) {
+      setTypes(response.types)
+      setStyles(response.styles)
+      setProducts(response.products)
+      setMaterials(response.materials)
+    }
+    console.log('resp', response)
+  }
 
   return (
     <ThemeProvider theme={Theme}>
-      <div className="bg-gray" style={{ overflowX: 'hidden', minHeight: '100vh' }}>
-        <Navbar />
-        <div className="content-home mt-3" style={{ minHeight: '45vh' }}>
-          <Typography className="m-3" variant="h5" color="text.secondary">Produtos recomendados para você</Typography>
-          <Slider {...settings}>
-            {state.products && state.products.map(item => (
-              <Card product={item}></Card>
-            ))}
-          </Slider>
+      <Navbar />
+      <div style={{ background: 'linear-gradient(to bottom, #693B9F, #8C4EBE, #A57BD5)', minHeight: '40vh' }}>
+        <div className="row w-principal p-5 m-auto">
+          <div className='col-4' style={{ borderRadius: '56% 44% 66% 40% / 30% 33% 67% 70%', backgroundColor: '#FFF', height: 400 }}>
+            <img src={art} alt="woman-art" className='h-100 d-flex justify-content-center m-auto' />
+          </div>
+          <div className="col-8 text-center m-auto text-white">
+            <p className='main-title'>Conheça a nossa plataforma e começe a garimpar!</p>
+            <p className='subtitle'>A plataforma atualmente se encontra em ambiente de testes</p>
+            <p className='small'>Agradeço se reportar os bugs encontrados, de resto, <del>ta liberada a bagunça dedo no cu e gritaria</del></p>
+          </div>
         </div>
+      </div>
+      <div className='w-principal m-auto'>
+        {/* <div className="mt-3" style={{ minHeight: '45vh' }}>
+            <Typography className="m-3" variant="h5" color="text.secondary">Produtos recomendados para você</Typography>
+            <Slider {...settings}>
+              {state.products && state.products.map(item => (
+                <Card product={item}></Card>
+              ))}
+            </Slider>
+          </div> */}
 
-        <div className="content-purple">
-          <div className="row">
-            <div className="d-flex justify-content-center m-auto flex-wrap" style={{ maxWidth: 800 }}>
-              {categorys.map(item => (
-                <div className="d-flex justify-content-center align-items-center bg-white p-3 text-gray hvr-bounce-to-right" style={{ cursor: 'pointer', border: '1px solid #693B9F', width: 100 }}>
-                  <div>
-                    <div className="d-flex justify-content-center">
-                      <FaTshirt className="m-auto" size={30} />
-                    </div>
-                    <Typography className="m-auto" variant="caption">{item.label}</Typography>
-                  </div>
+        <div className="row my-5">
+          <h6 className="title mx-4">Produtos postados recentemente</h6>
+          <div className="col-md-2">
+            <Accordion styles={styles} setStyle={setStyle} types={types} setType={setType} materials={materials} setMaterial={setMaterial} />
+          </div>
+
+          <div className='col-md-10'>
+            <div className="d-flex flex-wrap justify-content-center pointer">
+              {products && products.map(item => (
+                <div key={item.id}>
+                  <Card sales={false} product={item} />
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="content-home" style={{ minHeight: '40vh' }}>
-          <Typography className="m-3" variant="h5" color="text.secondary">Produtos postados recentemente</Typography>
-          <div className="d-flex flex-wrap justify-content-center">
-            {state.products && state.products.map(item => (
-              <Card sales={false} product={item}></Card>
-            ))}
+        <div className="row justify-content-center my-5">
+          <h6 className="title mx-4">Categorias mais visitadas</h6>
+          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
+            <div className='category d-flex align-items-center m-auto'>
+              <FaTshirt size={70} className='m-auto' />
+            </div>
+            <p className='subtitle text-center'>Casual</p>
+          </div>
+
+          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
+            <div className='category d-flex align-items-center m-auto'>
+              <GiDress size={70} className='m-auto' />
+            </div>
+            <p className='subtitle text-center'>Luxuoso</p>
+          </div>
+
+          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
+            <div className='category d-flex align-items-center m-auto'>
+              <IoIosGlasses size={70} className='m-auto' />
+            </div>
+            <p className='subtitle text-center'>Urbano</p>
+          </div>
+
+          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
+            <div className='category d-flex align-items-center m-auto'>
+              <GiUnderwearShorts size={70} className='m-auto' />
+            </div>
+            <p className='subtitle text-center'>Surfe</p>
+          </div>
+
+          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
+            <div className='category d-flex align-items-center m-auto'>
+              <GiGuitar size={70} className='m-auto' />
+            </div>
+            <p className='subtitle text-center'>Rocker</p>
           </div>
         </div>
 
-        <div className="content-home" style={{ minHeight: '40vh' }}>
+        {/* <div style={{ minHeight: '40vh' }}>
           <Typography className="m-3" variant="h5" color="text.secondary">Ofertas Especiais</Typography>
           <div className="d-flex flex-wrap justify-content-center">
             {state.products && state.products.map(item => (
               <Card sales={true} product={item}></Card>
             ))}
           </div>
-        </div>
-        <Footer />
+        </div> */}
       </div>
+      <Footer />
     </ThemeProvider>
   );
 };

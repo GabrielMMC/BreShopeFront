@@ -1,8 +1,9 @@
 const INITIAL_STATE = {
     token: null,
     user: {},
+    cart_items: [],
     collapsed: false,
-    toggled: true,
+    toggled: false,
     currentPage: 1,
 };
 
@@ -37,6 +38,13 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 cart_items: action.payload,
+
+            };
+
+        case 'toggle_cart':
+            return {
+                ...state,
+                toggled: action.toggled,
 
             };
         default:

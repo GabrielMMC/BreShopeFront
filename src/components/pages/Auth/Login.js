@@ -15,7 +15,7 @@ class Login extends React.Component {
     this.state = {
       loading: false,
       msgErro: "",
-      email: "admin@admin.com",
+      email: "comprador@email.com",
       password: "123456",
       redirect: false,
       path: "",

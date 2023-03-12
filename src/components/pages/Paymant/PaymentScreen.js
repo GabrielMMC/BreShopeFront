@@ -99,9 +99,10 @@ const PaymentScreen = () => {
 
     //validating the multi payment section, case has empty or wrong values is returned true for error variable
     if (method === 'multi_payment') {
-      if (Number(pendent[0].total) + Number(pendent[1].total) !== total) {
+      if (Number(card[0].amount.value) + Number(card[1].amount.value) !== total) {
+        console.log('teste', total, Number(card[0].amount.value) + Number(card[1].amount.value))
         errorPayment = true
-        renderToast({ type: 'error', msg: 'Verifique o saldo utilizado no multi pagamento!' })
+        renderToast({ type: 'error', error: 'Verifique o saldo utilizado no multi pagamento!' })
       }
     }
 
@@ -213,12 +214,12 @@ const PaymentScreen = () => {
           setCharge(response.order.charges[0].last_transaction)
         }
         else {
-          renderToast({ type: 'success', msg: 'Pedido gerado com sucesso!' });
+          renderToast({ type: 'success', error: 'Pedido gerado com sucesso!' });
           history('/profile/orders')
         }
       }
 
-      else renderToast({ type: 'error', msg: response.message })
+      else renderToast({ type: 'error', error: response.message })
       setTimeout(setLoadingSave(false), 2000)
 
     } else {

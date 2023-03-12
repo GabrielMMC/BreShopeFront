@@ -11,6 +11,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { GET_FETCH, STORAGE_URL } from "../../../../variables";
 import dateMask from "../../../utilities/masks/date";
 import { moneyMask } from "../../../utilities/masks/currency";
+import characterLimitMask from "../../../utilities/masks/characterLimit";
 // import './styles.css';
 
 // -------------------------------------------------------------------
@@ -45,7 +46,7 @@ export default function MoreInfo(props) {
   //******************************************************************
   // -------------------------Getting-data----------------------------
   const getData = async () => {
-    const response = await GET_FETCH({ url: `list_orders/${props.id}`, token: props.token });
+    const response = await GET_FETCH({ url: `orders/${props.id}`, token: props.token });
     setOrder(response.order);
   };
 
@@ -128,7 +129,7 @@ export default function MoreInfo(props) {
                   const { style, status } = handleStatus(item.status)
                   return (
                     // <div key={index} className="row my-5 rounded" style={{ backgroundColor: "#DCDCDC" }}>
-                    <div key={index} className={`${order.charges.length > 1 ? 'col-5' : 'col-12'} py-3 m-auto rounded`} style={{ whiteSpace: 'nowrap', backgroundColor: "#DCDCDC" }}>
+                    <div key={index} className='col-12 py-3 my-3 m-auto rounded bg-gray' style={{ whiteSpace: 'nowrap' }}>
                       <div className="d-flex">
                         <p>Pago em: </p>
                         <p className="ms-2">{item.paid_at ? dateMask(item.paid_at) : '- / - / -'}</p>
@@ -156,19 +157,16 @@ export default function MoreInfo(props) {
                 })}
 
                 {order.products.map((item, index) => (
-                  <div key={index} className={`col-12 py-3 m-auto rounded mt-3`} style={{ backgroundColor: "#DCDCDC" }}>
-                    <p className="lead">{item.product?.name}</p>
+                  <div key={index} className='col-12 py-3 m-auto rounded mt-3 bg-gray'>
+                    <p className="lead">{characterLimitMask(item.product?.name, 40)}</p>
                     <div className="d-flex">
                       {item.images.map(img => (
-                        <>
-                          {img && <div key={img.path} style={{ width: 100, height: 100, marginRight: '1rem' }}>
-                            <img style={{ width: '100%', height: '100%', borderRadius: '.4rem' }} src={`${STORAGE_URL}/${img?.path}`} />
-                          </div>
-                          }
-                        </>
+                        <div key={img?.file} style={{ width: 100, height: 100, marginRight: '1rem' }}>
+                          <img className='w-100 h-100 rounded' src={`${STORAGE_URL + img?.file}`} />
+                        </div>
                       ))}
                     </div>
-                    <p className="small mt-1">{item.product?.description}</p>
+                    <p className="small mt-1">{characterLimitMask(item.product?.description, 180)}</p>
                     <span className="small">{moneyMask(10000)}</span>
                     <span className="text-center row" style={{ backgroundColor: '#FFF', height: '.1rem' }} />
                   </div>

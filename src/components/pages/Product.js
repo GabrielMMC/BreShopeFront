@@ -1,10 +1,12 @@
 import { Button, CircularProgress, Divider, Fade, Rating, ThemeProvider, Typography } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL, POST_FETCH, URL } from '../../variables'
 import Container from './Container'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { MdClose } from 'react-icons/md'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 
 const Product = () => {
   const [state, setState] = React.useState({
@@ -18,8 +20,10 @@ const Product = () => {
   })
   const [ratings, setRatings] = React.useState('')
   const [ratingsFilter, setRatingsFilter] = React.useState('')
+  const [loadingCart, setLoadingCart] = React.useState(false)
   const params = useParams()
   const history = useNavigate()
+  const dispatch = useDispatch()
   const token = useSelector(state => state.AppReducer.token)
   const user = useSelector(state => state.AppReducer.user)
 
@@ -71,14 +75,20 @@ const Product = () => {
   }
 
   const handleAddCart = async () => {
-    window.scrollTo(0, 0)
+    setLoadingCart(true)
     const response = await POST_FETCH({ url: `${API_URL}cart/create`, body: { product_id: state.product.id, quantity: 1 }, token })
+    if (response?.status) {
+      // window.scrollTo(0, 0)
+      // dispatch({ type: 'cart_items', payload: { cart_items: response.cart_products } })
+      dispatch({ type: 'toggle_cart', toggled: true })
+    }
+    setLoadingCart(false)
     console.log('resp', response)
   }
 
   return (
     <Container>
-      <div className="m-auto bg-white mt-5 p-sm-5 m-5 rounded" style={{ maxWidth: 1000 }}>
+      <div className="m-auto bg-white mt-5 p-sm-5 m-5 rounded" style={{ maxWidth: 1200 }}>
         {!state.loading ?
           <div>
             <div className="row mx-3">
@@ -195,8 +205,7 @@ const Product = () => {
                 </div>
 
                 <div className="ms-auto">
-                  <Button variant='contained' className='mx-2' onClick={handleAddCart}>Adicionar ao carrinho</Button>
-                  <Button variant='contained' onClick={() => history(`/paymant/${params.id}`)}>Comprar agora</Button>
+                  <LoadingButton variant='contained' className='mx-2' onClick={handleAddCart} endIcon={<ShoppingCartIcon />} loading={loadingCart} loadingPosition="end">Adicionar ao carrinho</LoadingButton>
                 </div>
               </div>
             </div>

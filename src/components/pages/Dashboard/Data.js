@@ -16,7 +16,11 @@ const Data = () => {
 
   const [name, setName] = React.useState('')
   const [file, setFile] = React.useState('')
-  const [gender, setGender] = React.useState('')
+
+  const [genders, setGenders] = React.useState('')
+  const [genderId, setGenderId] = React.useState('')
+  const [gender, setGender] = React.useState('male')
+
   const [document, setDocument] = React.useState('')
   const [birthDate, setBirthDate] = React.useState('')
   const [errorDate, setErrorDate] = React.useState(false)
@@ -48,7 +52,8 @@ const Data = () => {
       //Setting states with request data
       setName(resp.customer?.name)
       setEmail(resp.customer?.email)
-      setGender(resp.customer?.gender)
+      setGenderId(resp.user.gender_id)
+      setGenders(resp.genders)
       setFile({ url: resp.user.file ? `${STORAGE_URL}${resp.user.file}` : '' })
       //Getting values and masks with mask functions
       setBirthDate(birthdate && birthdate.substring(0, 10))
@@ -58,7 +63,7 @@ const Data = () => {
 
     } else {
       //Error toast
-      renderToast({ type: 'error', msg: 'Erro ao buscar dados, tente novamente mais tarde!' })
+      renderToast({ type: 'error', error: 'Erro ao buscar dados, tente novamente mais tarde!' })
     }
 
     setLoading(false)
@@ -81,6 +86,7 @@ const Data = () => {
     form.append('number', numb)
     form.append('area_code', area)
     form.append('birthdate', birthDate)
+    form.append('gender_id', genderId)
     const resp = await POST_FETCH_FORMDATA({ url: `${API_URL}customers/update`, body: form, token })
 
     if (resp.status) {
@@ -90,9 +96,9 @@ const Data = () => {
       setLoadingSave(false)
 
       //Toasts of status
-      renderToast({ type: 'success', msg: 'Informações atualizadas com sucesso!' })
+      renderToast({ type: 'success', error: 'Informações atualizadas com sucesso!' })
     } else {
-      renderToast({ type: 'error', msg: 'Erro ao atualizar os dados, tente novamente mais tarde!' })
+      renderToast({ type: 'error', error: 'Erro ao atualizar os dados, tente novamente mais tarde!' })
     }
   }
 
@@ -174,11 +180,15 @@ const Data = () => {
           {/* -------------------------Gender------------------------- */}
           <div className='col-md-4 my-2'>
             <div className='form-floating'>
-              <select className='form-control' id='gender' type='text'
-                onChange={({ target }) => setGender(target.value)} required>
-                <option value='male'>Masculino</option>
-                <option value='female'>Feminino</option>
-                <option value='male'>Não identificar</option>
+              <select className='form-control' id='gender' type='text' value={genderId}
+                onChange={({ target }) => {
+                  setGenderId(target.value)
+                  setGender(genders.filter(item => item.id === target.value)[0].key)
+                }} required>
+                {!genderId && <option>Escolha um gênero</option>}
+                {genders.map(item => (
+                  <option key={item.id} value={item.id}>{item.name}</option>
+                ))}
               </select>
               <label htmlFor='gender'>Sexo*</label>
             </div>

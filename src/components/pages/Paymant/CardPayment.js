@@ -62,7 +62,7 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
                         onBlur={() => setError('number', card, setCard)} required />
                       <label htmlFor="card">Cartão*</label>
                     </div>
-                    <div className='brand'><img src={`${STORAGE_URL}brands/${card.brand.value ? card.brand.value : 'nocard'}.png`} alt='brand'></img></div>
+                    <div className='brand'><img src={`${URL}brands/${card.brand.value ? card.brand.value : 'nocard'}.png`} alt='brand'></img></div>
                   </div>
                 </div>
               </div>

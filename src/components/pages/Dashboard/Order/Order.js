@@ -74,7 +74,7 @@ const Order = () => {
     }
     // With false status, the error toast is called
     else {
-      renderToast({ type: 'error', msg: 'Erro ao buscar pedidos, tente novamente mais tarde!' })
+      renderToast({ type: 'error', error: 'Erro ao buscar pedidos, tente novamente mais tarde!' })
     }
 
     setLoading(false)
@@ -166,7 +166,7 @@ const Order = () => {
                   <td><span className='row m-auto status' style={style}>{status}</span></td>
                   <td>{moneyMask(item.amount)}</td>
                   <td>{dateMask(item.created_at)}</td>
-                  <td><MoreInfo id={item.id} /></td>
+                  <td><MoreInfo id={item.id} token={token} /></td>
                 </tr>
               )
             }

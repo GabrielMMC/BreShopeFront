@@ -46,7 +46,7 @@ const Address = () => {
 
     //Setting the addresses and shipping addresses accordingly with data length
     if (resp.status) { setData(resp.addresses); setShippingAddress(() => resp.addresses.length === 0 ? false : true) }
-    else renderToast({ type: 'error', msg: 'Erro ao buscar endereços, tente novamente mais tarde!' })
+    else renderToast({ type: 'error', error: 'Erro ao buscar endereços, tente novamente mais tarde!' })
 
     setLoading(false);
   };
@@ -66,8 +66,8 @@ const Address = () => {
       })
 
       // Separating toasts according to the status of the request
-      if (response.status) renderToast({ type: 'success', msg: 'Endereço atualizado com sucesso!' })
-      else renderToast({ type: 'error', msg: 'Erro ao atualizar endereço, tente novamente mais tarde!' })
+      if (response.status) renderToast({ type: 'success', error: 'Endereço atualizado com sucesso!' })
+      else renderToast({ type: 'error', error: 'Erro ao atualizar endereço, tente novamente mais tarde!' })
 
       // if it does not have an id defined in the status it means that it is an address creation
     } else {
@@ -78,8 +78,8 @@ const Address = () => {
       })
 
       // Separating toasts according to the status of the request
-      if (response.status) renderToast({ type: 'success', msg: 'Endereço salvo com sucesso!' })
-      else renderToast({ type: 'error', msg: 'Erro ao salvar endereço, tente novamente mais tarde!' })
+      if (response.status) renderToast({ type: 'success', error: 'Endereço salvo com sucesso!' })
+      else renderToast({ type: 'error', error: 'Erro ao salvar endereço, tente novamente mais tarde!' })
     }
 
     // finally if there is no error, the function to get the data is called

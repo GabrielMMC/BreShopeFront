@@ -72,6 +72,7 @@ const AddProduct = ({ edit }) => {
       formData.append('files[]', item.value)
     })
 
+
     Object.keys({ ...size }).forEach(item => {
       formData.append('sizes[]', JSON.stringify({ [item]: size[item] }))
     })

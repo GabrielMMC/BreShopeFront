@@ -56,7 +56,7 @@ const Payment = () => {
 
       // If it returns false status, is generated the toast with error message
     } else {
-      renderToast({ type: 'error', msg: 'Erro ao buscar cartões, tente novamente mais tarde!' })
+      renderToast({ type: 'error', error: 'Erro ao buscar cartões, tente novamente mais tarde!' })
     }
 
     setLoading(false)
@@ -76,9 +76,9 @@ const Payment = () => {
     // If it returns true status, is generated the toast with successful message and data is obtained against
     if (response.status) {
       getData()
-      renderToast({ type: 'success', msg: 'Cartão salvo com sucesso!' })
+      renderToast({ type: 'success', error: 'Cartão salvo com sucesso!' })
     } else {
-      renderToast({ type: 'error', msg: 'Erro ao salvar cartão, certifique-se que é um cartão válido!' })
+      renderToast({ type: 'error', error: 'Erro ao salvar cartão, certifique-se que é um cartão válido!' })
     }
 
     setLoading(false)
@@ -89,7 +89,7 @@ const Payment = () => {
   // -------------------------Deleting-data---------------------------
   const handleDelete = async (id) => {
     setLoading(true); setAdd(false); clearFields()
-    const response = await DELETE_FETCH(`${API_URL}/cards/delete/${id}`)
+    const response = await DELETE_FETCH({ url: `cards/delete/${id}`, token })
 
     // If it returns true status, is generated the toast with successful message and data is obtained against
     if (response) getData()
