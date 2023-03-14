@@ -1,187 +1,141 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useSelector } from 'react-redux';
-import { Button, IconButton, Input, ThemeProvider, Pagination } from '@mui/material';
-import { URL } from '../../../variables';
-import Theme from '../Theme/Theme';
-import swal from 'sweetalert';
+import React from 'react'
+import Images from './Images'
+import { useSelector } from 'react-redux'
+import Filter from '../../utilities/Filter'
+import { useNavigate } from 'react-router-dom'
+import { DELETE_FETCH, GET_FETCH } from '../../../variables'
+import { renderAlert, renderToast } from '../../utilities/Alerts'
+import { moneyMask } from '../../utilities/masks/currency'
+import { MdEdit, MdDelete, MdSearch, MdSave } from 'react-icons/md'
+import { CircularProgress, IconButton, Pagination, Tooltip, TextField, InputAdornment, Button } from '@mui/material'
 
-const ListProducts = () => {
-  const [state, setState] = React.useState({
-    products: [],
-    pagination: { current_page: '', total_pages: '', per_page: '' },
-    pageNumber: 1,
-    loading: true,
-    reload: false,
-    search: '',
+function ListProducts() {
+  const [allow, setAllow] = React.useState(true)
+  const [search, setSearch] = React.useState('')
+  const [dateOf, setDateOf] = React.useState('')
+  const [dateFor, setDateFor] = React.useState('')
+  const [loading, setLoading] = React.useState(true)
+  const [products, setProducts] = React.useState(null)
+  const [pagination, setPagination] = React.useState({
+    totalItems: '', pageNumber: 0, perPage: 10
   })
-  const history = useNavigate();
-  const token = useSelector(state => state.AppReducer.token);
+
+  const history = useNavigate()
+  const token = useSelector(state => state.AppReducer.token)
+
+  let timeout
+  const handleSearch = (value) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => { setSearch(value); setPagination({ ...pagination, pageNumber: 0 }) }, 750)
+  }
 
   React.useEffect(() => {
-    fetch(`${URL}api/get_products?page=${state.pageNumber}&search=${state.search}`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Authorization': `Bearer ${token}`,
-        // 'Content-Type': 'application/json',
-      }
+    if (allow) getData()
+  }, [pagination.pageNumber, allow, search])
+
+  const getData = async () => {
+    setLoading(true)
+    const response = await GET_FETCH({
+      url: `products/?page=${pagination.pageNumber + 1}&dateOf=${dateOf ? dateOf : ''}&dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
     })
-      .then(async (response) => {
-        const resp = await response.json();
-        return resp;
-      })
-      .then((resp) => {
-        console.log('json', resp)
-        console.log('token', token)
-        setState({
-          ...state,
-          products: resp.products,
-          pagination: resp.pagination,
-          loading: false,
-          already: true,
-        })
-      });
+    // console.log('resp', response)
 
-  }, [state.pageNumber, state.search, state.reload]);
-
-
-  const debounce = (func, wait) => {
-    console.log('caiu debounce')
-
-    let timeout;
-
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  };
-
-  function search({ value }, time) {
-    let timer = setTimeout(() => {
-      console.log('ativou dentro')
-      setState({ ...state, search: value })
-    }, time)
-    clearTimeout(timer)
-    console.log('ativou')
+    setPagination({ ...pagination, totalItems: response.pagination.total_pages }); setProducts(response.products); setLoading(false);
   }
 
-  function renderAlert(id) {
-    return (
-      swal({
-        title: "Deletar produto selecionado?",
-        text: "Uma vez deletado, não dará para recuperá-lo!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then(async (willDelete) => {
-        if (willDelete) {
-          swal("Produto deletado com sucesso!", {
-            icon: "success",
-          });
-          Delete(id)
-          setState({ ...state, pageNumber: 0, reload: !state.reload })
-        }
-      })
-    )
+  const handleSize = (description) => {
+    let value = Array.from(description)
+    let tooltip = false
+    if (value.length > 40) { value = value.splice(0, 40).toString().replace(/,/g, '') + '...'; tooltip = true }
+    else { value = value.toString().replace(/,/g, ''); tooltip = false }
+
+    return { value, tooltip }
   }
 
-  function Delete(id) {
-    fetch(`${URL}api/product/delete/${id}`, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Authorization': `Bearer ${token}`,
-        // 'Content-Type': 'application/json',
-      }
-    });
-    // setState({...state, })
-  }
+  const handleDelete = async (id) => {
+    const response = await DELETE_FETCH({ url: `products/${id}`, token })
+    // console.log('delete', response)
 
-  function EditSubject(id) {
-    history('/profile/product/' + id);
-  }
-
-  // function ShowInfo(id) {
-  //   history('/home/subjects/subject/' + id);
-  // }
-
-  function pagination() {
-    const { total_pages, per_page } = state.pagination;
-    return (
-      <div className='d-flex justify-content-center mb-3'>
-        <Pagination color='primary' shape="rounded" count={Math.ceil(total_pages / per_page)} page={state.pageNumber} onChange={(e, page) => setState({ ...state, pageNumber: page })} />
-      </div>
-    )
+    if (response.status) getData()
+    else renderToast({ type: 'error', error: 'Falha ao deletar produto, tente novamente mais tarde!' })
   }
 
   return (
-    <ThemeProvider theme={Theme}>
-      <div className="card m-auto" style={{ maxWidth: 1000 }}>
-        <div className='card-body' style={{ minHeight: "75vh" }}>
-          <div className="d-flex m-3">
-            <div className="flex-column">
-              <h1 className='header-title'>Seus Produtos</h1>
-              <Input fullWidth placeholder='Buscar...' endAdornment={<SearchIcon />} onChange={debounce(() => {
-                console.log('ativou')
-              }, 500)}></Input>
-            </div>
-            <div className="align-self-end ms-auto">
-              <Button classes={{ contained: 'bg-primary-bm' }} variant="contained" size='large' endIcon={<AutoStoriesIcon />} onClick={() => history('/profile/product/add')}>Adicionar</Button>
-            </div>
+    <div className='anime-left'>
+      <div className="row mb-5">
+        <div className='col-sm-6'>
+          <div className="d-flex align-items-center">
+            <h6 className="dash-title">Produtos</h6>
+            <Filter setAllow={setAllow} pagination={pagination} setPagination={setPagination} setSearch={setSearch} />
           </div>
-          <table className="table table-striped table-hover text-center mt-5">
-            <thead className='text-center'>
-              <tr>
-                <th scope="col">Imagem</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Preço</th>
-                <th scope="col">Descrição</th>
-                <th scope="col">Avaria</th>
-                <th scope="col">Ações</th>
+          <p className='small mb-4'>Encontre todos seu produtos cadastrados!</p>
+
+          <div class="input-group-with-icon">
+            <input class="form-control" type="text" placeholder="Buscar..." onChange={({ target }) => handleSearch(target.value)} required />
+            <MdSearch className='search-icon' size={25} />
+          </div>
+        </div>
+
+        <div className="col-sm-6">
+          <div className="d-flex ms-auto align-items-end justify-content-end h-100">
+            <Button variant='contained' endIcon={<MdSave />} onClick={() => history('/profile/product/add')} size='large'>Adicionar produto</Button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ minHeight: '100vh' }}>
+        {!loading ?
+          <table className='table table-hover table-striped text-center'>
+            <thead>
+              <tr className='small' style={{ fontWeight: 500 }}>
+                <td>IMAGEM</td>
+                <td>NOME</td>
+                <td>DESCRIÇÃO</td>
+                <td>AVARIA</td>
+                <td>PREÇO</td>
+                <td>QUANTIDADE</td>
+                <td>AÇÕES</td>
               </tr>
             </thead>
-            {state.products && !state.loading && <tbody>
-              {state.products.map(item => (
-                <tr key={item.id}>
-                  <td><img className='m-auto' style={{ width: 75, height: 75, borderRadius: '50%' }} src={item.images ? `${URL}storage/${item.images[0].file}` : `${URL}storage/fotos/user_not_found.png`} alt="subject" /></td>
-                  <td>{item.name}</td>
-                  <td>{item.price}</td>
-                  <td>{item.description}</td>
-                  <td>{item.damage}</td>
-                  <td>
-                    <IconButton size='small'>
-                      <EditIcon color='secondary' size='large' onClick={() => EditSubject(item.id)} />
-                    </IconButton>
-
-                    {/* <IconButton size='small'>
-                      <VisibilityIcon color='success' onClick={() => ShowInfo(item.id)} />
-                    </IconButton> */}
-
-                    <IconButton size='small'>
-                      <DeleteIcon color='error' onClick={() => renderAlert(item.id)} />
-                    </IconButton>
-                  </td>
-                </tr>
-              )
-              )}
-            </tbody>}
-          </table>
-        </div>
-        {state.loading && <div className="row"> <div className="col-12 p-5 d-flex justify-content-center align-items-center"><div className="spinner-border text-primary" role="status"  ></div></div></div>}
-        {state.products && pagination()}
+            <tbody>
+              {products && products.map((item, index) => {
+                const description = handleSize(item.description)
+                const title = handleSize(item.name)
+                return (
+                  <tr key={index} className=''>
+                    <td><Images thumb={item.thumb} images={item.images} /></td>
+                    <td>{title.tooltip ? <Tooltip placement='top' arrow title={item.name}><p>{title.value}</p></Tooltip> : title.value}</td>
+                    <td>{description.tooltip ?
+                      <Tooltip placement='top' arrow title={item.description}>
+                        <p style={{ cursor: 'pointer' }}>{description.value}</p>
+                      </Tooltip> : description.value
+                    }
+                    </td>
+                    <td><input className="form-check-input" type="checkbox" checked={Boolean(item.damage)} readOnly /></td>
+                    <td style={{ whiteSpace: 'nowrap' }}>{moneyMask(item.price)}</td>
+                    <td>{item.quantity} Un</td>
+                    <td style={{ whiteSpace: 'nowrap' }}>
+                      <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>
+                      <IconButton color='error' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table> : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
       </div>
-    </ThemeProvider>
-  )
+
+      {pagination.totalItems &&
+        <div className='d-flex justify-content-end'>
+          <Pagination color='primary' shape="rounded" count={Math.ceil(pagination.totalItems / pagination.perPage)}
+            page={pagination.pageNumber + 1} onChange={(e, page) => {
+              window.scrollTo(0, 0); setPagination({ ...pagination, pageNumber: page - 1 }); setAllow(true)
+            }
+            } />
+        </div>
+      }
+    </div>
+  );
 }
 
-export default ListProducts
+export default ListProducts;

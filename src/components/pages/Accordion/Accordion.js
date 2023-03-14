@@ -15,9 +15,9 @@ const Accordion = (props) => {
  return (
   <nav className="accordion navbar">
    <ul className="navbar-nav">
-    <li className="nav-item">
+    <li className="nav-item pointer" onClick={() => toggleAccordion('styles')} >
      <div className="d-flex justify-content-between">
-      <h4 onClick={() => toggleAccordion('styles')} className={`${activeItems.includes('styles') && 'accordion-active'} nav-item-header`}>
+      <h4 className={`${activeItems.includes('styles') && 'accordion-active'} nav-item-header`}>
        Estilos
       </h4>
       <RiArrowDropDownLine size={35} className={activeItems.includes('styles') ? 'rotate-in' : 'rotate-out'} />
@@ -28,9 +28,9 @@ const Accordion = (props) => {
       ))}
      </ul>
     </li>
-    <li className="nav-item">
+    <li className="nav-item pointer" onClick={() => toggleAccordion('types')}>
      <div className="d-flex justify-content-between">
-      <h4 onClick={() => toggleAccordion('types')} className={`${activeItems.includes('types') && 'accordion-active'} nav-item-header`}>
+      <h4 className={`${activeItems.includes('types') && 'accordion-active'} nav-item-header`}>
        Tipos
       </h4>
       <RiArrowDropDownLine size={35} className={activeItems.includes('types') ? 'rotate-in' : 'rotate-out'} />
@@ -49,9 +49,9 @@ const Accordion = (props) => {
       <li><a href="#">Maior que R$ 100</a></li>
      </ul>
     </li> */}
-    <li className="nav-item">
+    <li className="nav-item pointer" onClick={() => toggleAccordion('materials')}>
      <div className="d-flex justify-content-between">
-      <h4 onClick={() => toggleAccordion('materials')} className={`${activeItems.includes('materials') && 'accordion-active'} nav-item-header`}>
+      <h4 className={`${activeItems.includes('materials') && 'accordion-active'} nav-item-header`}>
        Materiais
       </h4>
       <RiArrowDropDownLine size={35} className={activeItems.includes('materials') ? 'rotate-in' : 'rotate-out'} />

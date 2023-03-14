@@ -94,7 +94,7 @@ const Product = () => {
             <div className="row mx-3">
               <div className="col-md-6 col-12 m-auto my-2">
                 <div className="col-12" style={{ minHeight: 350 }}>
-                  <Fade in={state.changeImg}><img src={`${URL}storage/${state.imgSelected ? state.imgSelected.file : state.product.images[0].file}`} style={{ width: 400, height: 400, borderRadius: 10, transitionDuration: '0.5s' }} alt='product' /></Fade>
+                  <Fade in={state.changeImg}><img src={`${URL}storage/${state.imgSelected ? state.imgSelected.file : state.product.thumb}`} style={{ width: 400, height: 400, borderRadius: 10, transitionDuration: '0.5s' }} alt='product' /></Fade>
                 </div>
                 <div className="row">
                   {state.product && renderImages()}

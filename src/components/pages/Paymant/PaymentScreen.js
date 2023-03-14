@@ -4,14 +4,15 @@ import UserData from './UserData'
 import Addresses from './Addresses'
 import Container from '../Container'
 import ChargeModal from './ChargeModal'
+import { LoadingButton } from '@mui/lab'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { MdClose, MdCheck } from 'react-icons/md'
-import { API_URL, POST_FETCH, STORAGE_URL, URL } from '../../../variables'
 import { renderToast } from '../../utilities/Alerts'
 import { splitNumber } from '../../utilities/masks/phone'
 import { moneyMask } from '../../utilities/masks/currency'
 import { getInterest } from '../../utilities/Installments'
+import { API_URL, POST_FETCH, STORAGE_URL } from '../../../variables'
 import { Typography, CircularProgress, Skeleton } from '@mui/material'
 import './styles.css';
 
@@ -301,7 +302,7 @@ const PaymentScreen = () => {
         <div className="row">
 
           <div className="col-lg-9 col-12 p-4 divider">
-            <p className='display-6'>Dados do pagamento</p>
+            <p className='dash-title'>Dados do pagamento</p>
             <hr />
 
             {/* --------------------------Address-Section-------------------------- */}
@@ -453,10 +454,8 @@ const PaymentScreen = () => {
               <hr />
 
               {/* --------------------------Button-Section-------------------------- */}
-              <div className='ms-auto d-flex'>
-                <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", minWidth: 137, minHeight: 60 }} className="normal-archor special ms-auto" disabled={loadingSave} onClick={handleSave}>
-                  {loadingSave ? <CircularProgress className='m-auto' size={20} color='inherit' /> : 'Finalizar'}
-                </button>
+              <div className='d-flex justify-content-end'>
+                <LoadingButton variant='contained' loading={loadingSave} onClick={handleSave} loadingPosition="end" endIcon={<MdCheck />}>Finalizar</LoadingButton>
               </div>
             </div>
           </div>

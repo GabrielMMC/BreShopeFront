@@ -8,6 +8,7 @@ import { Button, Typography, IconButton, CircularProgress, } from "@mui/material
 import { DELETE_FETCH, GET_CEP, GET_FETCH, POST_FETCH, API_URL } from "../../../variables";
 import { useSelector } from "react-redux";
 import { renderAlert, renderToast } from "../../utilities/Alerts";
+import SavePreset from "../../routes/Form/SavePreset";
 
 const Address = () => {
   // -------------------------------------------------------------------
@@ -55,11 +56,11 @@ const Address = () => {
   //******************************************************************
   // -------------------------Saving-data-----------------------------
   const handleSave = async (e) => {
-    setLoading(true); setAdd(false); e.preventDefault()
+    setLoadingSave(true); e.preventDefault()
     let response = false
     // if it has an id set in the status it means that it is an address edition
     if (id) {
-      response = POST_FETCH({
+      response = await POST_FETCH({
         url: `${API_URL}addresses/update`, token, body: {
           state, city, street, number, id, zip_code: cep, neighborhood: nbhd, shipping_address: shippingAddress, complement
         }
@@ -71,7 +72,7 @@ const Address = () => {
 
       // if it does not have an id defined in the status it means that it is an address creation
     } else {
-      response = POST_FETCH({
+      response = await POST_FETCH({
         url: `${API_URL}addresses/create`, token, body: {
           state, city, street, number, id, zip_code: cep, neighborhood: nbhd, shipping_address: shippingAddress, complement
         }
@@ -83,7 +84,7 @@ const Address = () => {
     }
 
     // finally if there is no error, the function to get the data is called
-    if (response.status || !response.status) { setAdd(false); clearFields(); getData() }
+    if (response.status || !response.status) { setLoadingSave(false); setAdd(false); clearFields(); getData(); }
   };
 
   // -----------------------------------------------------------------
@@ -135,7 +136,7 @@ const Address = () => {
         <>
           {/* -------------------------Personal-address-section------------------------- */}
           <div className="row">
-            <Typography className="small" style={{ fontSize: "1.2em" }}>ENDEREÇO PESSOAL</Typography>
+            <h6 className="dash-title">Endereços</h6>
             {/* Counter of shipping addresses and personal addresses */}
             {data.length > 0 ? (data.map((item) => (
               <div key={item.id} className="col-md-12 my-2 d-flex mb-3 p-3 bg-gray rounded">
@@ -151,7 +152,7 @@ const Address = () => {
               </div>
             )
             )
-            ) : (<div><Typography>Sem endereços cadastrados</Typography></div>)}
+            ) : (<div><h6 className="dash-title">Sem endereços cadastrados</h6></div>)}
           </div>
         </>
       ) : (
@@ -160,27 +161,11 @@ const Address = () => {
       {/* -------------------------Address-fields------------------------- */}
       <div className="row">
         <div className="d-flex align-items-center mt-5">
-          <Typography className="small" style={{ fontSize: "1.2em" }}>ADICIONAR ENDEREÇO</Typography>
+          <h6 className="dash-title">Adicionar endereço</h6>
           <button onClick={handleAdd} className='rounded-button hvr-grow ms-2 d-flex align-items-center justify-content-center'>
             {add ? <DeleteIcon size={15} /> : <AddIcon size={20} />}
           </button>
         </div>
-        {/* -------------------------Radio-buttons-section------------------------- */}
-        {add &&
-          <div className='d-flex anime-left mt-3'>
-            <div className="form-check form-switch me-3">
-              <input className="form-check-input" type="checkbox" role="switch" id="switch1" value={shippingAddress.residencial}
-                checked={shippingAddress.residencial} onChange={() => setShippingAddress({ residencial: true, commercial: false })} />
-              <label className="form-check-label" htmlFor="switch1" >Endereço Residencial</label>
-            </div>
-
-            <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" role="switch" id="switch2" value={shippingAddress.commercial}
-                checked={shippingAddress.commercial} onChange={() => setShippingAddress({ residencial: false, commercial: true })} />
-              <label className="form-check-label" htmlFor="switch2" >Endereço comercial</label>
-            </div>
-          </div>
-        }
       </div>
 
       {add &&
@@ -251,14 +236,7 @@ const Address = () => {
             </div>
           </div>
           {/* -------------------------Buttons-section------------------------- */}
-          <div className="d-flex mt-5">
-            <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", }} className="normal-archor special" onClick={() => history("/profile")}>
-              Voltar
-            </button>
-            <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", }} className="normal-archor special ms-auto" type="submit" disabled={loadingSave}>
-              {loadingSave ? <CircularProgress size={20} color='inherit' /> : 'Salvar'}
-            </button>
-          </div>
+          <SavePreset backPath={'/profile'} handleSave={handleSave} loading={loadingSave} />
         </form>}
       {!add && <div className='anime-right mt-2'><Typography>Cadastre endereços para começar!</Typography></div>}
     </>

@@ -1,13 +1,14 @@
 const INITIAL_STATE = {
-    token: null,
     user: {},
     cart_items: [],
-    collapsed: false,
+    token: null,
+    breshop: null,
     toggled: false,
-    currentPage: 1,
+    collapsed: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
+    console.log('action redux', action)
     switch (action.type) {
         case 'dados':
 

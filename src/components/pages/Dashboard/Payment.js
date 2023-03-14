@@ -10,6 +10,7 @@ import cpfMask from '../../utilities/masks/cpf'
 import cardMask from '../../utilities/masks/card'
 import { renderAlert, renderToast } from '../../utilities/Alerts';
 import swal from "sweetalert";
+import SavePreset from '../../routes/Form/SavePreset';
 
 const Payment = () => {
   // -------------------------------------------------------------------
@@ -66,7 +67,7 @@ const Payment = () => {
   //******************************************************************
   // -------------------------Saving-data-----------------------------
   const handleSave = async () => {
-    setLoading(true); setAdd(false); clearFields()
+    setLoadingSave(true); clearFields()
     const response = await POST_FETCH({
       url: `${API_URL}/cards/create`, body: {
         cvv, exp_month: month, exp_year: year, holder_name: name, holder_document: document.value, number: card.value, brand: card.brand
@@ -81,7 +82,7 @@ const Payment = () => {
       renderToast({ type: 'error', error: 'Erro ao salvar cartão, certifique-se que é um cartão válido!' })
     }
 
-    setLoading(false)
+    setLoadingSave(false); setAdd(false)
   }
 
   // -----------------------------------------------------------------
@@ -123,7 +124,7 @@ const Payment = () => {
   return (
     // -------------------------Cards-Content-------------------------
     <div>
-      <Typography className="small" style={{ fontSize: "1.2em" }}>CARTÕES</Typography>
+      <h6 className="dash-title">Cartões</h6>
       {!loading ? <div className="d-flex flex-wrap">
         {data.length > 0
           ? data.map((item, index) => (
@@ -143,7 +144,7 @@ const Payment = () => {
 
               <div className="col-md-12 my-2">
                 <p>{item.holder_name}</p>
-                <p>{item.number}</p>
+                <p>**** **** **** {item.last_four_digits}</p>
                 <div className="d-flex" style={{ fontSize: '.8rem' }}>
                   <div className='d-flex'>
                     <p className='me-2'>Validade</p>
@@ -159,7 +160,7 @@ const Payment = () => {
       {/* -------------------------Card-fields-section------------------------- */}
       <div className="row my-5">
         <div className="d-flex align-items-center">
-          <Typography variant='h6'>Adicionar Cartão</Typography>
+          <h6 className="dash-title">Adicionar cartão</h6>
           <button onClick={handleAdd} className='rounded-button hvr-grow ms-2 d-flex align-items-center justify-content-center'>
             {add ? <DeleteIcon size={15} /> : <AddIcon size={20} />}
           </button>
@@ -232,14 +233,7 @@ const Payment = () => {
             </div>
 
             {/* -------------------------Buttons-section------------------------- */}
-            <div className="d-flex mt-5">
-              <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", }} className="normal-archor special" onClick={() => history("/profile")}>
-                Voltar
-              </button>
-              <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: "1rem", }} className="normal-archor special ms-auto" type="submit" disabled={loadingSave}>
-                {loadingSave ? <CircularProgress size={20} color='inherit' /> : 'Salvar'}
-              </button>
-            </div>
+            <SavePreset backPath={'/profile'} handleSave={handleSave} loading={loadingSave} />
           </form>
         }
         {!add && <div className='anime-right mt-2'><Typography>Cadastre cartões para começar!</Typography></div>}

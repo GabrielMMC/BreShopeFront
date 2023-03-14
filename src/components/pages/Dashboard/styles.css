@@ -100,7 +100,7 @@ h1, h2, h3, h4, h5, h6, p, span{
 /* --------------------------------------------------Animations-------------------------------------------------- */
 .rounded-button {
     border-radius: 50%;
-    background-color: #FFA235;
+    background-color: #F5C469;
     color: #fff;
     border: none;
     height: 2rem;
@@ -149,14 +149,14 @@ h1, h2, h3, h4, h5, h6, p, span{
 
   .focus {
     transition: all 5s !important;
-    border-bottom: 1px solid #FFA235 !important;
-    border-top: 1px solid #FFA235 !important;
-    border-right: 1px solid #FFA235 !important;
+    border-bottom: 1px solid #F5C469 !important;
+    border-top: 1px solid #F5C469 !important;
+    border-right: 1px solid #F5C469 !important;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
   }
   
   .form-control:focus {
-    border: 1px solid #FFA235 !important;
+    border: 1px solid #F5C469 !important;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px !important;
   }
 
@@ -184,7 +184,7 @@ h1, h2, h3, h4, h5, h6, p, span{
 
 .payment-card {
   border-radius: .6rem;
-  background-color: #FFA235;
+  background-color: #F5C469;
   /* background-color: #ff4c4c; */
   width: 400px;
   height: 200px;
@@ -226,8 +226,10 @@ h1 {
 }
 
 .user-dash li{
-  margin: .5rem 0 .5rem 0;
+  margin: 0 0 .5rem 0;
+  padding: 0 0 0 10px;
   display: flex;
+  align-items: center;
   width: 95%;
   background-color: #E8E8E8;
 } 
@@ -235,16 +237,26 @@ h1 {
 .user-dash li p{
   text-decoration: none;
   padding: 1rem 1rem 1rem .3rem;
+  margin: 0;
 }
 
 .user-dash li:hover{
-  background-color: #FFA235;
+  background-color: #F5C469;
+  font-weight: 500;
   transition: all .3s;
 }
 
-.user-dash li span{
-  background: #FFA235;
-  width: 5px;
-  height: auto;
+.user-dash li:before {
+  content: "";
   display: block;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-42%);
+  width: 5px;
+  height: 100%;
+  background-color: #F5C469;
+  z-index: -1;
+  /* margin-left: -3px; */
+  margin-top: -5px;
 }

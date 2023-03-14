@@ -7,6 +7,7 @@ import { moneyMask } from '../../../utilities/masks/currency';
 import dateMask from '../../../utilities/masks/date';
 import Filter from '../../../utilities/Filter';
 import { useSelector } from 'react-redux'
+import { MdSearch } from 'react-icons/md'
 import { renderToast } from '../../../utilities/Alerts';
 
 const Order = () => {
@@ -120,30 +121,24 @@ const Order = () => {
   return (
     <div className="row">
       {/* -------------------------search-and-filter------------------------- */}
-      <div className="col-md-6 col-12">
+      <div className="col-md-6 col-12 mb-5">
         <div className="d-flex">
           <div>
-            <div className='d-flex'>
-              <Typography className="small" style={{ fontSize: "1.2em" }}>PEDIDOS</Typography>
+            <div className='d-flex align-items-center'>
+              <h6 className="dash-title">Pedidos</h6>
               <Filter setDateOf={setDateOf} setDateFor={setDateFor} dateOf={dateOf} dateFor={dateFor} options={options} setOptions={setOptions}
                 setAllow={setAllow} setPagination={setPagination} setSearch={setSearch} />
             </div>
-            <span className="text-muted">Saiba mais sobre o seus pedidos!</span>
+            <p className='small mb-4'>Saiba mais sobre seus pedidos!</p>
           </div>
 
         </div>
-        <div className='input-group my-3'>
-          <div className='form-floating'>
-            <input className='form-control' id='product' type='text' onChange={({ target }) => handleSearch(target.value)} required />
-            <label htmlFor='product'>Buscar...</label>
-          </div>
-          <div className='d-flex align-items-center' style={{ backgroundColor: '#FFA235', width: '3rem', borderRadius: '0 .3rem .3rem 0' }}>
-            <SearchIcon sx={{ color: '#FFF', margin: 'auto' }} />
-          </div>
 
+        <div class="input-group-with-icon">
+          <input class="form-control" type="text" placeholder="Buscar..." onChange={({ target }) => handleSearch(target.value)} required />
+          <MdSearch className='search-icon' size={25} />
         </div>
       </div>
-      <hr />
       {/* -------------------------Orders-table------------------------- */}
       {!loading ?
         <table className='table table-striped table-hover lead'>
@@ -178,7 +173,7 @@ const Order = () => {
       {/* -------------------------Pagination------------------------- */}
       {pagination && pagination.totalItems &&
         <div className='d-flex justify-content-end'>
-          <Pagination shape="rounded" count={Math.ceil(pagination.totalItems / pagination.perPage)} page={pagination.pageNumber + 1}
+          <Pagination shape="rounded" color='primary' count={Math.ceil(pagination.totalItems / pagination.perPage)} page={pagination.pageNumber + 1}
             onChange={(e, page) => { window.scrollTo(0, 0); setPagination({ ...pagination, pageNumber: page - 1 }); setAllow(true) }} />
         </div>
       }

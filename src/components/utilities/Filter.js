@@ -9,7 +9,6 @@ const Filter = (props) => {
   const [open, setOpen] = React.useState(false)
 
   function renderOptions() {
-    console.log('opt', props)
     if (props.options) {
       const keys = Object.keys(props.options)
       return keys.map(item => (

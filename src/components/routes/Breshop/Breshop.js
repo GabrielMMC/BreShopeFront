@@ -10,6 +10,7 @@ import { Button, CircularProgress } from "@mui/material"
 import numberMask from "../../utilities/masks/clearString"
 import { GET_FETCH, POST_FETCH_FORMDATA, STORAGE_URL, URL } from "../../../variables"
 import { renderToast } from "../../utilities/Alerts"
+import SavePreset from "../Form/SavePreset"
 
 const Breshop = () => {
   const { form, setForm, errors, handleChange, handleBlur, setErrors, handleFileChange } = useForm({
@@ -172,15 +173,7 @@ const Breshop = () => {
           </div>
         </div>
 
-
-        <div className="d-flex m-2">
-          <div className="align-self-center">
-            <Button variant='contained' size='large' onClick={() => history('/profile')} startIcon={<ReplyAllIcon />}> Voltar</Button>
-          </div>
-          <div className="align-self-center ms-auto">
-            <LoadingButton variant='contained' size='large' loading={loadingSave} onClick={handleSave} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
-          </div>
-        </div>
+        <SavePreset backPath={'/profile'} handleSave={handleSave} loading={loadingSave} />
       </form>
         : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
     </>

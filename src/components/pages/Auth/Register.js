@@ -6,6 +6,8 @@ import Input from '../../routes/Form/Input'
 import Theme from '../../routes/Theme/Theme'
 import Navbar from '../Navbar'
 import Footer from '../Footer'
+import logo from '../../../assets/logo.png'
+import { MdSave, MdReply } from 'react-icons/md'
 
 const Register = () => {
   const [form, setForm] = React.useState({
@@ -40,18 +42,19 @@ const Register = () => {
 
   return (
     <ThemeProvider theme={Theme}>
-      <div className='d-flex vh-100 align-items-center' style={{ overflow: 'hidden', backgroundColor: '#f5f5f5' }}>
-        <div className="p-sm-5 p-3 rounded shadow m-auto bg-white" style={{ width: 500 }}>
-          <div style={{ height: '30%' }}>
-            <img src={`${URL}storage/banner.png`} className='img-fluid' alt="logo" />
+      <div className='row vh-100 align-items-center' style={{ overflow: 'hidden', backgroundColor: '#f5f5f5' }}>
+        <div className="p-sm-5 p-3 rounded shadow m-auto bg-white" style={{ maxWidth: 600 }}>
+          <div className='d-flex justify-content-center' style={{ height: '30%' }}>
+            <img src={logo} className='img-fluid' alt="logo" />
           </div>
           <div style={{ marginTop: loading ? 16 : 44 }}>
             {loading && <LinearProgress />}
             {error && <Alert variant="filled" severity="error">Ouve um erro, tente novamente mais tarde!</Alert>}
             {renderInput()}
           </div>
-          <div className="d-flex justify-content-end mt-5">
-            <Button variant='contained' size='large' onClick={() => save()}>Salvar</Button>
+          <div className="d-flex mt-5">
+            <Button variant='contained' startIcon={<MdReply />} onClick={() => history('/')}>Voltar</Button>
+            <Button variant='contained' endIcon={<MdSave />} onClick={() => save()} className='ms-auto'>Salvar</Button>
           </div>
         </div>
       </div>

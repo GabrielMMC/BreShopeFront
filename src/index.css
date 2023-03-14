@@ -18,6 +18,15 @@ code {
   cursor: pointer;
 }
 
+.bg-blur {
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.5);
+}
+
 .title {
   position: relative;
   font-size: 36px;
@@ -71,8 +80,6 @@ code {
   font-size: 25px;
   font-weight: normal;
   color: #333;
-  margin-top: 10px;
-  margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -264,3 +271,35 @@ code {
   background-color: #F5C469;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
+
+.input-group-with-icon {
+  position: relative; 
+  display: flex;
+  align-items: center;
+}
+
+.input-group-with-icon input[type="text"] {
+  padding-right: 40px; /* ajusta o espaço do input para que o ícone tenha espaço */
+  height: 45px;
+}
+
+.input-group-with-icon .search-icon {
+  position: absolute; /* posiciona o ícone dentro do input */
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  z-index: 1; /* coloca o ícone acima do input */
+  cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+  /* Adiciona regras de estilo para dispositivos móveis */
+  .input-group-with-icon input[type="text"] {
+    padding-right: 30px;
+  }
+
+  .input-group-with-icon .search-icon {
+    right: 8px;
+  }
+}
+

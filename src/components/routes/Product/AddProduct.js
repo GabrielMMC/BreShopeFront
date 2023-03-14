@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import setError from '../../utilities/Error';
 import { moneyMask } from '../../utilities/masks/currency';
+import SavePreset from '../Form/SavePreset';
+import { CircularProgress } from '@mui/material'
 
 const AddProduct = ({ edit }) => {
   // -------------------------------------------------------------------
@@ -40,6 +42,8 @@ const AddProduct = ({ edit }) => {
   })
 
   const history = useNavigate();
+  const [loading, setLoading] = React.useState(true)
+  const [loadingSave, setLoadingSave] = React.useState(false)
   const token = useSelector(state => state.AppReducer.token);
 
   // -----------------------------------------------------------------
@@ -56,6 +60,7 @@ const AddProduct = ({ edit }) => {
         materials: { ...form.materials, fillOption: response.materials },
       })
       console.log('resp', response)
+      setLoading(false)
     }
 
     getData()
@@ -65,6 +70,7 @@ const AddProduct = ({ edit }) => {
   //******************************************************************
   // -------------------------Saving-data-----------------------------
   const handleSave = async () => {
+    setLoadingSave(true)
     let formData = new FormData()
     Object.keys({ ...form }).forEach(item => formData.append(item, form[item].value))
 
@@ -88,7 +94,8 @@ const AddProduct = ({ edit }) => {
     })
 
     const response = await POST_FETCH_FORMDATA({ url: `${API_URL}store_product`, body: formData, token })
-    console.log('resp', response)
+    // console.log('resp', response)
+    setLoadingSave(false)
   }
 
   // -----------------------------------------------------------------
@@ -138,7 +145,7 @@ const AddProduct = ({ edit }) => {
     <div className="row mt-3">
       <Typography variant='h5'>CADASTRO DE PRODUTO</Typography>
 
-      {form.filled &&
+      {!loading ?
         <>
           {/* -------------------------Thumb-image------------------------- */}
           <div className="row mb-4">
@@ -320,10 +327,10 @@ const AddProduct = ({ edit }) => {
               </div>
             </div>
             {/* -------------------------Buttons------------------------- */}
-            <Button className='mt-5' onClick={handleSave}>Salvar</Button>
+            <SavePreset backPath={'/profile'} handleSave={handleSave} loading={loadingSave} />
           </div>
         </>
-      }
+        : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
     </div >
   )
 }

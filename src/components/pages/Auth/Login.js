@@ -1,7 +1,7 @@
 import React from "react";
 import { URL } from "../../../variables";
 import { connect } from "react-redux";
-import { login } from "../../../components/actions/AppActions";
+import { login, mudarDados } from "../../../components/actions/AppActions";
 import { Box, Button, TextField, ThemeProvider, Typography } from "@mui/material";
 import Theme from '../../routes/Theme/Theme';
 
@@ -63,12 +63,14 @@ class Login extends React.Component {
             });
           } else {
             // login sucesso
-            console.log("sucesso");
             this.setState({ loading_save: false });
 
             localStorage.setItem("token", resp.access_token);
             localStorage.setItem("user", JSON.stringify(resp.user));
+            localStorage.setItem("breshop", JSON.stringify(resp.user.breshop));
+
             this.props.login({ token: resp.access_token, user: resp.user });
+            this.props.mudarDados({ breshop: resp.user.breshop });
           }
         } catch (err) {
           console.log(err);
@@ -281,4 +283,4 @@ const mapsStateToProps = (state) => ({
   token: state.AppReducer.token,
 });
 
-export default connect(mapsStateToProps, { login })(Login);
+export default connect(mapsStateToProps, { login, mudarDados })(Login);

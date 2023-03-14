@@ -40,6 +40,7 @@ const RoutesContainer = () => {
   let token = localStorage.getItem("token");
   let user = localStorage.getItem("user");
   let cartItems = localStorage.getItem("cart_items");
+  let breshop = localStorage.getItem("breshop");
 
   user = JSON.parse(user);
   if (user == null || user === undefined) {
@@ -48,6 +49,7 @@ const RoutesContainer = () => {
 
   dispatch({ type: "login", payload: { token: token, user: user } });
   dispatch({ type: "cart_items", payload: cartItems ? JSON.parse(cartItems) : '' });
+  dispatch({ type: "dados", payload: breshop ? { breshop: JSON.parse(breshop) } : null });
 
   return (
     <Routes>

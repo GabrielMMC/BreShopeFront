@@ -9,12 +9,12 @@ const SavePreset = (props) => {
   const history = useNavigate()
 
   return (
-    <div className="d-flex m-2">
+    <div className="d-flex my-5">
       <div className="align-self-center">
-        <Button variant='contained' size='large' onClick={() => history('/home/products')} startIcon={<ReplyAllIcon />}> Voltar</Button>
+        <Button variant='contained' onClick={() => history(props.backPath)} startIcon={<ReplyAllIcon />}> Voltar</Button>
       </div>
       <div className="align-self-center ms-auto">
-        <LoadingButton variant='contained' size='large' loading={props.loading} onClick={() => props.edit ? props.save('update') : props.save('add')} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
+        <LoadingButton variant='contained' loading={props.loading} onClick={props.handleSave} loadingPosition="end" endIcon={<SaveIcon />}>Salvar</LoadingButton>
       </div>
     </div>
   )

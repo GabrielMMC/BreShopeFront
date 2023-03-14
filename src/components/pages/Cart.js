@@ -44,7 +44,7 @@ const Cart = () => {
   const notify = useSelector(state => state.AppReducer?.cart_items?.cart_items?.length)
 
   React.useEffect(() => {
-    getData()
+    if (token) getData()
   }, [toggled])
 
   const getData = async () => {

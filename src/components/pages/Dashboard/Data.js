@@ -6,6 +6,7 @@ import { GET_FETCH, POST_FETCH_FORMDATA, URL, STORAGE_URL, API_URL } from '../..
 import phoneMask, { splitNumber } from '../../utilities/masks/phone'
 import cpfMask from '../../utilities/masks/cpf'
 import { renderToast } from '../../utilities/Alerts'
+import SavePreset from '../../routes/Form/SavePreset'
 
 const Data = () => {
   // -------------------------------------------------------------------
@@ -118,7 +119,7 @@ const Data = () => {
   return (
     <>
       {/* -------------------------Account-section------------------------- */}
-      <Typography className="small" style={{ fontSize: "1.2em" }}>RESUMO DA CONTA</Typography>
+      <h6 className="dash-title">Resumo da conta</h6>
       {!loading ? <form onSubmit={(e) => { handleSave(e) }}>
         <div className='row align-items-end'>
           {/* -------------------------Name------------------------- */}
@@ -203,14 +204,7 @@ const Data = () => {
           </div>
         </div>
         {/* -------------------------Buttons-section------------------------- */}
-        <div className='d-flex mt-5'>
-          <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: '1rem' }} className="normal-archor special" onClick={() => history('/')}>
-            Voltar
-          </button>
-          <button style={{ cursor: "pointer", padding: "1rem 2rem", flexGrow: "0", flexBasis: '1rem' }} className="normal-archor special ms-auto" type="submit">
-            {loadingSave ? <CircularProgress color='inherit' size={20} /> : 'Salvar'}
-          </button>
-        </div>
+        <SavePreset backPath={'/profile'} handleSave={handleSave} loading={loadingSave} />
       </form> : <div className="d-flex justify-content-center p-5"><CircularProgress color='inherit' /></div>}
     </>
   )

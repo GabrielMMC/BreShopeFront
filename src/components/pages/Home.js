@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Card from './Card';
-import { ThemeProvider, Typography } from "@mui/material";
+import { ThemeProvider, CircularProgress } from "@mui/material";
 import { GET_PUBLIC_FETCH, URL } from '../../variables';
 import Theme from '../routes/Theme/Theme';
 import Slider from "react-slick";
@@ -28,26 +28,27 @@ const Home = () => {
   const [styles, setStyles] = React.useState('')
   const [products, setProducts] = React.useState('')
   const [materials, setMaterials] = React.useState('')
+  const [loading, setLoading] = React.useState(true)
 
   const [type, setType] = React.useState('')
   const [style, setStyle] = React.useState('')
   const [price, setPrice] = React.useState('')
-  const [rating, setRating] = React.useState('')
   const [material, setMaterial] = React.useState('')
 
   React.useEffect(() => {
     getData()
-  }, [])
+  }, [type, material, style])
 
   const getData = async () => {
-    const response = await GET_PUBLIC_FETCH({ url: `${URL}api/get_all_products?page=${state.pageNumber}` })
+    const response = await GET_PUBLIC_FETCH({ url: `${URL}api/get_all_products?page=${state.pageNumber}&type_id=${type}&style_id=${style}&material_id=${material}` })
+    console.log('resp', response)
     if (response.status) {
       setTypes(response.types)
       setStyles(response.styles)
       setProducts(response.products)
       setMaterials(response.materials)
     }
-    console.log('resp', response)
+    setLoading(false)
   }
 
   return (
@@ -61,7 +62,8 @@ const Home = () => {
           <div className="col-8 text-center m-auto text-white">
             <p className='main-title'>Conheça a nossa plataforma e começe a garimpar!</p>
             <p className='subtitle'>A plataforma atualmente se encontra em ambiente de testes</p>
-            <p className='small'>Agradeço se reportar os bugs encontrados, de resto, <del>ta liberada a bagunça dedo no cu e gritaria</del></p>
+            <p className='small'>Agradeço se reportar os bugs encontrados, de resto, <del>ta liberada a bagunça</del></p>
+            {/* dedo no cu e gritaria */}
           </div>
         </div>
       </div>
@@ -82,18 +84,20 @@ const Home = () => {
           </div>
 
           <div className='col-md-10'>
-            <div className="d-flex flex-wrap justify-content-center pointer">
-              {products && products.map(item => (
-                <div key={item.id}>
-                  <Card sales={false} product={item} />
-                </div>
-              ))}
-            </div>
+            {!loading ?
+              <div className="d-flex flex-wrap justify-content-center pointer">
+                {products && products.map(item => (
+                  <div key={item.id}>
+                    <Card sales={false} product={item} />
+                  </div>
+                ))}
+              </div>
+              : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
           </div>
         </div>
 
-        <div className="row justify-content-center my-5">
-          <h6 className="title mx-4">Categorias mais visitadas</h6>
+        <h6 className="title mx-4 mt-5">Categorias mais visitadas</h6>
+        <div className="row justify-content-center">
           <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
             <div className='category d-flex align-items-center m-auto'>
               <FaTshirt size={70} className='m-auto' />
