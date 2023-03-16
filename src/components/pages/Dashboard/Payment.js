@@ -133,7 +133,7 @@ const Payment = () => {
 
               <div className="d-flex">
                 <div style={{ width: '75px', marginTop: 5 }}>
-                  <img className='img-fluid' src={`${URL}/brands/${item.brand.toLowerCase()}.png`} alt='brand' />
+                  <img className='img-fluid' src={`${URL}brands/${item.brand.toLowerCase()}.png`} alt='brand' />
                 </div>
                 <div className="ms-auto">
                   <IconButton onClick={() =>

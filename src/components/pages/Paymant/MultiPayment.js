@@ -147,7 +147,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                         onBlur={() => setError('number', card, setCard, indexCard)} required />
                       <label htmlFor="card">Cartão*</label>
                     </div>
-                    <div className='brand'><img src={`${URL}/brands/${card[indexCard].brand.value ? card[indexCard].brand.value : 'nocard'}.png`} alt='brand'></img></div>
+                    <div className='brand'><img src={`${URL}brands/${card[indexCard].brand.value ? card[indexCard].brand.value : 'nocard'}.png`} alt='brand'></img></div>
                   </div>
                 </div>
               </div>

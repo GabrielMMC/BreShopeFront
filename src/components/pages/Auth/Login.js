@@ -6,7 +6,7 @@ import { Box, Button, TextField, ThemeProvider, Typography } from "@mui/material
 import Theme from '../../routes/Theme/Theme';
 
 // mui icons
-import login_image from "../../../assets/login_image.svg";
+// import login_image from "../../../assets/login_image.svg";
 import Navbar from "../Navbar";
 
 class Login extends React.Component {
@@ -191,7 +191,7 @@ class Login extends React.Component {
               }}
             >
               <img
-                src={login_image}
+                // src={ }
                 alt="Imagem de login"
                 style={{ objectFit: "contain", width: "10rem" }}
               />

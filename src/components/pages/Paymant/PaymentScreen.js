@@ -379,7 +379,7 @@ const PaymentScreen = () => {
                 cartItems.map(item => (
                   <div className='product' key={item.id}>
                     <div className="d-flex">
-                      <div className='rounded' style={{ width: '40%', height: '40%', maxWidth: 150 }}>
+                      <div className='rounded' style={{ minWidth: '40%', minHeight: '40%', maxWidth: 150 }}>
                         <img src={`${STORAGE_URL + item.thumb}`} className='img-fluid' alt="product" />
                       </div>
                       <span className='small m-auto'>{item.description}</span>
@@ -387,7 +387,7 @@ const PaymentScreen = () => {
 
                     <div className='d-flex justify-content-around'>
                       <span className='small'>{item.name}</span>
-                      <span className="small">{moneyMask(item.price * (100 - item.discount_price))} x {item.quantity}Un</span>
+                      <span className="small">{moneyMask(item.price)} x {item.quantity}Un</span>
                     </div>
 
                   </div>

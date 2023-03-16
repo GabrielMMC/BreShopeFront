@@ -22,7 +22,7 @@ export default function RecipeReviewCard({ product, sales }) {
 
 
   return (
-    <Card onClick={() => ''} sx={{ width: 280 }} className='m-2 hvr'>
+    <Card onClick={() => ''} sx={{ width: 280, boxShadow: 0 }} className='m-2'>
       <div className='position-relative' style={{ height: '400px !important', width: '100%' }}>
         {sales &&
           <div className='sale'>
