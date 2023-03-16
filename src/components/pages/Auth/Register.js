@@ -37,7 +37,7 @@ const Register = () => {
     let body = MOUNT_JSON_BODY({ form })
     let resp = await POST_PUBLIC_FETCH({ url: `${URL}api/register`, body })
     setLoading(false)
-    if (resp.status) history('/'); else setError(true)
+    if (resp.status) history('/login'); else setError(true)
   }
 
   return (

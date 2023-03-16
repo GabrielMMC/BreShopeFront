@@ -8,6 +8,8 @@ import { BiHomeSmile } from 'react-icons/bi'
 import { MdOutlineLocalShipping } from 'react-icons/md'
 import { TbShirt } from 'react-icons/tb'
 import { RiBillLine } from 'react-icons/ri'
+import { FaRegMoneyBillAlt } from 'react-icons/fa'
+import { AiOutlineLineChart } from 'react-icons/ai'
 import { useSelector } from 'react-redux'
 import Data from "./Data";
 import './styles.css';
@@ -16,7 +18,7 @@ const Profile = () => {
   const location = useLocation()
   const history = useNavigate()
   const breshop = useSelector(state => state.AppReducer.breshop)
-  console.log('breshop', breshop)
+  // console.log('breshop', breshop)
 
   return (
     <Container>
@@ -46,10 +48,20 @@ const Profile = () => {
                   <p className='small' style={{ color: 'black' }}>Minha loja</p>
                 </li>
                 {breshop &&
-                  <li className='hvr-grow pointer' onClick={() => history('/profile/products')}>
-                    <TbShirt />
-                    <p className='small' style={{ color: 'black' }}>Meus produtos</p>
-                  </li>}
+                  <>
+                    <li className='hvr-grow pointer' onClick={() => history('/profile/products')}>
+                      <TbShirt />
+                      <p className='small' style={{ color: 'black' }}>Meus produtos</p>
+                    </li>
+                    <li className='hvr-grow pointer' onClick={() => history('/profile/withdrawals')}>
+                      <FaRegMoneyBillAlt />
+                      <p className='small' style={{ color: 'black' }}>Meus saques</p>
+                    </li>
+                    <li className='hvr-grow pointer' onClick={() => history('/profile/recipient-orders')}>
+                      <AiOutlineLineChart />
+                      <p className='small' style={{ color: 'black' }}>Meus pedidos</p>
+                    </li>
+                  </>}
               </ul>
             </nav>
           </div>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Typography } from "@mui/material";
 import { FileDrop } from 'react-file-drop';
-import CurrencyInput from 'react-currency-input';
 import { URL, STORAGE_URL } from '../../../variables';
 import Card from '../../utilities/Card';
 import { renderToast } from '../../utilities/Alerts';
@@ -300,23 +299,23 @@ const Input = ({ state, setState, item, edit }) => {
             </form>
           )
 
-        case 'price':
-          return (
-            <form className='form-floating'>
-              <CurrencyInput
-                className={`form-control ${state[item].error && 'is-invalid'}`}
-                prefix="R$"
-                id={state[item].label}
-                name="input-name"
-                decimalsLimit={2}
-                decimalSeparator="."
-                groupSeparator="."
-                value={state[item].value}
-                onChange={(e) => setState({ ...state, [item]: { ...state[item], value: e, error: false } })}
-              />
-              <label htmlFor={state[item].label}>{state[item].label}</label>
-            </form>
-          )
+        // case 'price':
+        //   return (
+        //     <form className='form-floating'>
+        //       <CurrencyInput
+        //         className={`form-control ${state[item].error && 'is-invalid'}`}
+        //         prefix="R$"
+        //         id={state[item].label}
+        //         name="input-name"
+        //         decimalsLimit={2}
+        //         decimalSeparator="."
+        //         groupSeparator="."
+        //         value={state[item].value}
+        //         onChange={(e) => setState({ ...state, [item]: { ...state[item], value: e, error: false } })}
+        //       />
+        //       <label htmlFor={state[item].label}>{state[item].label}</label>
+        //     </form>
+        //   )
 
         case 'cpf':
           return (

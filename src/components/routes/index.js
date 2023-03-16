@@ -15,6 +15,8 @@ import Payment from "../pages/Dashboard/Payment";
 import Orders from "../pages/Dashboard/Order/Order";
 import Recipient from "./Breshop/Recipient";
 import PaymentScreen from "../pages/Paymant/PaymentScreen";
+import Withdrawal from "./Financial/Withdrawal";
+import RecipientOrders from "./Order/RecipientOrders";
 
 const PrivateRoute = (props) => {
   const token = useSelector((state) => state.AppReducer.token);
@@ -67,6 +69,8 @@ const RoutesContainer = () => {
         <Route path={"products"} element={<ListProducts />} />
         <Route path={"product/add"} element={<AddProduct />} />
         <Route path={"product/edit/:id"} element={<EditProduct />} />
+        <Route path={"withdrawals"} element={<Withdrawal />} />
+        <Route path={"recipient-orders"} element={<RecipientOrders />} />
       </Route>
       <Route path={"/*"} element={<GuestRoutes />} />
     </Routes>

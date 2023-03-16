@@ -83,47 +83,46 @@ function ListProducts() {
         </div>
       </div>
 
-      <div style={{ minHeight: '100vh' }}>
-        {!loading ?
-          <table className='table table-hover table-striped text-center'>
-            <thead>
-              <tr className='small' style={{ fontWeight: 500 }}>
-                <td>IMAGEM</td>
-                <td>NOME</td>
-                <td>DESCRIÇÃO</td>
-                <td>AVARIA</td>
-                <td>PREÇO</td>
-                <td>QUANTIDADE</td>
-                <td>AÇÕES</td>
-              </tr>
-            </thead>
-            <tbody>
-              {products && products.map((item, index) => {
-                const description = handleSize(item.description)
-                const title = handleSize(item.name)
-                return (
-                  <tr key={index} className=''>
-                    <td><Images thumb={item.thumb} images={item.images} /></td>
-                    <td>{title.tooltip ? <Tooltip placement='top' arrow title={item.name}><p>{title.value}</p></Tooltip> : title.value}</td>
-                    <td>{description.tooltip ?
-                      <Tooltip placement='top' arrow title={item.description}>
-                        <p style={{ cursor: 'pointer' }}>{description.value}</p>
-                      </Tooltip> : description.value
-                    }
-                    </td>
-                    <td><input className="form-check-input" type="checkbox" checked={Boolean(item.damage)} readOnly /></td>
-                    <td style={{ whiteSpace: 'nowrap' }}>{moneyMask(item.price)}</td>
-                    <td>{item.quantity} Un</td>
-                    <td style={{ whiteSpace: 'nowrap' }}>
-                      <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>
-                      <IconButton color='error' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table> : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
-      </div>
+      {!loading ?
+        <table className='table table-hover table-striped text-center'>
+          <thead>
+            <tr className='small' style={{ fontWeight: 500 }}>
+              <td>IMAGEM</td>
+              <td>NOME</td>
+              <td>DESCRIÇÃO</td>
+              <td>AVARIA</td>
+              <td>PREÇO</td>
+              <td>QUANTIDADE</td>
+              <td>AÇÕES</td>
+            </tr>
+          </thead>
+          <tbody>
+            {products && products.map((item, index) => {
+              const description = handleSize(item.description)
+              const title = handleSize(item.name)
+              return (
+                <tr key={index} className=''>
+                  <td><Images thumb={item.thumb} images={item.images} /></td>
+                  <td>{title.tooltip ? <Tooltip placement='top' arrow title={item.name}><p>{title.value}</p></Tooltip> : title.value}</td>
+                  <td>{description.tooltip ?
+                    <Tooltip placement='top' arrow title={item.description}>
+                      <p style={{ cursor: 'pointer' }}>{description.value}</p>
+                    </Tooltip> : description.value
+                  }
+                  </td>
+                  <td><input className="form-check-input" type="checkbox" checked={Boolean(item.damage)} readOnly /></td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{moneyMask(item.price)}</td>
+                  <td>{item.quantity} Un</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>
+                    <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>
+                    <IconButton color='error' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table> : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>
+      }
 
       {pagination.totalItems &&
         <div className='d-flex justify-content-end'>
