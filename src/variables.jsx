@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
 
-export const URL = "http://localhost:8000/"
+// export const URL = "http://localhost:8000/"
 export const THIS_URL = "http://localhost:3000/"
 
-// export const URL = "https://bmtestapi.enterscience.com.br/"
+export const URL = "https://immense-island-09041.herokuapp.com/"
 // export const THIS_URL = "https://bmtest.enterscience.com.br/"
 
 export const API_URL = URL + "api/";
