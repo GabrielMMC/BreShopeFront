@@ -39,11 +39,12 @@
     "node": "16.19.0"
   },  
   "scripts": {
-    "start": "react-scripts start",
+    "start": "NODE_OPTIONS=--max_old_space_size=1024 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  
   "eslintConfig": {
     "extends": [
       "react-app",
