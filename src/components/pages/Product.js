@@ -7,6 +7,7 @@ import Container from './Container'
 import { useSelector, useDispatch } from 'react-redux'
 import { MdClose } from 'react-icons/md'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import { moneyMask } from '../utilities/masks/currency'
 
 const Product = () => {
   const [state, setState] = React.useState({
@@ -88,10 +89,14 @@ const Product = () => {
 
   return (
     <Container>
-      <div className="m-auto bg-white mt-5 p-sm-5 m-5 rounded" style={{ maxWidth: 1200 }}>
+      <div className="m-auto bg-white mt-5 p-sm-5 m-5 rounded">
         {!state.loading ?
           <div>
             <div className="row mx-3">
+              <div className="col-12">
+                <p className='product-title'>{state.product.name}</p>
+              </div>
+
               <div className="col-md-6 col-12 m-auto my-2">
                 <div className="col-12" style={{ minHeight: 350 }}>
                   <Fade in={state.changeImg}><img src={`${URL}storage/${state.imgSelected ? state.imgSelected.file : state.product.thumb}`} style={{ width: 400, height: 400, borderRadius: 10, transitionDuration: '0.5s' }} alt='product' /></Fade>
@@ -100,14 +105,15 @@ const Product = () => {
                   {state.product && renderImages()}
                 </div>
               </div>
-
               <div className="col-md-6 col-12">
-                <Typography variant='h5'>{state.product.name}</Typography>
-                <Typography variant='h4'>R$: {state.product.price}</Typography>
-                <Typography variant='body1'>Descrição</Typography>
-                <Typography variant='body2'>{state.product.description}</Typography>
-                <Typography variant='body1'>Avaria</Typography>
-                <Typography variant='body2'>{state.product.damage_description}</Typography>
+                <p className='price'>{moneyMask(state.product.price)}</p>
+                <p className='product-subtitle'>
+                  <strong>{moneyMask(state.product.price)}</strong> em até 12x de <strong>{moneyMask(state.product.price * (16.37 / 100))}</strong> sem juros no cartão
+                  Ou em 1x no cartão com até <strong>5% OFF</strong>
+                </p>
+                <p className='product-subtitle'>{state.product.description}</p>
+                <p className='product-subtitle'>Avaria</p>
+                <p className='product-subtitle'>{state.product.damage_description}</p>
               </div>
             </div>
             <Divider className='my-5' />
