@@ -10,6 +10,20 @@ code {
     monospace;
 }
 
+.overflow-hidden{
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+}
+
+.link{
+  text-decoration: underline;
+  color: #693B9F;
+}
+
+.link:hover{
+  color: #693B9F;
+}
+
 .error{
   color: #DC3545
 }
@@ -302,4 +316,62 @@ code {
     right: 8px;
   }
 }
+
+.bg-gradient{
+  background: linear-gradient(to bottom, #693B9F, #8C4EBE, #693B9F) !important;
+}
+
+/* estilo do input */
+.input-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.input-container label {
+  position: absolute;
+  top: 0;
+  transform: translateY(0%);
+  margin: .5rem .5rem .5rem .8rem;
+  font-size: 0.8rem;
+  color: #777;
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+}
+
+.input-container input {
+  display: block;
+  width: 100%;
+  padding: 1.5rem 1rem 1rem 1rem;
+  font-size: 1rem;
+  border-radius: 2rem;
+  border: none;
+  outline: none;
+  background-color: #f5f5f5;
+}
+
+.input-container input:focus {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.icon-button {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-right: 40px;
+  transform: translate(50%, -50%);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.input-error {
+  outline: 1px solid #DC3545 !important;
+}
+
+
 
