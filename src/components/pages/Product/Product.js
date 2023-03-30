@@ -2,11 +2,13 @@ import { Button, CircularProgress, Divider, Fade, Rating, ThemeProvider, Typogra
 import { LoadingButton } from '@mui/lab'
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { API_URL, POST_FETCH, URL } from '../../variables'
-import Container from './Container'
+import { API_URL, POST_FETCH, URL } from '../../../variables'
+import Container from '../Container'
 import { useSelector, useDispatch } from 'react-redux'
 import { MdClose } from 'react-icons/md'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import { moneyMask } from '../../utilities/masks/currency'
+import ProductImages from './ProductImages'
 
 const Product = () => {
   const [state, setState] = React.useState({
@@ -43,17 +45,6 @@ const Product = () => {
       })
   }, [])
 
-  function renderImages() {
-    // setTimeout(() => { setState({ ...state, changeImg: false }) }, 200);
-    return state.product.images.map(item => (
-      <div className="col-sm-3 col-6 mt-2">
-        <div onClick={() => { setState({ ...state, imgSelected: { id: item.id, file: item.file }, changeImg: !state.changeImg }) }} style={{ height: 100, cursor: 'pointer' }}>
-          {item.file && <img style={{ width: '100%', height: '100%', borderRadius: 5, border: item.id === state.imgSelected.id && '2px solid yellow' }} alt='product' src={`${URL}storage/${item.file}`}></img>}
-        </div>
-      </div>
-    ))
-  }
-
   const submitComment = async (e) => {
     e.preventDefault()
     const response = await POST_FETCH({
@@ -88,26 +79,53 @@ const Product = () => {
 
   return (
     <Container>
-      <div className="m-auto bg-white mt-5 p-sm-5 m-5 rounded" style={{ maxWidth: 1200 }}>
+      <div className="bg-white mt-5 p-sm-5 rounded">
         {!state.loading ?
           <div>
-            <div className="row mx-3">
-              <div className="col-md-6 col-12 m-auto my-2">
-                <div className="col-12" style={{ minHeight: 350 }}>
-                  <Fade in={state.changeImg}><img src={`${URL}storage/${state.imgSelected ? state.imgSelected.file : state.product.thumb}`} style={{ width: 400, height: 400, borderRadius: 10, transitionDuration: '0.5s' }} alt='product' /></Fade>
-                </div>
-                <div className="row">
-                  {state.product && renderImages()}
-                </div>
+            <div className="row">
+              <div className="col-12 mb-3">
+                <span className='product-title'>{state.product.name}</span>
               </div>
 
-              <div className="col-md-6 col-12">
-                <Typography variant='h5'>{state.product.name}</Typography>
-                <Typography variant='h4'>R$: {state.product.price}</Typography>
-                <Typography variant='body1'>Descrição</Typography>
-                <Typography variant='body2'>{state.product.description}</Typography>
-                <Typography variant='body1'>Avaria</Typography>
-                <Typography variant='body2'>{state.product.damage_description}</Typography>
+              <div className="col-lg-6">
+                <ProductImages thumb={state.product.thumb} images={state.product.images} />
+              </div>
+              <div className="col-lg-6">
+                <div className="d-flex align-content-around flex-wrap h-100">
+                  <div className="col-12">
+                    <p className='price'>{moneyMask(state.product.price)}</p>
+
+                    <p className='product-subtitle'>
+                      <strong>{moneyMask(state.product.price)}</strong> em até 12x de <strong>{moneyMask(state.product.price * (16.37 / 100))}</strong> sem juros no cartão
+                      Ou em 1x no cartão com até <strong>5% OFF</strong>
+                    </p>
+                    <span className='product-subtitle'>Descrição: </span>
+                    <p className='product-subtitle'>{state.product.description}</p>
+                    <span className='product-subtitle'>Avaria: </span>
+                    <p className='product-subtitle'>{state.product.damage_description ? state.product.damage_description : 'Produto não possui desgastes'}</p>
+
+                    <span className='product-subtitle'>Tamanhos: </span>
+                    <div className="d-flex">
+                      <div className="me-2"><button className='rounded-button'>PP</button></div>
+                      <div className="me-2"><button className='rounded-button'>P</button></div>
+                      <div className="me-2"><button className='rounded-button'>M</button></div>
+                      <div className="me-2"><button className='rounded-button'>G</button></div>
+                      <div className="me-2"><button className='rounded-button'>GG</button></div>
+                      <div className="me-2"><button className='rounded-button'>XL</button></div>
+                    </div>
+
+                    <p className='product-subtitle mt-3'>Estoque: {state.product.quantity > 0
+                      ? <span className='success bold'>{state.product.quantity === 1 ? state.product.quantity + ' unidade' : state.product.quantity + ' unidades'}</span>
+                      : <span className='error bold'>Esgotado</span>}
+                    </p>
+
+                  </div>
+                  <div className="col-12">
+                    <div className="d-flex justify-content-end">
+                      <LoadingButton variant='contained' onClick={handleAddCart} endIcon={<ShoppingCartIcon />} loading={loadingCart} loadingPosition="end">Adicionar ao carrinho</LoadingButton>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <Divider className='my-5' />
@@ -202,10 +220,6 @@ const Product = () => {
               <div className="d-flex mt-3">
                 <div className="justify-content-start">
                   <Button variant='contained'>Voltar</Button>
-                </div>
-
-                <div className="ms-auto">
-                  <LoadingButton variant='contained' className='mx-2' onClick={handleAddCart} endIcon={<ShoppingCartIcon />} loading={loadingCart} loadingPosition="end">Adicionar ao carrinho</LoadingButton>
                 </div>
               </div>
             </div>
