@@ -11,12 +11,9 @@ code {
 }
 
 .price {
-  font-size: 24px; /* tamanho da fonte */
   font-weight: bold; /* peso da fonte */
-  color: #f00; /* cor do texto, vermelho neste caso */
   /* text-decoration: line-through; */
-  font-size: 2rem; /* tamanho da fonte */
-  letter-spacing: 2px; /* espaçamento entre letras */
+  font-size: 2.5rem; /* tamanho da fonte */
   color: #333; /* cor do texto, cinza neste caso */
   line-height: 1.5; /* altura da linha */
 }
@@ -29,6 +26,14 @@ code {
 
 .error{
   color: #DC3545
+}
+
+.success{
+  color: #008000
+}
+
+.secondary{
+  color: #F5C469
 }
 
 .pointer{
@@ -45,9 +50,10 @@ code {
 }
 
 .product-title{
-  font-size: 36px;
-  font-weight: 400;
-  letter-spacing: 2px;
+  font-family: 'Open Sans', sans-serif; /* Define a fonte para os títulos */
+  font-weight: 700; /* Define a espessura da fonte */
+  line-height: 1.2; /* Define a altura da linha */
+  font-size: 2rem;
   color: #333;
 }
 
@@ -332,3 +338,25 @@ code {
   }
 }
 
+.rounded-button {
+  border-radius: 10%;
+  border: none;
+  height: 2rem;
+  width: 2rem;
+  background: #F5F5F5;
+  color: #707070
+}
+
+.rounded-button:hover{
+  transition: .3s all;
+  background: #E8E8E8;
+}
+
+.rounded-active{
+  background: #F5C469;
+  color: #333;
+}
+
+.rounded-active:hover{
+  background: #F5C469;
+}
