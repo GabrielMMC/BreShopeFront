@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 export const URL = "http://localhost:8000/"
 export const THIS_URL = "http://localhost:3000/"
 
-// export const URL = "https://bmtestapi.enterscience.com.br/"
+// export const URL = "https://immense-island-09041.herokuapp.com/"
 // export const THIS_URL = "https://bmtest.enterscience.com.br/"
 
 export const API_URL = URL + "api/";
@@ -159,7 +159,6 @@ export async function DELETE_FETCH(props) {
 }
 
 export async function POST_PUBLIC_FETCH(props) {
-  console.log('props', props.body)
   return (fetch(props.url, {
     method: 'POST',
     headers: {

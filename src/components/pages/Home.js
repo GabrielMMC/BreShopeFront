@@ -1,9 +1,8 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Card from './Card';
-import { ThemeProvider, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { GET_PUBLIC_FETCH, URL } from '../../variables';
-import Theme from '../routes/Theme/Theme';
 import Slider from "react-slick";
 import './Private/SideBar/styles/index.css';
 import Footer from "./Footer";
@@ -52,7 +51,7 @@ const Home = () => {
   }
 
   return (
-    <ThemeProvider theme={Theme}>
+    <>
       <Navbar />
       <div style={{ background: 'linear-gradient(to bottom, #693B9F, #8C4EBE, #A57BD5)', minHeight: '40vh' }}>
         <div className="row w-principal p-5 m-auto">
@@ -144,7 +143,7 @@ const Home = () => {
         </div> */}
       </div>
       <Footer />
-    </ThemeProvider>
+    </>
   );
 };
 
