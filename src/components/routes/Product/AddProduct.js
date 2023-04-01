@@ -19,19 +19,20 @@ const AddProduct = ({ edit }) => {
   // -------------------------------------------------------------------
   //********************************************************************
   // -------------------------States------------------------------------
+  const [hasDamage, setHasDamage] = React.useState(false)
   const [size, setSize] = React.useState({
-    pp: false,
-    p: false,
-    m: false,
-    g: false,
-    gg: false,
-    xg: false
+    PP: false,
+    P: false,
+    M: false,
+    G: false,
+    GG: false,
+    XG: false
   })
 
   const [form, setForm] = React.useState({
     name: { value: "", error: false },
+    size: { value: "", error: false },
     damage: { value: "", error: false },
-    quantity: { value: "", error: false },
     description: { value: "", error: false },
     price: { value: "", mask: "", error: false },
     type: { value: "", error: false },
@@ -71,16 +72,17 @@ const AddProduct = ({ edit }) => {
   // -------------------------Saving-data-----------------------------
   const handleSave = async () => {
     setLoadingSave(true)
+    let form2 = { ...form }
+    let emptyError = false
+
     let formData = new FormData()
-    Object.keys({ ...form }).forEach(item => formData.append(item, form[item].value))
+    Object.keys({ ...form }).forEach(item => {
+      if (form[item].value || item === 'files' || (item === 'damage' && !hasDamage)) formData.append(item, form[item].value)
+      else { form2[item].error = true; emptyError = true; console.log('item erro', item) }
+    })
 
     form.files.forEach(item => {
       formData.append('files[]', item.value)
-    })
-
-
-    Object.keys({ ...size }).forEach(item => {
-      formData.append('sizes[]', JSON.stringify({ [item]: size[item] }))
     })
 
     form.styles.selected.forEach(item => {
@@ -93,8 +95,13 @@ const AddProduct = ({ edit }) => {
       formData.append('materials[]', item)
     })
 
-    const response = await POST_FETCH_FORMDATA({ url: `${API_URL}store_product`, body: formData, token })
-    // console.log('resp', response)
+    console.log('erro', emptyError)
+    if (!emptyError) {
+      const response = await POST_FETCH_FORMDATA({ url: `${API_URL}store_product`, body: formData, token })
+      console.log('resp', response)
+    } else {
+      setForm(form2)
+    }
     setLoadingSave(false)
   }
 
@@ -109,13 +116,12 @@ const AddProduct = ({ edit }) => {
       let fr = new FileReader()
       fr.onload = (e) => {
         form2.files = [...form2.files, { value: files[i], url: e.target.result }]
+        setForm(form2)
       }
       fr.readAsDataURL(files[i])
     }
 
-    setForm(form2)
   }
-
 
   const handleChangeThumb = (file) => {
     let form2 = { ...form }
@@ -123,15 +129,20 @@ const AddProduct = ({ edit }) => {
     let fr = new FileReader()
     fr.onload = (e) => {
       form2.thumb = { ...form2.thumb, value: file, url: e.target.result }
+      setForm(form2)
     }
     fr.readAsDataURL(file)
-
-    setForm(form2)
   }
 
-  const handleSizeChange = (item) => {
-    setSize({ ...size, [item]: !size[item] })
-    setForm({ ...form, size: { ...form.size, value: item, error: false } })
+  const handleSizeChange = (key) => {
+    let size2 = { ...size }
+    Object.keys({ ...size }).forEach(item => {
+      if (item === key) size2[item] = !size2[item]
+      else size2[item] = false
+    })
+
+    setSize(size2)
+    setForm({ ...form, size: { ...form.size, value: size2[key] ? key : '', error: false } })
   }
 
   const handleArrayChange = (value, type) => {
@@ -139,6 +150,11 @@ const AddProduct = ({ edit }) => {
     if (selected.filter(item => item === value).length === 0) selected = [...selected, value]
 
     setForm({ ...form, [type]: { ...form[type], value, selected, error: false } })
+  }
+
+  const handleDamageChange = () => {
+    setHasDamage(!hasDamage)
+    setForm({ ...form, damage: { value: '', error: false } })
   }
 
   return (
@@ -206,6 +222,7 @@ const AddProduct = ({ edit }) => {
               <div className="form-floating">
                 <select id='type' className={`form-control ${form.type.error && 'is-invalid'}`} value={form.type.value}
                   onChange={(e) => setForm({ ...form, type: { ...form.type, value: e.target.value, error: false } })}>
+                  <option value={''}>Selecione uma opção</option>
                   {form.type.fillOption && form.type.fillOption.map(item => (<option key={item.id} value={item.id}>{item.name}</option>))}
                 </select>
                 <label htmlFor='type'>Tipo de roupa</label>
@@ -216,6 +233,7 @@ const AddProduct = ({ edit }) => {
               <div className="form-floating">
                 <select id='style' className={`form-control ${form.styles.error && 'is-invalid'}`} value={form.styles.value}
                   onChange={(e) => handleArrayChange(e.target.value, 'styles')}>
+                  <option value={''}>Selecione uma opção</option>
                   {form.styles.fillOption && form.styles.fillOption.map(item => (<option key={item.id} value={item.id}>{item.name}</option>))}
                 </select>
                 <label htmlFor='style'>Estilo da roupa</label>
@@ -226,6 +244,7 @@ const AddProduct = ({ edit }) => {
               <div className="form-floating">
                 <select id='material' className={`form-control ${form.materials.error && 'is-invalid'}`} value={form.materials.value}
                   onChange={(e) => handleArrayChange(e.target.value, 'materials')}>
+                  <option value={''}>Selecione uma opção</option>
                   {form.materials.fillOption && form.materials.fillOption.map(item => (<option key={item.id} value={item.id}>{item.name}</option>))}
                 </select>
                 <label htmlFor='material'>Material</label>
@@ -275,21 +294,12 @@ const AddProduct = ({ edit }) => {
               </div>
             </div>
             {/* -------------------------Price------------------------- */}
-            <div className="col-sm-4">
+            <div className="col-sm-6">
               <div className="form-floating">
                 <input className={`form-control ${form.price.error && 'is-invalid'}`} id="price" type="text" value={form.price.mask}
                   onChange={({ target }) => setForm({ ...form, price: { ...form.price, value: target.value.replace(/\D/g, ''), mask: moneyMask(target.value), error: false } })}
                   onBlur={() => setError('price', form, setForm)} required />
                 <label htmlFor="price">Preço*</label>
-              </div>
-            </div>
-            {/* -------------------------Quantity------------------------- */}
-            <div className="col-sm-2">
-              <div className="form-floating">
-                <input className={`form-control ${form.quantity.error && 'is-invalid'}`} id="quantity" type="number" value={form.quantity.value}
-                  onChange={({ target }) => setForm({ ...form, quantity: { ...form.quantity, value: target.value, error: false } })}
-                  onBlur={() => setError('quantity', form, setForm)} required />
-                <label htmlFor="quantity">Quantidade*</label>
               </div>
             </div>
           </div>
@@ -303,10 +313,11 @@ const AddProduct = ({ edit }) => {
                 <label htmlFor="description">Descrição*</label>
               </div>
             </div>
+            {console.log('size', form.size)}
             {/* -------------------------Sizes------------------------- */}
             {Object.keys({ ...size }).map((item, index) => (
               <div className="col-2 text-center rounded my-3" key={index}>
-                <Button fullWidth color={size[item] ? 'success' : 'error'} sx={{ backgroundColor: '#f1f1f1' }} endIcon={size[item] ? <CheckIcon /> : <CloseIcon />}
+                <Button fullWidth color={size[item] ? 'success' : (form.size.error ? 'error' : 'inherit')} sx={{ backgroundColor: '#f1f1f1' }} endIcon={size[item] ? <CheckIcon /> : <CloseIcon />}
                   onClick={() => handleSizeChange(item)}>
                   {item}
                 </Button>
@@ -315,12 +326,12 @@ const AddProduct = ({ edit }) => {
             {/* -------------------------Damage-description-check------------------------- */}
             <div className="col-12 mt-3">
               <div className="form-check form-switch">
-                <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked={hasDamage} onClick={handleDamageChange} />
                 <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Possui avaria</label>
               </div>
               {/* -------------------------Damage-description------------------------- */}
               <div className="form-floating">
-                <textarea className={`form-control ${form.damage.error && 'is-invalid'}`} name="text" id="description" rows="10" value={form.damage.value}
+                <textarea disabled={Boolean(!hasDamage)} className={`form-control ${form.damage.error && 'is-invalid'}`} name="text" id="description" rows="10" value={form.damage.value}
                   onChange={({ target }) => setForm({ ...form, damage: { ...form.damage, value: target.value, error: false } })}
                   onBlur={() => setError('damage', form, setForm)} style={{ minHeight: 150 }} />
                 <label htmlFor="description">Avaria*</label>
