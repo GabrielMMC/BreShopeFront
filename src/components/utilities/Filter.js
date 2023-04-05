@@ -3,6 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from '@mui/icons-material/Search';
 import { Box, Fade, IconButton, Modal } from '@mui/material'
 import FilterListIcon from '@mui/icons-material/FilterList';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 import dateMask from './masks/date';
 
 const Filter = (props) => {
@@ -13,10 +14,10 @@ const Filter = (props) => {
       const keys = Object.keys(props.options)
       return keys.map(item => (
         <div className="form-check my-2 mx-3 d-flex align-items-center">
-          <input className="form-check-input" type="checkbox" name="exampleRadios" id={item} value={props.options[item].value}
-            onChange={() => handleChange(item)} checked={props.options[item].value} />
+          <input className="form-check-input" type="radio" name="option" checked={Boolean(props.options[item].id === props.selectedGender)} id={item}
+            onChange={() => props.setSelected(props.options[item].id)} />
           <label className="form-check-label lead ms-1" htmlFor={item}>
-            {props.options[item].label}
+            {props.options[item].key}
           </label>
         </div>
       )
@@ -24,25 +25,16 @@ const Filter = (props) => {
     }
   }
 
-  const handleChange = (id) => {
-    let options2 = { ...props.options }
-    let keys = Object.keys(props.options)
-    keys.forEach(item => {
-      if (item === id) options2[item] = { ...options2[item], value: !options2[item].value }; else options2[item] = { ...options2[item], value: false }
-    })
-    props.setOptions(options2)
-  }
-
   const handleOpen = () => {
     props.setAllow(false); setOpen(true)
   }
 
   const handleClose = () => {
-    props.setAllow(true); setOpen(false); props.setSearch(''); props.setPagination({ ...props.pagination, pageNumber: 0 })
+    props.setAllow(true); setOpen(false); props.setSearch(''); props.setPagination(oldPagination => { return { ...oldPagination, pageNumber: 0 } })
   }
 
-  const handleDateChange = (value) => {
-    console.log('value', value)
+  const handleClearDates = () => {
+    props.setDateFor(''); props.setDateOf(''); props.setAllow(true); setOpen(false); props.setPagination(oldPagination => { return { ...oldPagination, pageNumber: 0 } })
   }
 
   const style = {
@@ -51,6 +43,8 @@ const Filter = (props) => {
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 2,
+    overflowY: 'auto',
+    minWidth: 275
   };
 
   return (
@@ -59,6 +53,7 @@ const Filter = (props) => {
         <FilterListIcon size={30} />
       </IconButton>
       <Modal
+        disableScrollLock={false}
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
@@ -73,15 +68,14 @@ const Filter = (props) => {
               </IconButton>
 
               <div className="ms-auto">
-                <button className='rounded-button hvr-grow' onClick={handleClose}>
+                <IconButton className='hvr-grow' onClick={handleClearDates}>
+                  <EventBusyIcon size={22} />
+                </IconButton>
+                <IconButton className='hvr-grow' onClick={handleClose}>
                   <SearchIcon size={22} />
-                </button>
+                </IconButton>
               </div>
             </div>
-            {props.options &&
-              < div className="my-4 m-auto">
-                {renderOptions()}
-              </div>}
 
             <div className="mt-3">
               <label htmlFor='name'>De {props.dateOf ? dateMask(props.dateOf) : ' - / - / -'}</label>
@@ -90,6 +84,17 @@ const Filter = (props) => {
               <label className='mt-3' htmlFor='name'>Até {props.dateFor ? dateMask(props.dateFor) : ' - / - / -'}</label>
               <input type="date" className="form-control" value={props.dateFor} onChange={({ target }) => props.setDateFor(target.value)} />
             </div>
+
+            {props.options &&
+              <div className="my-4 m-auto">
+                <div className="d-flex align-items-center">
+                  <span>Opções</span>
+                  <IconButton onClick={() => props.setSelected('')} color='error' sx={{ width: 15, height: 15 }} >
+                    <CloseIcon sx={{ width: 15, height: 15 }} />
+                  </IconButton>
+                </div>
+                {renderOptions()}
+              </div>}
           </Box>
         </Fade>
       </Modal>

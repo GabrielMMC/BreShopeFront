@@ -26,32 +26,38 @@
   background-color: #693b9f;
 }
 
-.sale {
+.close-sale{
   position: absolute;
+  margin: 10px;
   top: 0;
   right: 0;
+  border-radius: 50%;
+  background-color: #DC3545;
+  color: #fff;
+  border: none;
+  height: 1.8rem;
+  width: 1.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.sale{
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  padding: 0 15px 0 15px;
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.1);
+  top: 0;
+  left: 0;
 }
 
 .sale p {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 1.5rem;
   position: relative;
-  margin-right: 10px;
   margin-top: 10px;
-  color: #ff4c4c;
-}
-
-.sale::before {
-  background-color: #FFFF5C;
-  width: 60px;
-  height: 80px;
-  border-radius: 0% 0% 30% 30%;
-  content: ' ';
-  top: 0;
-  right: 0;
-  position: fixed;
-  margin-top: -1rem;
-  margin-right: 10px;
+  color: #FFF;
 }
 
 @media (max-width: 500px) {

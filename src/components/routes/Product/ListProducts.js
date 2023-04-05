@@ -66,12 +66,13 @@ function ListProducts() {
         <div className='col-sm-6'>
           <div className="d-flex align-items-center">
             <h6 className="dash-title">Produtos</h6>
-            <Filter setAllow={setAllow} pagination={pagination} setPagination={setPagination} setSearch={setSearch} />
+            <Filter setAllow={setAllow} pagination={pagination} setPagination={setPagination} setSearch={setSearch}
+              setDateFor={setDateFor} setDateOf={setDateOf} dateFor={dateFor} dateOf={dateOf} />
           </div>
           <p className='small mb-4'>Encontre todos seu produtos cadastrados!</p>
 
-          <div class="input-group-with-icon">
-            <input class="form-control" type="text" placeholder="Buscar..." onChange={({ target }) => handleSearch(target.value)} required />
+          <div className="input-group-with-icon">
+            <input className="form-control" type="text" placeholder="Buscar..." onChange={({ target }) => handleSearch(target.value)} required />
             <MdSearch className='search-icon' size={25} />
           </div>
         </div>
@@ -92,7 +93,7 @@ function ListProducts() {
               <td>DESCRIÇÃO</td>
               <td>AVARIA</td>
               <td>PREÇO</td>
-              <td>QUANTIDADE</td>
+              <td>TAMANHO</td>
               <td>AÇÕES</td>
             </tr>
           </thead>
@@ -110,9 +111,10 @@ function ListProducts() {
                     </Tooltip> : description.value
                   }
                   </td>
+                  {console.log('itme', item.damage)}
                   <td><input className="form-check-input" type="checkbox" checked={Boolean(item.damage)} readOnly /></td>
                   <td style={{ whiteSpace: 'nowrap' }}>{moneyMask(item.price)}</td>
-                  <td>{item.quantity} Un</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{item.size}</td>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>
                     <IconButton color='error' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>

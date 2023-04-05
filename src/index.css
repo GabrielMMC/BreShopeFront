@@ -28,6 +28,9 @@ code {
   color: #DC3545
 }
 
+.file-error{
+  border-color: #DC3545
+}
 .pointer{
   cursor: pointer;
 }
@@ -317,6 +320,10 @@ code {
   }
 }
 
+.bg-gray{
+  background-color:#F5F5F5;
+}
+
 .bg-gradient{
   background: linear-gradient(to bottom, #693B9F, #8C4EBE, #693B9F) !important;
 }
@@ -373,5 +380,27 @@ code {
   outline: 1px solid #DC3545 !important;
 }
 
+.form-check-input[type=checkbox]:checked {
+  background-color: #693B9F !important;
+  border-color: #693B9F !important;
+}
+
+.form-check-input[type=checkbox]:focus {
+  border-color: #693B9F !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.footer-img{
+  width: 50px;
+  height: 100%;
+  margin: 5px;
+}
+
+.footer ul li{
+text-decoration: none;
+color: #693B9F;
+margin: none;
+}
 
 

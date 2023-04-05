@@ -101,7 +101,7 @@ export async function PUT_FETCH(props) {
 
 export async function PATCH_FETCH_FORMDATA(props) {
   return (fetch(`${URL}api/${props.url}`, {
-    method: 'POST',
+    method: 'PATCH',
     headers: {
       'Accept': 'application/json',
       'Authorization': `Bearer ${props.token}`
