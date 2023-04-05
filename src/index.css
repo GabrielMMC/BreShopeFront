@@ -10,22 +10,30 @@ code {
     monospace;
 }
 
-.overflow-hidden{
-  overflow-x: hidden !important;
-  overflow-y: hidden !important;
+.price {
+  font-weight: bold; /* peso da fonte */
+  /* text-decoration: line-through; */
+  font-size: 2.5rem; /* tamanho da fonte */
+  color: #333; /* cor do texto, cinza neste caso */
+  line-height: 1.5; /* altura da linha */
 }
 
-.link{
-  text-decoration: underline;
-  color: #693B9F;
-}
-
-.link:hover{
-  color: #693B9F;
+.price-sale {
+  font-size: 32px; /* tamanho da fonte */
+  font-weight: bold; /* peso da fonte */
+  color: #008000; /* cor do texto, verde neste caso */
 }
 
 .error{
   color: #DC3545
+}
+
+.success{
+  color: #008000
+}
+
+.secondary{
+  color: #F5C469
 }
 
 .file-error{
@@ -42,6 +50,19 @@ code {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.5);
+}
+
+.product-title{
+  font-family: 'Open Sans', sans-serif; /* Define a fonte para os títulos */
+  font-weight: 700; /* Define a espessura da fonte */
+  line-height: 1.2; /* Define a altura da linha */
+  font-size: 2rem;
+  color: #333;
+}
+
+.product-subtitle{
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.60);
 }
 
 .title {
@@ -324,83 +345,25 @@ code {
   background-color:#F5F5F5;
 }
 
-.bg-gradient{
-  background: linear-gradient(to bottom, #693B9F, #8C4EBE, #693B9F) !important;
-}
-
-/* estilo do input */
-.input-container {
-  position: relative;
-  margin-bottom: 1rem;
-}
-
-.input-container label {
-  position: absolute;
-  top: 0;
-  transform: translateY(0%);
-  margin: .5rem .5rem .5rem .8rem;
-  font-size: 0.8rem;
-  color: #777;
-  pointer-events: none;
-  transition: all 0.2s ease-out;
-}
-
-.input-container input {
-  display: block;
-  width: 100%;
-  padding: 1.5rem 1rem 1rem 1rem;
-  font-size: 1rem;
-  border-radius: 2rem;
+.rounded-button {
+  border-radius: 10%;
   border: none;
-  outline: none;
-  background-color: #f5f5f5;
+  height: 2rem;
+  width: 2rem;
+  background: #F5F5F5;
+  color: #707070
 }
 
-.input-container input:focus {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+.rounded-button:hover{
+  transition: .3s all;
+  background: #E8E8E8;
 }
 
-.input-container {
-  position: relative;
-  margin-bottom: 1rem;
+.rounded-active{
+  background: #F5C469;
+  color: #333;
 }
 
-.icon-button {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  margin-right: 40px;
-  transform: translate(50%, -50%);
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
+.rounded-active:hover{
+  background: #F5C469;
 }
-
-.input-error {
-  outline: 1px solid #DC3545 !important;
-}
-
-.form-check-input[type=checkbox]:checked {
-  background-color: #693B9F !important;
-  border-color: #693B9F !important;
-}
-
-.form-check-input[type=checkbox]:focus {
-  border-color: #693B9F !important;
-  outline: 0 !important;
-  box-shadow: none !important;
-}
-
-.footer-img{
-  width: 50px;
-  height: 100%;
-  margin: 5px;
-}
-
-.footer ul li{
-text-decoration: none;
-color: #693B9F;
-margin: none;
-}
-
-
