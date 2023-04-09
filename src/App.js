@@ -9,7 +9,7 @@ function App() {
     palette: {
       primary: { main: '#693B9F' },
       secondary: { main: '#1976d2' },
-      success: { main: '#693B9F' },
+      yellow: { main: '#F5C469' },
     }
   })
 

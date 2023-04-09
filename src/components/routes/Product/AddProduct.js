@@ -150,7 +150,6 @@ const AddProduct = ({ edit }) => {
       updatedForm.files = fileDataArray
       setForm(updatedForm)
     })
-
   }
 
   const handleChangeThumb = (file) => {

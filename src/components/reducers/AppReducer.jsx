@@ -5,6 +5,7 @@ const INITIAL_STATE = {
     breshop: null,
     toggled: false,
     collapsed: false,
+    search: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -40,11 +41,15 @@ export default (state = INITIAL_STATE, action) => {
                 cart_items: action.payload,
 
             };
-
         case 'toggle_cart':
             return {
                 ...state,
                 toggled: action.toggled,
+            };
+        case 'search':
+            return {
+                ...state,
+                search: action.payload,
 
             };
         default:

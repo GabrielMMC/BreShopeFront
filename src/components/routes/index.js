@@ -6,6 +6,7 @@ import Profile from "../pages/Dashboard/Profile";
 import Home from "../pages/Home";
 import Product from "../pages/Product/Product";
 import Breshop from "./Breshop/Breshop";
+import BreshopPublic from "../pages/Breshop";
 import GuestRoutes from "./GuestRoutes";
 import AddProduct from "./Product/AddProduct";
 import EditProduct from "./Product/EditProduct";
@@ -62,6 +63,7 @@ const RoutesContainer = () => {
       <Route path={"/login"} element={<LoginRoute />} />
       <Route path={"/register"} element={<Register />} />
       <Route path={"product/:id"} element={<Product />} />
+      <Route path={"breshop/:id"} element={<BreshopPublic />} />
       <Route path={"/payment"} element={<PaymentScreen />} />
       <Route path={"/home"} element={<PrivateRoute />} />
       <Route path={"/profile"} element={<Profile />}>

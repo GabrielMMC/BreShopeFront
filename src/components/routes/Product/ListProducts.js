@@ -3,11 +3,12 @@ import Images from './Images'
 import { useSelector } from 'react-redux'
 import Filter from '../../utilities/Filter'
 import { useNavigate } from 'react-router-dom'
+import { moneyMask } from '../../utilities/masks/currency'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { DELETE_FETCH, GET_FETCH } from '../../../variables'
 import { renderAlert, renderToast } from '../../utilities/Alerts'
-import { moneyMask } from '../../utilities/masks/currency'
 import { MdEdit, MdDelete, MdSearch, MdSave } from 'react-icons/md'
-import { CircularProgress, IconButton, Pagination, Tooltip, TextField, InputAdornment, Button } from '@mui/material'
+import { CircularProgress, IconButton, Pagination, Tooltip, Button } from '@mui/material'
 
 function ListProducts() {
   const [allow, setAllow] = React.useState(true)
@@ -94,6 +95,7 @@ function ListProducts() {
               <td>AVARIA</td>
               <td>PREÇO</td>
               <td>TAMANHO</td>
+              <td>STATUS</td>
               <td>AÇÕES</td>
             </tr>
           </thead>
@@ -114,10 +116,17 @@ function ListProducts() {
                   {console.log('itme', item.damage)}
                   <td><input className="form-check-input" type="checkbox" checked={Boolean(item.damage)} readOnly /></td>
                   <td style={{ whiteSpace: 'nowrap' }}>{moneyMask(item.price)}</td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{item.size}</td>
+                  <td style={{ whiteSpace: 'nowrap' }}><span className='bold'>{item.size}</span></td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{item.sold ? <span className='success bold'>Vendido</span> : <span className='error bold'>Em estoque</span>}</td>
                   <td style={{ whiteSpace: 'nowrap' }}>
-                    <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>
-                    <IconButton color='error' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>
+                    {item.sold ?
+                      <IconButton color='yellow' onClick={() => history(`/profile/recipient-orders`)}><VisibilityIcon /></IconButton>
+                      :
+                      <>
+                        <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>
+                        <IconButton color='error' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>
+                      </>
+                    }
                   </td>
                 </tr>
               )

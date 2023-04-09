@@ -113,8 +113,7 @@ function ListSales() {
               window.scrollTo(0, 0); setPagination({ ...pagination, pageNumber: page - 1 }); setAllow(true)
             }
             } />
-        </div>
-      }
+        </div>}
     </div>
   );
 }
