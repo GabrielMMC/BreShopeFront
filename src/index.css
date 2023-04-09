@@ -10,24 +10,45 @@ code {
     monospace;
 }
 
-.overflow-hidden{
-  overflow-x: hidden !important;
-  overflow-y: hidden !important;
+p{
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.60);
 }
 
-.link{
-  text-decoration: underline;
-  color: #693B9F;
+.price {
+  font-weight: bold;
+  font-size: 2.5rem;
+  color: #333;
+  line-height: 1.5;
 }
 
-.link:hover{
-  color: #693B9F;
+.no-discount {
+  font-size: 1.5rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+.countdown{
+  font-size: 2rem;
+  color: #DC3545 ;
+  line-height: 1.5;
 }
 
 .error{
-  color: #DC3545
+  color: #DC3545 !important;
 }
 
+.success{
+  color: #008000
+}
+
+.secondary{
+  color: #F5C469
+}
+
+.file-error{
+  border-color: #DC3545
+}
 .pointer{
   cursor: pointer;
 }
@@ -39,6 +60,19 @@ code {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.5);
+}
+
+.product-title{
+  font-family: 'Open Sans', sans-serif; /* Define a fonte para os títulos */
+  font-weight: 700; /* Define a espessura da fonte */
+  line-height: 1.2; /* Define a altura da linha */
+  font-size: 2rem;
+  color: #333;
+}
+
+.product-subtitle{
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.60);
 }
 
 .title {
@@ -293,7 +327,7 @@ code {
 }
 
 .input-group-with-icon input[type="text"] {
-  padding-right: 40px; /* ajusta o espaço do input para que o ícone tenha espaço */
+  /* padding-right: 40px;*/
   height: 45px;
 }
 
@@ -315,6 +349,37 @@ code {
   .input-group-with-icon .search-icon {
     right: 8px;
   }
+}
+
+.bg-gray{
+  background-color:#F5F5F5;
+}
+
+.rounded-button {
+  border-radius: 10%;
+  border: none;
+  height: 2rem;
+  width: 2rem;
+  background: #F5F5F5;
+  color: #707070
+}
+
+.rounded-button:hover{
+  transition: .3s all;
+  background: #E8E8E8;
+}
+
+.rounded-active{
+  background: #F5C469;
+  color: #333;
+}
+
+.rounded-active:hover{
+  background: #F5C469;
+}
+
+.bg-gray{
+  background-color:#F5F5F5;
 }
 
 .bg-gradient{
@@ -373,5 +438,41 @@ code {
   outline: 1px solid #DC3545 !important;
 }
 
+.form-check-input[type=checkbox]:checked {
+  background-color: #693B9F !important;
+  border-color: #693B9F !important;
+}
 
+.form-check-input[type=checkbox]:focus {
+  border-color: #693B9F !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.footer-img{
+  width: 50px;
+  height: 100%;
+  margin: 5px;
+}
+
+.footer ul li{
+text-decoration: none;
+color: #693B9F;
+margin: none;
+}
+
+.comment-input{
+  border: none;
+  background-color: #E9E9E9;
+  border-radius: 0;
+  outline: 0;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.60);
+  width: 100%;
+}
+
+.secondary{
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.60);
+}
 

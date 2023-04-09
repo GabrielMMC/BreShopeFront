@@ -22,7 +22,7 @@ h1, h2, h3, h4, h5, h6, p, span{
 }
 
 .box{
-    max-width: 1200px;
+    max-width: 1400px;
     border-radius: .2rem;
     background-color: #FFF;
     margin: auto;
@@ -209,7 +209,7 @@ h1 {
 /* --------------------------------------------------User-Dashboard-------------------------------------------------- */
 .user-dash{
   height: calc(100vh - 172px);
-  border-right: 1px solid #E8E8E8
+  border-right: 1px solid #F2F2F2
 }
 
 .user-dash ul{
@@ -231,7 +231,7 @@ h1 {
   display: flex;
   align-items: center;
   width: 95%;
-  background-color: #E8E8E8;
+  background-color: #F0F0F0;
 } 
 
 .user-dash li p{

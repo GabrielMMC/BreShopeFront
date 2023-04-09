@@ -26,9 +26,7 @@ const EditProduct = () => {
         }
       })
         .then(async (response) => {
-          console.log(response)
           const json = await response.json();
-          console.log(json)
           return json;
         }).then(async (json) => {
           setState({ ...state, data: json, redirect: true })
@@ -37,12 +35,13 @@ const EditProduct = () => {
   }, [id]);
   return (
     <>
-      <ThemeProvider theme={Theme}>
-        <div className="d-flex justify-content-center m-5 p-5">
+      {!state.redirect ?
+        <div className="d-flex justify-content-center p-5">
           {!state.redirect && <CircularProgress />}
         </div>
-        {state.redirect && <AddProduct edit={state.data} />}
-      </ThemeProvider>
+        :
+        <AddProduct edit={state.data.product} />
+      }
     </>
   )
 }

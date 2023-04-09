@@ -1,18 +1,23 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Fade from "@mui/material/Fade";
-import Modal from "@mui/material/Modal";
-import Backdrop from "@mui/material/Backdrop";
-import CloseIcon from "@mui/icons-material/Close";
-import { CircularProgress, IconButton } from "@mui/material";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import LocalAtmIcon from "@mui/icons-material/LocalAtm";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { GET_FETCH, STORAGE_URL } from "../../../../variables";
-import dateMask from "../../../utilities/masks/date";
-import { moneyMask } from "../../../utilities/masks/currency";
-import characterLimitMask from "../../../utilities/masks/characterLimit";
-// import './styles.css';
+import * as React from "react"
+import Box from "@mui/material/Box"
+import Fade from "@mui/material/Fade"
+import Modal from "@mui/material/Modal"
+import Backdrop from "@mui/material/Backdrop"
+import { MdOutlineDone } from 'react-icons/md'
+import CloseIcon from "@mui/icons-material/Close"
+import dateMask from "../../../utilities/masks/date"
+import LocalAtmIcon from "@mui/icons-material/LocalAtm"
+import CreditCardIcon from "@mui/icons-material/CreditCard"
+import VisibilityIcon from "@mui/icons-material/Visibility"
+import { moneyMask } from "../../../utilities/masks/currency"
+import { GET_FETCH, POST_FETCH_FORMDATA, PUT_FETCH_FORMDATA, STORAGE_URL, URL } from "../../../../variables"
+import characterLimitMask from "../../../utilities/masks/characterLimit"
+import { CircularProgress, IconButton, Button, Rating } from "@mui/material"
+import { LoadingButton } from '@mui/lab'
+import ImagesModal from "../../Paymant/ImagesModal"
+import { useSelector } from "react-redux"
+import { BiCommentCheck, BiCommentX, BiImageAdd } from 'react-icons/bi'
+import { renderToast } from "../../../utilities/Alerts"
 
 // -------------------------------------------------------------------
 //********************************************************************
@@ -25,14 +30,25 @@ const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+
+  '@media(max-width: 1000px)': {
+    width: '90%',
+    transform: 'initial',
+    left: '5%',
+  },
 };
 
 export default function MoreInfo(props) {
   // -------------------------------------------------------------------
   //********************************************************************
   // -------------------------States------------------------------------
-  const [open, setOpen] = React.useState(false);
   const [order, setOrder] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const [delivered, setDelivered] = React.useState(false);
+  const [loadingSave, setLoadingSave] = React.useState(false);
+  const [loadingRate, setLoadingRate] = React.useState(false);
+
+  const token = useSelector(state => state.AppReducer.token)
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -48,7 +64,19 @@ export default function MoreInfo(props) {
   const getData = async () => {
     const response = await GET_FETCH({ url: `orders/${props.id}`, token: props.token });
     setOrder(response.order);
+    setDelivered(response.order.products.map(item => {
+      return {
+        id: item.product.id,
+        rating: 0,
+        files: [],
+        delivered: false,
+        breshop_id: item.product.breshop_id,
+        comment: { value: '', error: false },
+      }
+    }))
   };
+
+  console.log('delivered', delivered)
 
 
   // -----------------------------------------------------------------
@@ -91,6 +119,104 @@ export default function MoreInfo(props) {
         return method;
     }
   }
+
+  const handleDeliveredSubmit = async (validate, id) => {
+    let response
+    let body = new FormData()
+    let ratingObj = delivered.filter(item => item.id === id)[0]
+
+    body.append('product_id', id)
+    body.append('order_id', order.id)
+    body.append('breshop_id', ratingObj.breshop_id)
+
+    if (validate) {
+      if (!ratingObj.comment.value) ratingObj.comment.error = true
+
+      body.append('rating', ratingObj.rating)
+      body.append('comment', ratingObj.comment.value)
+      ratingObj.files.forEach(item => { body.append('files[]', item.value) })
+
+      if (ratingObj.comment.error) {
+        setDelivered(delivered.map(item => {
+          if (item.id === id) item.comment.error = true
+          return item
+        }))
+      } else {
+        setLoadingRate(true)
+        response = await POST_FETCH_FORMDATA({ url: `${URL}api/order/products/rating/create`, body, token })
+        console.log('response', response)
+        if (response.status) {
+          handleUpdateStatus(id)
+          renderToast({ type: 'success', error: response.message })
+        } else {
+          renderToast({ type: 'error', error: response.message })
+        }
+        setLoadingRate(false)
+      }
+    } else {
+      setLoadingSave(true)
+      response = await POST_FETCH_FORMDATA({ url: `${URL}api/order/products/update`, body, token })
+      console.log('response', response)
+      if (response.status) {
+        handleUpdateStatus(id)
+        renderToast({ type: 'success', error: response.message })
+      } else {
+        renderToast({ type: 'error', error: response.message })
+      }
+      setLoadingSave(false)
+    }
+  }
+
+  const handleUpdateStatus = (id) => {
+    let newOrder = { ...order }
+    newOrder.products.forEach(item => {
+      if (item.product.id === id) item.delivered = true
+    })
+    setOrder(newOrder)
+  }
+
+  const handleRatingChange = (id, value) => {
+    setDelivered(delivered.map(item => {
+      if (item.id === id) item.rating = value
+      return item
+    }))
+  }
+
+  const handleCommentChange = (id, value) => {
+    setDelivered(delivered.map(item => {
+      if (item.id === id) {
+        item.comment.value = value
+        item.comment.error = ''
+      }
+      return item
+    }))
+  }
+
+  const handleAddFiles = (id, files) => {
+    console.log('files', files)
+    const filePromises = []
+    for (let i = 0; i < 4; i++) {
+      if (files[i] !== undefined) {
+        const fr = new FileReader()
+        filePromises.push(new Promise((resolve) => {
+          fr.onload = (e) => {
+            resolve({ value: files[i], url: e.target.result, name: files[i].name })
+          }
+          fr.readAsDataURL(files[i])
+        }))
+      }
+    }
+
+    Promise.all(filePromises).then((fileDataArray) => {
+      setDelivered(delivered.map(item => {
+        if (item.id === id) {
+          item.files = fileDataArray
+        }
+        return item
+      }))
+    })
+  }
+
 
   return (
     <div>
@@ -152,12 +278,11 @@ export default function MoreInfo(props) {
 
                       <span style={style} className="m-1 text-center row status small">{status}</span>
                     </div>
-                    // </div>
-                  );
+                  )
                 })}
 
                 {order.products.map((item, index) => (
-                  <div key={index} className='col-12 py-3 m-auto rounded mt-3 bg-gray'>
+                  <div className="col-12 mt-3 bg-gray py-3 m-auto rounded" key={index}>
                     <p className="lead">{characterLimitMask(item.product?.name, 40)}</p>
                     <div className="d-flex">
                       {item.images.map(img => (
@@ -167,8 +292,46 @@ export default function MoreInfo(props) {
                       ))}
                     </div>
                     <p className="small mt-1">{characterLimitMask(item.product?.description, 180)}</p>
-                    <span className="small">{moneyMask(10000)}</span>
+                    <div className="d-flex align-items-center my-2">
+                      <span className="bold">{moneyMask(10000)}</span>
+                      <div className="ms-auto">
+                        {item.delivered
+                          ? <Button variant='contained' size='small' endIcon={<MdOutlineDone />} disabled>Produto recebido</Button>
+                          : <Button variant='contained' size='small' endIcon={<MdOutlineDone />} onClick={() =>
+                            setDelivered(delivered.map(item2 => { if (item2.id === item.product.id) item2.delivered = !item2.delivered; return item2 }))
+                          }>{delivered.filter(item2 => item.product.id === item2.id)[0].delivered ? 'Cancelar recebimento' : 'Confirmar recebimento'}
+                          </Button>}
+                      </div>
+                    </div>
                     <span className="text-center row" style={{ backgroundColor: '#FFF', height: '.1rem' }} />
+
+                    {!item.delivered && delivered.map(item2 => {
+                      if (item.product.id === item2.id && item2.delivered)
+                        return (
+                          <div key={item.product.id} className="row mt-3">
+                            <div className="d-flex align-items-center">
+                              <Rating value={item2.rating} onChange={({ target }) => handleRatingChange(item2.id, target.value)} />
+                              <ImagesModal images={item2.files} />
+                              <div className="ms-3 d-flex flex-wrap">
+                                {item2.files.map(file => (
+                                  <span className="ms-2 secondary" key={file.value.name}>{file.value.name}</span>
+                                ))}
+                              </div>
+                            </div>
+                            <textarea className={`${item2.comment.error && 'input-error'} comment-input`} value={item2.comment.value} onChange={({ target }) => handleCommentChange(item2.id, target.value)} cols="30" rows="5"></textarea>
+                            <div className="d-flex">
+                              <Button component="label" endIcon={<BiImageAdd />}>Envie Imagens
+                                <input hidden onChange={({ target }) => handleAddFiles(item2.id, target.files)} accept="image/*" multiple type="file" />
+                              </Button>
+                              <div className="ms-auto">
+                                <LoadingButton loading={loadingSave} onClick={() => handleDeliveredSubmit(false, item2.id)} loadingPosition="end" endIcon={<BiCommentX />}>Salvar sem feedback</LoadingButton>
+                                <LoadingButton loading={loadingRate} onClick={() => handleDeliveredSubmit(true, item2.id)} loadingPosition="end" endIcon={<BiCommentCheck />}>Salvar</LoadingButton>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                    })
+                    }
                   </div>
                 )
                 )}

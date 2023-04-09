@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom'
 import { FiUser } from 'react-icons/fi'
 import { BsCreditCard } from 'react-icons/bs'
 import { BiHomeSmile } from 'react-icons/bi'
-import { MdOutlineLocalShipping } from 'react-icons/md'
 import { TbShirt } from 'react-icons/tb'
 import { RiBillLine } from 'react-icons/ri'
 import { FaRegMoneyBillAlt } from 'react-icons/fa'
 import { AiOutlineLineChart } from 'react-icons/ai'
+import { MdOutlineLocalShipping, MdOutlineLocalOffer } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import Data from "./Data";
 import './styles.css';
@@ -25,7 +25,7 @@ const Profile = () => {
       <div className='box p-3'>
         <div className='row'>
           <div className='col-3'>
-            <nav className="user-dash">
+            <nav className="user-dash h-100">
               <ul>
                 <li className='hvr-grow pointer' onClick={() => history('/profile')}>
                   <FiUser />
@@ -52,6 +52,10 @@ const Profile = () => {
                     <li className='hvr-grow pointer' onClick={() => history('/profile/products')}>
                       <TbShirt />
                       <p className='small' style={{ color: 'black' }}>Meus produtos</p>
+                    </li>
+                    <li className='hvr-grow pointer' onClick={() => history('/profile/sales')}>
+                      <MdOutlineLocalOffer />
+                      <p className='small' style={{ color: 'black' }}>Minhas promoções</p>
                     </li>
                     <li className='hvr-grow pointer' onClick={() => history('/profile/withdrawals')}>
                       <FaRegMoneyBillAlt />

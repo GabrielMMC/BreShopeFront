@@ -4,8 +4,9 @@ import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import Profile from "../pages/Dashboard/Profile";
 import Home from "../pages/Home";
-import Product from "../pages/Product";
+import Product from "../pages/Product/Product";
 import Breshop from "./Breshop/Breshop";
+import BreshopPublic from "../pages/Breshop";
 import GuestRoutes from "./GuestRoutes";
 import AddProduct from "./Product/AddProduct";
 import EditProduct from "./Product/EditProduct";
@@ -17,6 +18,10 @@ import Recipient from "./Breshop/Recipient";
 import PaymentScreen from "../pages/Paymant/PaymentScreen";
 import Withdrawal from "./Financial/Withdrawal";
 import RecipientOrders from "./Order/RecipientOrders";
+import AddSale from "../pages/Dashboard/Sale/AddSale";
+import Building from "../pages/Building";
+import ListSales from "../pages/Dashboard/Sale/ListSales";
+import { EditSale } from "../pages/Dashboard/Sale/EditSale";
 
 const PrivateRoute = (props) => {
   const token = useSelector((state) => state.AppReducer.token);
@@ -58,6 +63,7 @@ const RoutesContainer = () => {
       <Route path={"/login"} element={<LoginRoute />} />
       <Route path={"/register"} element={<Register />} />
       <Route path={"product/:id"} element={<Product />} />
+      <Route path={"breshop/:id"} element={<BreshopPublic />} />
       <Route path={"/payment"} element={<PaymentScreen />} />
       <Route path={"/home"} element={<PrivateRoute />} />
       <Route path={"/profile"} element={<Profile />}>
@@ -69,10 +75,14 @@ const RoutesContainer = () => {
         <Route path={"products"} element={<ListProducts />} />
         <Route path={"product/add"} element={<AddProduct />} />
         <Route path={"product/edit/:id"} element={<EditProduct />} />
+        <Route path={"sales"} element={<ListSales />} />
+        <Route path={"sale/add"} element={<AddSale />} />
+        <Route path={"sale/edit/:id"} element={<EditSale />} />
         <Route path={"withdrawals"} element={<Withdrawal />} />
         <Route path={"recipient-orders"} element={<RecipientOrders />} />
       </Route>
       <Route path={"/*"} element={<GuestRoutes />} />
+      <Route path={"/building/*"} element={<Building />} />
     </Routes>
   );
 };

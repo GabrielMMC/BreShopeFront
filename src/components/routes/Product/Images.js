@@ -22,13 +22,13 @@ const style = {
 export default function Images(props) {
   const [open, setOpen] = React.useState(false);
   const [thumbLoaded, setThumbLoaded] = React.useState(false);
-  const [images, setImages] = React.useState(props.images.map(item => { return { path: item.file, loaded: false } }));
+  const [images, setImages] = React.useState(props.images.map(item => { return { path: item.file ? item.file : item, loaded: false } }));
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
     <div>
-      <div style={{ width: 100, height: 100 }}>
+      <div style={{ width: 100, height: 100, margin: 'auto' }}>
         <img onClick={handleOpen} onLoad={() => setThumbLoaded(true)} className={`w-100 h-100 rounded pointer ${!thumbLoaded && 'd-none'}`} src={`${STORAGE_URL + '/' + props.thumb}`} alt="product" />
         {!thumbLoaded && <Skeleton className='position-absolute' variant="rectangular" width={100} height={100} animation='wave' sx={{ borderRadius: '.4rem' }} />}
       </div>

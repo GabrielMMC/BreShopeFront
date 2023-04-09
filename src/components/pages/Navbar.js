@@ -9,7 +9,7 @@ import { CgProfile } from 'react-icons/cg';
 import { FaBars } from 'react-icons/fa';
 import logo from '../../assets/logo.png';
 import { IconButton, Input } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { MdSearch } from 'react-icons/md';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { GET_FETCH, STORAGE_URL } from '../../variables';
 import Cart from './Cart';
@@ -21,19 +21,14 @@ const Navbar = (props) => {
   const dispatch = useDispatch();
   const user = useSelector(store => store.AppReducer.user);
 
-  const token = useSelector(state => state.AppReducer.token)
-  const toggled = useSelector(store => store.AppReducer.toggled)
-  const collapsed = useSelector(store => store.AppReducer.collapsed)
-
-  const handleCollapsedChange = (checked) => {
-    dispatch(mudarDados({ collapsed: checked }));
-
-  };
-
-  const handleToggleSidebar = (value) => {
-    // setToggled(value);
-    dispatch(mudarDados({ toggled: value }));
-  };
+  let timer
+  const handleSearchChange = (e) => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      history('/')
+      dispatch({ type: 'search', payload: e.target.value })
+    }, 750)
+  }
 
   const toggle = useCallback(() => {
     setMenu(!menu)
@@ -54,9 +49,13 @@ const Navbar = (props) => {
 
 
         <div className='d-flex align-items-center'>
-          <div className="d-flex">
-            <input type="text" className='search-container' placeholder='Buscar...' />
+          <div className="input-group-with-icon">
+            <input type="text" className='search-container' placeholder='Buscar por produto ou loja...' onChange={handleSearchChange} />
+            <div className="icon-button">
+              <MdSearch className='search-icon' size={25} color='#747474' />
+            </div>
           </div>
+
           <div className="d-flex me-3">
             <IconButton><FavoriteIcon sx={{ color: 'white' }} /></IconButton>
             <Cart open={cart} />

@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Card from './Card';
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Pagination } from "@mui/material";
 import { GET_PUBLIC_FETCH, URL } from '../../variables';
 import Slider from "react-slick";
 import './Private/SideBar/styles/index.css';
@@ -14,40 +14,103 @@ import { GiDress } from "react-icons/gi";
 import { GiGuitar } from "react-icons/gi";
 import { GiUnderwearShorts } from "react-icons/gi";
 import { IoIosGlasses } from "react-icons/io";
-import SaleCard from "./SaleCard";
 import art from '../../assets/art.png'
 import Accordion from "./Accordion/Accordion";
+import CategoryCard from "./CategoryCard";
+import BreshopCard from "./BreshopCard";
 
 const Home = () => {
-  const [state, setState] = React.useState({
-    pageNumber: 1,
-    products: [],
-  })
   const [types, setTypes] = React.useState('')
   const [styles, setStyles] = React.useState('')
-  const [products, setProducts] = React.useState('')
+  const [products, setProducts] = React.useState([])
+  const [saleProducts, setSaleProducts] = React.useState([])
+  const [breshops, setBreshops] = React.useState([])
   const [materials, setMaterials] = React.useState('')
   const [loading, setLoading] = React.useState(true)
 
-  const [type, setType] = React.useState('')
-  const [style, setStyle] = React.useState('')
-  const [price, setPrice] = React.useState('')
-  const [material, setMaterial] = React.useState('')
+  const [selectedTypes, setSelectedTypes] = React.useState([])
+  const [selectedStyles, setSelectedStyles] = React.useState([])
+  // const [price, setPrice] = React.useState('')
+  const [selectedMaterials, setSelectedMaterials] = React.useState([])
+  const [productPagination, setProductPagination] = React.useState({
+    totalItems: '', pageNumber: 0, perPage: 15
+  })
+  const [salePagination, setSalePagination] = React.useState({
+    totalItems: '', pageNumber: 0, perPage: 15
+  })
+  const [breshopPagination, setBreshopPagination] = React.useState({
+    totalItems: '', pageNumber: 0, perPage: 15
+  })
+
+  const search = useSelector(store => store.AppReducer.search);
+
+  React.useEffect(() => {
+    if (!loading) {
+      getData()
+      getSaleProducts()
+    }
+  }, [selectedTypes, selectedMaterials, selectedStyles])
+
+  React.useEffect(() => {
+    if (!loading) {
+      setLoading(true)
+      salePagination.pageNumber === 0 ? getSaleProducts() : setSalePagination({ ...salePagination, pageNumber: 0 })
+      breshopPagination.pageNumber === 0 ? getBreshops() : setBreshopPagination({ ...breshopPagination, pageNumber: 0 })
+      productPagination.pageNumber === 0 ? getData() : setProductPagination({ ...productPagination, pageNumber: 0 })
+    }
+  }, [search])
 
   React.useEffect(() => {
     getData()
-  }, [type, material, style])
+  }, [productPagination.pageNumber])
+
+  React.useEffect(() => {
+    getSaleProducts()
+  }, [salePagination.pageNumber])
+
+  React.useEffect(() => {
+    getBreshops()
+  }, [breshopPagination.pageNumber])
 
   const getData = async () => {
-    const response = await GET_PUBLIC_FETCH({ url: `${URL}api/get_all_products?page=${state.pageNumber}&type_id=${type}&style_id=${style}&material_id=${material}` })
-    console.log('resp', response)
+    setLoading(true)
+    const styleIds = selectedStyles.map(item => item.id)
+    const typeIds = selectedTypes.map(item => item.id)
+    const materialIds = selectedMaterials.map(item => item.id)
+    const response = await GET_PUBLIC_FETCH({
+      url: `${URL}api/get_all_products?search=${search}&page=${productPagination.pageNumber}&types=${typeIds}&styles=${styleIds}&materials=${materialIds}`
+    })
+    // console.log('resp', response)
     if (response.status) {
       setTypes(response.types)
       setStyles(response.styles)
       setProducts(response.products)
       setMaterials(response.materials)
+      setProductPagination({ ...productPagination, totalItems: response.pagination.total_pages })
     }
     setLoading(false)
+  }
+
+  const getSaleProducts = async () => {
+    const styleIds = selectedStyles.map(item => item.id)
+    const typeIds = selectedTypes.map(item => item.id)
+    const materialIds = selectedMaterials.map(item => item.id)
+    const response = await GET_PUBLIC_FETCH({
+      url: `${URL}api/public/products/sale?search=${search}&page=${salePagination.pageNumber + 1}&types=${typeIds}&styles=${styleIds}&materials=${materialIds}`
+    })
+    // console.log('resp sale', response)
+    setSaleProducts(response.sale_products)
+    setSalePagination({ ...salePagination, totalItems: response.pagination.total_pages })
+  }
+
+
+  const getBreshops = async () => {
+    const response = await GET_PUBLIC_FETCH({
+      url: `${URL}api/public/breshops?search=${search}&page=${breshopPagination.pageNumber + 1}`
+    })
+    // console.log('resp breshop', response)
+    setBreshops(response.breshops)
+    setBreshopPagination({ ...breshopPagination, totalItems: response.pagination.total_pages })
   }
 
   return (
@@ -66,81 +129,96 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className='w-principal m-auto'>
-        {/* <div className="mt-3" style={{ minHeight: '45vh' }}>
-            <Typography className="m-3" variant="h5" color="text.secondary">Produtos recomendados para você</Typography>
-            <Slider {...settings}>
-              {state.products && state.products.map(item => (
-                <Card product={item}></Card>
-              ))}
-            </Slider>
-          </div> */}
-
+      <div className='w-principal m-auto my-5'>
         <div className="row my-5">
           <h6 className="title mx-4">Produtos postados recentemente</h6>
           <div className="col-md-2">
-            <Accordion styles={styles} setStyle={setStyle} types={types} setType={setType} materials={materials} setMaterial={setMaterial} />
+            <Accordion styles={styles} types={types} materials={materials}
+              selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles}
+              selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes}
+              selectedMaterials={selectedMaterials} setSelectedMaterials={setSelectedMaterials} />
           </div>
 
           <div className='col-md-10'>
             {!loading ?
-              <div className="d-flex flex-wrap justify-content-center pointer">
-                {products && products.map(item => (
-                  <div key={item.id}>
-                    <Card sales={false} product={item} />
-                  </div>
-                ))}
-              </div>
+              <>
+                <div className="d-flex flex-wrap">
+                  {products.length > 0 ?
+                    products.map(item => (
+                      <div key={item.id}>
+                        <Card product={item} />
+                      </div>
+                    ))
+                    : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem produtos cadastrados'}</p>}
+                </div>
+
+                {products.length > 0 && productPagination.totalItems &&
+                  <div className='d-flex justify-content-center mt-3'>
+                    <Pagination color='yellow' shape="rounded" count={Math.ceil(productPagination.totalItems / productPagination.perPage)}
+                      page={productPagination.pageNumber + 1} onChange={(e, page) => {
+                        window.scrollTo(0, 0); setProductPagination({ ...productPagination, pageNumber: page - 1 })
+                      }
+                      } />
+                  </div>}
+              </>
               : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
           </div>
         </div>
 
-        <h6 className="title mx-4 mt-5">Categorias mais visitadas</h6>
-        <div className="row justify-content-center">
-          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
-            <div className='category d-flex align-items-center m-auto'>
-              <FaTshirt size={70} className='m-auto' />
+        <div className="row">
+          <h6 className="title mx-4">Promoções disponíveis</h6>
+          <div className="col-12">
+            <div className="d-flex flex-wrap">
+              {saleProducts.length > 0 ?
+                saleProducts.map(item => (
+                  <div key={item.id}>
+                    <Card product={item} />
+                  </div>
+                ))
+                : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem promoções cadastradas'}</p>}
             </div>
-            <p className='subtitle text-center'>Casual</p>
-          </div>
 
-          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
-            <div className='category d-flex align-items-center m-auto'>
-              <GiDress size={70} className='m-auto' />
-            </div>
-            <p className='subtitle text-center'>Luxuoso</p>
-          </div>
-
-          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
-            <div className='category d-flex align-items-center m-auto'>
-              <IoIosGlasses size={70} className='m-auto' />
-            </div>
-            <p className='subtitle text-center'>Urbano</p>
-          </div>
-
-          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
-            <div className='category d-flex align-items-center m-auto'>
-              <GiUnderwearShorts size={70} className='m-auto' />
-            </div>
-            <p className='subtitle text-center'>Surfe</p>
-          </div>
-
-          <div className="mx-5 my-3 hvr-grow align-items-center pointer" style={{ width: 175, height: 175 }}>
-            <div className='category d-flex align-items-center m-auto'>
-              <GiGuitar size={70} className='m-auto' />
-            </div>
-            <p className='subtitle text-center'>Rocker</p>
+            {saleProducts.length > 0 && salePagination.totalItems &&
+              <div className='d-flex justify-content-center mt-3'>
+                <Pagination color='yellow' shape="rounded" count={Math.ceil(salePagination.totalItems / salePagination.perPage)}
+                  page={salePagination.pageNumber + 1} onChange={(e, page) => {
+                    window.scrollTo(0, 0); setSalePagination({ ...salePagination, pageNumber: page - 1 })
+                  }
+                  } />
+              </div>}
           </div>
         </div>
 
-        {/* <div style={{ minHeight: '40vh' }}>
-          <Typography className="m-3" variant="h5" color="text.secondary">Ofertas Especiais</Typography>
-          <div className="d-flex flex-wrap justify-content-center">
-            {state.products && state.products.map(item => (
-              <Card sales={true} product={item}></Card>
-            ))}
+        <div className="my-5">
+          <h6 className="title mx-4">Categorias mais visitadas</h6>
+          <div className="row justify-content-center">
+            <CategoryCard title='Casual' icon={FaTshirt} />
+            <CategoryCard title='Luxuoso' icon={GiDress} />
+            <CategoryCard title='Urbano' icon={IoIosGlasses} />
+            <CategoryCard title='Surfe' icon={GiUnderwearShorts} />
+            <CategoryCard title='Rocker' icon={GiGuitar} />
           </div>
-        </div> */}
+        </div>
+
+        <h6 className="title mx-4 mt-5">Lojas populares</h6>
+        <div className="d-flex flex-wrap m-3 pointer">
+          {breshops.length > 0 ?
+            breshops.map(item => (
+              <div key={item.id}>
+                <BreshopCard shop={item} />
+              </div>
+            ))
+            : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem lojas cadastradas'}</p>}
+        </div>
+
+        {breshops.length > 0 && breshopPagination.totalItems &&
+          <div className='d-flex justify-content-center mt-3'>
+            <Pagination color='yellow' shape="rounded" count={Math.ceil(breshopPagination.totalItems / breshopPagination.perPage)}
+              page={breshopPagination.pageNumber + 1} onChange={(e, page) => {
+                window.scrollTo(0, 0); setBreshopPagination({ ...breshopPagination, pageNumber: page - 1 })
+              }
+              } />
+          </div>}
       </div>
       <Footer />
     </>

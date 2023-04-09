@@ -48,7 +48,7 @@ const PaymentScreen = () => {
   // -------------------------Getting-data----------------------------
   React.useEffect(() => {
     if (cartItems.length > 0) {
-      let tt = 0
+      let finalPrice = ''
       //Object to filter and group sales products
       let shipping = {
         temp: [],
@@ -57,8 +57,14 @@ const PaymentScreen = () => {
 
       cartItems.forEach(item => {
         //Sum of price with discount and quantity
-        // tt += ((item.price * (100 - item.discount_price)) * (item.quantity ? item.quantity : 1))
-        tt += ((item.price * item.quantity))
+        const price = item.price;
+        if (item.discount) {
+          const discount = item.discount / 100;
+          finalPrice += price * (1 - discount);
+        } else {
+          finalPrice += price
+        }
+        // finalPrice = parseFloat(finalPrice.toFixed(2)) * 100
 
         // Shipping.temp does not contain the promotion id, it is added and created an item object within shipping.result
         // if (!shipping.temp.includes(item.provider_sale_id)) {
@@ -68,12 +74,13 @@ const PaymentScreen = () => {
         //   shipping.result.push({ description: item.sale.name, amount: item.delivery_price, id: item.product_id })
         // }
       })
+      console.log('finalPrice', finalPrice)
       //Setting states
-      setTotal(tt)
-      setInterest(getInterest("1", tt))
+      setTotal(finalPrice)
+      setInterest(getInterest("1", finalPrice))
       setShippingsTotal(shipping.result)
       //Creating objects with total value in case the multipayment option is chosen
-      setPendent([{ value: tt, total: 0 }, { value: tt, total: 0 }])
+      setPendent([{ value: finalPrice, total: 0 }, { value: finalPrice, total: 0 }])
       setLoadingShipping(false)
     }
   }, [cartItems])
@@ -119,13 +126,15 @@ const PaymentScreen = () => {
 
       //Items object
       cartItems.forEach(item => {
+        const price = item.discount ? item.price * (1 - (item.discount / 100)) : item.price
+
         items = [...items, {
           "id": item.product_id,
           "breshop_id": item.breshop_id,
           "description": item.description,
           "shipping_amount": item.delivery_price,
           "quantity": item.quantity ? item.quantity : 1,
-          "amount": Number(item.price),
+          "amount": Number(price),
         }]
       })
 
@@ -172,7 +181,7 @@ const PaymentScreen = () => {
               ...payment, {
                 "card_id": item.id,
                 "card": { ...item },
-                "amount": item.amount,
+                "amount": Number(item.amount),
                 "payment_method": 'credit_card',
                 "installments": item.installments,
               }] :
@@ -180,7 +189,7 @@ const PaymentScreen = () => {
             payment = [
               ...payment, {
                 "card": { ...item },
-                "amount": item.amount,
+                "amount": Number(item.amount),
                 "payment_method": 'credit_card',
                 "installments": item.installments,
               }])
