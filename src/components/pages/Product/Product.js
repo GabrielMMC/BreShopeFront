@@ -1,4 +1,3 @@
-import { Button, CircularProgress, Divider, Fade, Rating, ThemeProvider, Typography } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -10,36 +9,91 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { moneyMask } from '../../utilities/masks/currency'
 import ProductImages from './ProductImages'
 import PromotionCountdown from './PromotionCountdown'
+import ImagesModal from '../Paymant/ImagesModal'
+import Card from '../Card'
+import { Button, CircularProgress, Rating, Pagination, Typography } from '@mui/material'
 
 const Product = () => {
-  const [ratings, setRatings] = React.useState('')
+  const [isCalled, setIsCalled] = React.useState(false);
+  const [waitTime, setWaitTime] = React.useState(5000); // tempo de espera em milissegundos (5 segundos)
+
+  const [search, setsearch] = React.useState('')
+  const [ratings, setRatings] = React.useState([])
   const [product, setProduct] = React.useState('')
   const [breshop, setBreshop] = React.useState('')
-  const [ratingsFilter, setRatingsFilter] = React.useState('')
-  const [loadingCart, setLoadingCart] = React.useState(false)
   const [loading, setLoading] = React.useState(true)
+  const [loadingCart, setLoadingCart] = React.useState(false)
+  const [breshopProducts, setBreshopProducts] = React.useState([])
+  const [breshopPagination, setBreshopPagination] = React.useState({
+    totalItems: '', pageNumber: 0, perPage: 15
+  })
+  const [ratingPagination, setRatingPagination] = React.useState({
+    totalItems: '', pageNumber: 1, perPage: 1, lastPage: 1
+  })
 
   const params = useParams()
   const dispatch = useDispatch()
   const token = useSelector(state => state.AppReducer.token)
 
-  React.useEffect(() => {
-    const getData = async () => {
-      const response = await GET_FETCH({ url: `get_public_product/${params.id}` })
-      console.log('product', response)
-      setProduct(response.product)
-      setBreshop(response.product.owner)
-      setRatings(response.product.owner.ratings)
-      setRatingsFilter(response.product.owner.ratings)
-      setLoading(false)
-    }
 
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight * 0.8 && !isCalled && ratingPagination.pageNumber !== ratingPagination.lastPage) {
+        setRatingPagination({ ...ratingPagination, pageNumber: ratingPagination.pageNumber + 1 });
+        setIsCalled(true);
+        setTimeout(() => {
+          setIsCalled(false);
+        }, waitTime);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isCalled, waitTime]);
+
+  React.useEffect(() => {
     getData()
   }, [])
 
-  const getRating = (value) => {
-    const rating = ratings.filter(item => item.rating === value).length
-    return rating
+  React.useEffect(() => {
+    if (!loading) getRatings()
+  }, [breshop])
+
+  React.useEffect(() => {
+    if (!loading && product.breshop_id) {
+      breshopPagination.pageNumber === 0 ? getBreshopProducts() : setBreshopPagination({ ...breshopPagination, pageNumber: 0 })
+    }
+  }, [breshopPagination.pageNumber, product])
+
+  React.useEffect(() => {
+    if (!loading && product.breshop_id) getRatings()
+  }, [ratingPagination.pageNumber])
+
+  const getData = async () => {
+    const response = await GET_FETCH({ url: `get_public_product/${params.id}` })
+    // console.log('product', response)
+    setProduct(response.product)
+    setBreshop(response.product.owner)
+    setLoading(false)
+  }
+
+  console.log('paginatiop', ratingPagination)
+  const getRatings = async () => {
+    const response = await GET_FETCH({ url: `public/breshops/${product.breshop_id}/ratings?page=${ratingPagination.pageNumber}` })
+    // console.log('product', response)
+    setRatings([...ratings, ...response.ratings])
+    setRatingPagination({ ...ratingPagination, lastPage: response.pagination.last_page })
+    // setLoading(false)
+  }
+
+  const getBreshopProducts = async () => {
+    const response = await GET_FETCH({ url: `public/breshops/${product.breshop_id}/products?page=${breshopPagination.pageNumber}` })
+    // console.log('breshops products', response)
+    setBreshopProducts(response.breshop_products)
+    setBreshopPagination({ ...breshopPagination, totalItems: response.pagination.total_pages })
   }
 
   const handleAddCart = async () => {
@@ -113,7 +167,7 @@ const Product = () => {
                 </div>
               </div>
             </div>
-            <Divider className='my-5' />
+            <hr />
             <div className="row">
               <div className="col-6 m-auto">
                 <div className="d-flex justify-content-center">
@@ -138,49 +192,78 @@ const Product = () => {
                 <Typography color="text.secondary">Comentarios</Typography>
               </div>
             </div>
-            <Divider className='my-5' />
+            <hr />
 
+            {/* -------------------------Other-products-section------------------------- */}
+            <div className="row my-5">
+              <Typography color="text.secondary" variant='h5'>Outros produtos da loja</Typography>
+
+              {!loading ?
+                <>
+                  <div className="d-flex flex-wrap">
+                    {breshopProducts.length > 0 ?
+                      breshopProducts.map(item => (
+                        <div key={item.id}>
+                          <Card product={item} />
+                        </div>
+                      ))
+                      : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem produtos cadastrados'}</p>}
+                  </div>
+
+                  {breshopProducts.length > 0 && breshopPagination.totalItems &&
+                    <div className='d-flex justify-content-center mt-3'>
+                      <Pagination color='yellow' shape="rounded" count={Math.ceil(breshopPagination.totalItems / breshopPagination.perPage)}
+                        page={breshopPagination.pageNumber + 1} onChange={(e, page) => {
+                          window.scrollTo(0, 0); setBreshopPagination({ ...breshopPagination, pageNumber: page - 1 })
+                        }
+                        } />
+                    </div>}
+                </>
+                : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
+            </div>
             {/* -------------------------Comments-Section------------------------- */}
             <div className="row">
               <div className="d-flex justify-content-center mb-5">
                 <Typography color="text.secondary" variant='h5'>Comentários da Loja</Typography>
               </div>
-              {/* 
               {ratings.length > 0 ?
                 <>
                   <div className="mb-5">
-                    <span className="lead ms-2">Filtrar por:</span>
+                    {/* <span className="lead ms-2">Filtrar por:</span>
                     <span className="lead ms-2">Uma estrela ({getRating("1")}), </span>
                     <span className="lead ms-2">Duas estrelas ({getRating("2")}), </span>
                     <span className="lead ms-2">Três estrelas ({getRating("3")}), </span>
                     <span className="lead ms-2">Quatro estrelas ({getRating("4")}), </span>
-                    <span className="lead ms-2">Cinco estrelas ({getRating("5")})</span>
+                    <span className="lead ms-2">Cinco estrelas ({getRating("5")})</span> */}
                     <div className="d-flex align-items-center">
                       <span className='lead ms-2' style={{ color: '#FF0000' }}>Eliminar filtro</span>
                       <MdClose color='red' />
                     </div>
                   </div>
 
-                  {ratingsFilter.map(item => (
+                  {ratings.map(item => (
                     <div className="row  my-3" key={item.id}>
                       <div className="d-flex justify-content-start">
                         <div>
-                          <img className='m-auto' style={{ width: 75, height: 75 }}
-                            src={`${URL}storage/photos/${item.user.file ? item.user.file : 'no_user.png'}`} alt="subject" />
+                          <img className='m-auto rounded-50' style={{ width: 75, height: 75 }}
+                            src={`${URL}storage/${item.user.file ? item.user.file : 'no_user.png'}`} alt="subject" />
                         </div>
                         <div className='ms-2'>
                           <Typography className='ms-1' color="text.secondary">{item.user.name}</Typography>
-                          <Rating value={item.rating} />
+                          <div className="d-flex align-items-center">
+                            <Rating value={item.rating} readOnly />
+                            <ImagesModal images={item.images} />
+                          </div>
                         </div>
                       </div>
 
-                      <div className="col-12">
-                        <Typography>{item.comment}</Typography>
+                      <div className="col-12 mt-2">
+                        <p>{item.comment}</p>
                       </div>
                     </div>
                   )
                   )}
-                </> : <Typography>Loja sem nenhum comentário registrado</Typography>} */}
+                </> : <Typography>Loja sem nenhum comentário registrado</Typography>}
             </div>
 
             {/* -------------------------Buttons-Section------------------------- */}

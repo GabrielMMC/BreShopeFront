@@ -15,7 +15,7 @@ import { ImImages } from 'react-icons/im'
 const style = {
   position: "absolute",
   top: '25%',
-  left: "50%",
+  left: "25%",
   width: "50%",
   height: 500,
   bgcolor: "background.paper",
