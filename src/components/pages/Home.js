@@ -121,10 +121,10 @@ const Home = () => {
           <div className='col-4' style={{ borderRadius: '56% 44% 66% 40% / 30% 33% 67% 70%', backgroundColor: '#FFF', height: 400 }}>
             <img src={art} alt="woman-art" className='h-100 d-flex justify-content-center m-auto' />
           </div>
-          <div className="col-8 text-center m-auto text-white">
-            <p className='main-title'>Conheça a nossa plataforma e começe a garimpar!</p>
-            <p className='subtitle'>A plataforma atualmente se encontra em ambiente de testes</p>
-            <p className='small'>Agradeço se reportar os bugs encontrados, de resto, <del>ta liberada a bagunça</del></p>
+          <div className="col-8 text-center m-auto">
+            <p className='main-title text-white'>Conheça a nossa plataforma e começe a garimpar!</p>
+            <p className='subtitle text-white'>A plataforma atualmente se encontra em ambiente de testes</p>
+            <p className='small text-white'>Agradeço se reportar os bugs encontrados, de resto, <del>ta liberada a bagunça</del></p>
             {/* dedo no cu e gritaria */}
           </div>
         </div>
