@@ -4,7 +4,7 @@ import useForm from '../../utilities/useForm'
 import { useNavigate } from 'react-router-dom'
 import { emailRegex } from '../../utilities/masks/Regex'
 import { POST_PUBLIC_FETCH, URL } from '../../../variables'
-import { login, mudarDados } from "../../actions/AppActions"
+import { mudarDados } from "../../actions/AppActions"
 import { BsGraphUp, BsSearch, BsHeart, BsBagCheck } from 'react-icons/bs'
 import { IconButton, Button, LinearProgress, Alert } from '@mui/material'
 import { MdVisibility, MdVisibilityOff, MdOutlineLogin } from 'react-icons/md'
@@ -47,6 +47,7 @@ const Login = () => {
         localStorage.setItem("breshop", JSON.stringify(response.user.breshop));
 
         dispatch({ type: 'login', payload: { token: response.access_token, user: response.user } });
+        dispatch({ type: 'breshop', payload: response.breshop });
         mudarDados({ breshop: response.user.breshop });
 
         history('/')

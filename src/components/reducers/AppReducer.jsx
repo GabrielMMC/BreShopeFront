@@ -33,7 +33,11 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 token: action.payload.token,
                 user: action.payload.user,
-
+            };
+        case 'breshop':
+            return {
+                ...state,
+                breshop: action.payload
             };
         case 'cart_items':
             return {
