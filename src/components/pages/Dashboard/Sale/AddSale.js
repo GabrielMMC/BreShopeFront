@@ -121,7 +121,7 @@ const AddSale = ({ edit }) => {
                 <input className={`form-control ${errors?.start_date && 'is-invalid'}`} value={form.start_date} onChange={(e) => {
                   handleChange(e)
                   // If the final date is greater than the chosen one, it will be reset.
-                  if (e.target.value > form.end_date) setForm({ ...form, end_date: '' })
+                  if (e.target.value > form.end_date) setForm({ ...form, start_date: e.target.value, end_date: '' })
                 }} onBlur={handleBlur} type='date' id='start_date' name='start_date' min={getDate('yyyy-mm-dd')} />
                 <label htmlFor='start_date'>Começa em*</label>
                 <span className='small error'>{errors?.start_date}</span>
@@ -147,7 +147,7 @@ const AddSale = ({ edit }) => {
                   }} onBlur={handleBlur} id='discount' name='discount' maxLength={2} />
                   <label htmlFor='discount'>Desconto*</label>
                 </div>
-                <span class="input-group-text" id="basic-addon1"><AiOutlinePercentage /></span>
+                <span className="input-group-text" id="basic-addon1"><AiOutlinePercentage /></span>
               </div>
               <span className='small error'>{errors?.discount}</span>
             </div>

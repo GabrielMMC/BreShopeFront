@@ -113,14 +113,13 @@ function ListProducts() {
                     </Tooltip> : description.value
                   }
                   </td>
-                  {console.log('itme', item.damage)}
                   <td><input className="form-check-input" type="checkbox" checked={Boolean(item.damage)} readOnly /></td>
                   <td style={{ whiteSpace: 'nowrap' }}>{moneyMask(item.price)}</td>
                   <td style={{ whiteSpace: 'nowrap' }}><span className='bold'>{item.size}</span></td>
                   <td style={{ whiteSpace: 'nowrap' }}>{item.sold ? <span className='success bold'>Vendido</span> : <span className='error bold'>Em estoque</span>}</td>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     {item.sold ?
-                      <IconButton color='yellow' onClick={() => history(`/profile/recipient-orders`)}><VisibilityIcon /></IconButton>
+                      <IconButton color='success' onClick={() => history(`/profile/recipient-orders`)}><VisibilityIcon /></IconButton>
                       :
                       <>
                         <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>

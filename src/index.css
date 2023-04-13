@@ -13,6 +13,11 @@ code {
 p{
   font-size: 16px;
   color: rgba(0, 0, 0, 0.60);
+  margin: 0;
+}
+
+.min-height{
+  min-height: calc(100vh - 400px);
 }
 
 .price {
@@ -474,5 +479,20 @@ margin: none;
 .secondary{
   font-size: 12px;
   color: rgba(0, 0, 0, 0.60);
+}
+
+.cart-section{
+  display: block;
+}
+
+@media screen and (max-width: 990px) {
+  .cart-section{
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.dropdown-active:active{
+  background-color: #693B9F !important;
 }
 

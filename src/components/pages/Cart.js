@@ -1,6 +1,5 @@
 import React from "react"
-import Box from "@mui/material/Box"
-import Fade from "@mui/material/Fade"
+import { MdOutlineClose } from 'react-icons/md'
 import Modal from "@mui/material/Modal"
 import { useSelector, useDispatch } from 'react-redux'
 import Backdrop from "@mui/material/Backdrop"
@@ -128,9 +127,12 @@ const Cart = () => {
                     {products.length !== 0 ?
                       products.map(item => (
                         <div key={item.product_id} className="row">
-                          <div className="col-sm-3" style={{ position: "relative", display: "inline-block" }}>
+                          <div className="col-sm-3 position-relative">
+                            <button onClick={() => handleDelete(item.product_id)} type='button' className="close-sale" style={{ margin: 0, marginRight: 3, marginTop: -8 }}>
+                              <MdOutlineClose color='#FFF' size={25} />
+                            </button>
                             <img src={STORAGE_URL + item?.thumb} alt="product" className='img-fluid' />
-                            <button className='remove-button' onClick={() => handleDelete(item.product_id)}><CloseIcon fontSize='small' /></button>
+                            {/* <button className='remove-button' onClick={() => handleDelete(item.product_id)}><CloseIcon fontSize='small' /></button> */}
                           </div>
                           <div className="col-sm-6">
                             <span>{characterLimitMask(item.name, 40)}</span>
@@ -138,9 +140,9 @@ const Cart = () => {
                           </div>
                           <div className="col-sm-3">
                             <div className="d-flex input-group justify-content-end flex-nowrap">
-                              <button onClick={() => handleQuantityChange(item.quantity - 1, item.product_id)} className='cart-button' style={{ borderRadius: '.4rem 0 0 .4rem' }}>-</button>
-                              <input onChange={({ target }) => handleQuantityChange(target.value, item.product_id)} className='form-control text-center' type="text" style={{ maxWidth: '3rem' }} value={item.quantity} />
-                              <button onClick={() => handleQuantityChange(item.quantity + 1, item.product_id)} className='cart-button' style={{ borderRadius: '0 .4rem .4rem 0' }}>+</button>
+                              <button disabled onClick={() => handleQuantityChange(item.quantity - 1, item.product_id)} className='cart-button' style={{ borderRadius: '.4rem 0 0 .4rem' }}>-</button>
+                              <input disabled onChange={({ target }) => handleQuantityChange(target.value, item.product_id)} className='form-control text-center' type="text" style={{ maxWidth: '3rem' }} value={item.quantity} />
+                              <button disabled onClick={() => handleQuantityChange(item.quantity + 1, item.product_id)} className='cart-button' style={{ borderRadius: '0 .4rem .4rem 0' }}>+</button>
                             </div>
                             <p className='d-flex justify-content-end bold'>{moneyMask(item.price * item.quantity)}</p>
                           </div>
@@ -159,7 +161,7 @@ const Cart = () => {
               </div>
 
               <div className="ms-auto">
-                <Button size='large' variant='contained' disabled={Boolean(products.length === 0)} onClick={() => history('/payment')} endIcon={<ShoppingCartCheckoutIcon />}>Ir para pagamento</Button>
+                <Button size='large' variant='contained' disabled={Boolean(products.length === 0)} onClick={() => { dispatch({ type: 'toggle_cart', toggled: false }); history('/payment') }} endIcon={<ShoppingCartCheckoutIcon />}>Ir para pagamento</Button>
               </div>
             </div>
           </div>

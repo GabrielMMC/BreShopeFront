@@ -194,6 +194,7 @@ const Withdrawal = () => {
               <tbody>
                 {withdrawals && withdrawals.map((item, index) => {
                   const { style, status } = handleStatus(item.status)
+
                   return (
                     <tr key={index}>
                       <td>{moneyMask(item.amount)}</td>

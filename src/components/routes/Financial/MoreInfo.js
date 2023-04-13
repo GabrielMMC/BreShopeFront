@@ -82,7 +82,7 @@ export default function MoreInfo({ id }) {
 
   return (
     <div>
-      <IconButton color='inherit' onClick={handleOpen}>
+      <IconButton color='success' onClick={handleOpen}>
         <VisibilityIcon size={17} />
       </IconButton>
 

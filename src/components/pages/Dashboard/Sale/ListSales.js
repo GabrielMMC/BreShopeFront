@@ -106,7 +106,7 @@ function ListSales() {
         </table> : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>
       }
 
-      {sales.length > 0 && pagination.totalItems &&
+      {sales?.length > 0 && pagination.totalItems &&
         <div className='d-flex justify-content-end'>
           <Pagination color='primary' shape="rounded" count={Math.ceil(pagination.totalItems / pagination.perPage)}
             page={pagination.pageNumber + 1} onChange={(e, page) => {

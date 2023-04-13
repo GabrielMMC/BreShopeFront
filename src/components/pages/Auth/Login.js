@@ -8,6 +8,7 @@ import { login, mudarDados } from "../../actions/AppActions"
 import { BsGraphUp, BsSearch, BsHeart, BsBagCheck } from 'react-icons/bs'
 import { IconButton, Button, LinearProgress, Alert } from '@mui/material'
 import { MdVisibility, MdVisibilityOff, MdOutlineLogin } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
 
 const Login = () => {
   //States and hooks
@@ -20,6 +21,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = React.useState(false)
 
   const history = useNavigate()
+  const dispatch = useDispatch()
 
   //Save function
   const handleSave = async () => {
@@ -44,10 +46,10 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(response.user));
         localStorage.setItem("breshop", JSON.stringify(response.user.breshop));
 
+        dispatch({ type: 'login', payload: { token: response.access_token, user: response.user } });
         mudarDados({ breshop: response.user.breshop });
-        login({ token: response.access_token, user: response.user });
 
-        // history('/')
+        history('/')
       } else {
         setErrorMessage(response.message)
       }

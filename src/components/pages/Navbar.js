@@ -15,14 +15,17 @@ import { GET_FETCH, STORAGE_URL } from '../../variables';
 import Cart from './Cart';
 
 const Navbar = (props) => {
+  const search = useSelector(store => store.AppReducer.search);
   const [menu, setMenu] = useState(false);
   const [cart, setCart] = useState(false);
+  const [navSearch, setNavSearch] = useState(search);
   const history = useNavigate()
   const dispatch = useDispatch();
   const user = useSelector(store => store.AppReducer.user);
 
   let timer
   const handleSearchChange = (e) => {
+    setNavSearch(e.target.value)
     clearTimeout(timer)
     timer = setTimeout(() => {
       history('/')
@@ -50,7 +53,7 @@ const Navbar = (props) => {
 
         <div className='d-flex align-items-center'>
           <div className="input-group-with-icon">
-            <input type="text" className='search-container' placeholder='Buscar por produto ou loja...' onChange={handleSearchChange} />
+            <input type="text" className='search-container' placeholder='Buscar por produto ou loja...' value={navSearch} onChange={handleSearchChange} />
             <div className="icon-button">
               <MdSearch className='search-icon' size={25} color='#747474' />
             </div>
@@ -70,19 +73,19 @@ const Navbar = (props) => {
                 {user.id ?
                   <>
                     <Link to={`/profile`} className='navlink'>
-                      <DropdownItem><CgProfile style={{ marginRight: 5 }} /> Minha Conta</DropdownItem>
+                      <DropdownItem className='dropdown-active'><CgProfile style={{ marginRight: 5 }} /> Minha Conta</DropdownItem>
                     </Link>
-                    <DropdownItem onClick={logout_} className='navlink'>
+                    <DropdownItem onClick={logout_} className='navlink dropdown-active'>
                       <MdExitToApp style={{ marginRight: 5 }} />Sair
                     </DropdownItem>
                   </>
                   :
                   <>
                     <Link to={`/register`} className='navlink'>
-                      <DropdownItem><MdExitToApp style={{ marginRight: 5 }} /> Criar Conta</DropdownItem>
+                      <DropdownItem className='dropdown-active'><MdExitToApp style={{ marginRight: 5 }} /> Criar Conta</DropdownItem>
                     </Link>
                     <Link to={`/login`} className='navlink'>
-                      <DropdownItem><CgProfile style={{ marginRight: 5 }} />Entrar</DropdownItem>
+                      <DropdownItem className='dropdown-active'><CgProfile style={{ marginRight: 5 }} />Entrar</DropdownItem>
                     </Link>
                   </>}
               </DropdownMenu>

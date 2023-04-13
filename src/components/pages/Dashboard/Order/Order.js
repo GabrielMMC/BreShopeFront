@@ -9,6 +9,7 @@ import Filter from '../../../utilities/Filter';
 import { useSelector } from 'react-redux'
 import { MdSearch } from 'react-icons/md'
 import { renderToast } from '../../../utilities/Alerts';
+import Images from '../../../routes/Product/Images';
 
 const Order = () => {
   // -------------------------------------------------------------------
@@ -37,10 +38,8 @@ const Order = () => {
   React.useEffect(() => {
     const getData = async () => {
       setAllow(false); setLoading(true)
-      console.log('datge', dateOf, dateFor)
 
       const status = getStatus()
-      console.log('statr', status)
       const response = await GET_FETCH({
         url: `orders/?page=${pagination.pageNumber + 1}&status=${status ? status : ''}&dateOf=${dateOf ? dateOf : ''}
         &dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
@@ -119,7 +118,7 @@ const Order = () => {
   }
 
   return (
-    <div className="row">
+    <div className="row anime-left">
       {/* -------------------------search-and-filter------------------------- */}
       <div className="col-md-6 col-12 mb-5">
         <div className="d-flex">
@@ -141,14 +140,14 @@ const Order = () => {
       </div>
       {/* -------------------------Orders-table------------------------- */}
       {!loading ?
-        <table className='table table-striped table-hover lead'>
+        <table className='table table-striped table-hover text-center'>
           <thead>
-            <tr>
-              <td>Produtos</td>
-              <td>Status</td>
-              <td>Total</td>
-              <td>Criado em</td>
-              <td>Ações</td>
+            <tr className='small' style={{ fontWeight: 500 }}>
+              <td>PRODUTOS</td>
+              <td>STATUS</td>
+              <td>TOTAL</td>
+              <td>CRIADO EM</td>
+              <td>AÇÕES</td>
             </tr>
           </thead>
           <tbody>
@@ -157,7 +156,7 @@ const Order = () => {
               const { style, status } = handleStatus(item.status)
               return (
                 <tr key={index} style={{ whiteSpace: 'nowrap' }}>
-                  <td>{item.products.map(item2 => (<span className='row m-auto'>{item2?.product?.name}</span>))}</td>
+                  <td><Images thumb={item.images[0]} images={item.images} /></td>
                   <td><span className='row m-auto status' style={style}>{status}</span></td>
                   <td>{moneyMask(item.amount)}</td>
                   <td>{dateMask(item.created_at)}</td>
@@ -168,7 +167,7 @@ const Order = () => {
             )}
           </tbody>
         </table>
-        : <div className='d-flex justify-content-center p-5'><CircularProgress color='inherit' /></div>
+        : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>
       }
       {/* -------------------------Pagination------------------------- */}
       {pagination && pagination.totalItems &&
