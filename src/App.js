@@ -4,7 +4,6 @@ import { ToastContent } from './components/utilities/Alerts'
 import './components/pages/Styles/style.css'
 
 function App() {
-
   const Theme = createTheme({
     palette: {
       primary: { main: '#693B9F' },

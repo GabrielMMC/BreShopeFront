@@ -13,6 +13,7 @@ import { MdSearch } from 'react-icons/md';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { GET_FETCH, STORAGE_URL } from '../../variables';
 import Cart from './Cart';
+import Wishlist from './Wishlist';
 
 const Navbar = (props) => {
   const search = useSelector(store => store.AppReducer.search);
@@ -60,7 +61,7 @@ const Navbar = (props) => {
           </div>
 
           <div className="d-flex me-3">
-            <IconButton><FavoriteIcon sx={{ color: 'white' }} /></IconButton>
+            <Wishlist />
             <Cart open={cart} />
           </div>
 

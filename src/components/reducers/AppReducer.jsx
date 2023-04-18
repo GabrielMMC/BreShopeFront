@@ -1,9 +1,11 @@
 const INITIAL_STATE = {
     user: {},
     cart_items: [],
+    wishlist_items: [],
     token: null,
     breshop: null,
     toggled: false,
+    wishlist_toggled: false,
     collapsed: false,
     search: '',
 };
@@ -16,12 +18,23 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 ...action.payload
             };
+        case 'breshop':
+            return {
+                ...state,
+                breshop: action.payload,
+
+            };
 
         case 'logout':
             return {
                 ...state,
                 token: null,
+                breshop: null,
                 user: {},
+                cart_items: [],
+                wishlist_items: [],
+                search: ''
+
             };
         case 'user':
             return {
@@ -41,10 +54,21 @@ export default (state = INITIAL_STATE, action) => {
                 cart_items: action.payload,
 
             };
+        case 'wishlist_items':
+            return {
+                ...state,
+                wishlist_items: action.payload,
+
+            };
         case 'toggle_cart':
             return {
                 ...state,
                 toggled: action.toggled,
+            };
+        case 'toggle_wishlist':
+            return {
+                ...state,
+                wishlist_toggled: action.toggled,
             };
         case 'search':
             return {

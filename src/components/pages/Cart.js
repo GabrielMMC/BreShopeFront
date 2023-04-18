@@ -122,42 +122,69 @@ const Cart = () => {
                   </div>
                 </div>
                 <hr className='mb-5' />
-                {!loading ?
+
+                {token ?
                   <>
-                    {products.length !== 0 ?
-                      products.map(item => (
-                        <div key={item.product_id} className="row">
-                          <div className="col-sm-3 position-relative">
-                            <button onClick={() => handleDelete(item.product_id)} type='button' className="close-sale" style={{ margin: 0, marginRight: 3, marginTop: -8 }}>
-                              <MdOutlineClose color='#FFF' size={25} />
-                            </button>
-                            <img src={STORAGE_URL + item?.thumb} alt="product" className='img-fluid' />
-                            {/* <button className='remove-button' onClick={() => handleDelete(item.product_id)}><CloseIcon fontSize='small' /></button> */}
-                          </div>
-                          <div className="col-sm-6">
-                            <span>{characterLimitMask(item.name, 40)}</span>
-                            <p className='small'>{characterLimitMask(item.description, 180)}</p>
-                          </div>
-                          <div className="col-sm-3">
-                            <div className="d-flex input-group justify-content-end flex-nowrap">
-                              <button disabled onClick={() => handleQuantityChange(item.quantity - 1, item.product_id)} className='cart-button' style={{ borderRadius: '.4rem 0 0 .4rem' }}>-</button>
-                              <input disabled onChange={({ target }) => handleQuantityChange(target.value, item.product_id)} className='form-control text-center' type="text" style={{ maxWidth: '3rem' }} value={item.quantity} />
-                              <button disabled onClick={() => handleQuantityChange(item.quantity + 1, item.product_id)} className='cart-button' style={{ borderRadius: '0 .4rem .4rem 0' }}>+</button>
+                    {!loading ?
+                      <>
+                        {products.length !== 0 ?
+                          products.map(item => (
+                            <div key={item.product_id} className="row mb-4">
+                              <div className="col-sm-4 position-relative">
+                                <button onClick={() => handleDelete(item.product_id)} type='button' className="close-sale" style={{ margin: 0, marginRight: 3, marginTop: -8 }}>
+                                  <MdOutlineClose color='#FFF' size={25} />
+                                </button>
+                                <img src={STORAGE_URL + item?.thumb} alt="product" className='img-fluid' />
+                                {item.discount &&
+                                  <div className='sale'>
+                                    <p className='h6'>{item.discount}%</p>
+                                  </div>}
+                              </div>
+                              <div className="col-sm-5">
+                                <p>{item.name}</p>
+                                <p className='small'>{characterLimitMask(item.description, 180)}</p>
+                              </div>
+                              <div className="col-sm-3">
+                                <div className="d-flex input-group justify-content-end flex-nowrap">
+                                  <button disabled onClick={() => handleQuantityChange(item.quantity - 1, item.product_id)} className='cart-button' style={{ borderRadius: '.4rem 0 0 .4rem' }}>-</button>
+                                  <input disabled onChange={({ target }) => handleQuantityChange(target.value, item.product_id)} className='form-control text-center' type="text" style={{ maxWidth: '3rem' }} value={item.quantity} />
+                                  <button disabled onClick={() => handleQuantityChange(item.quantity + 1, item.product_id)} className='cart-button' style={{ borderRadius: '0 .4rem .4rem 0' }}>+</button>
+                                </div>
+                                {item.discount ?
+                                  <>
+                                    <p className='bold'>
+                                      <del>{moneyMask(item.price)}</del>
+                                    </p>
+                                    <p style={{ color: '#DC3545', fontWeight: 'bold' }}>
+                                      {moneyMask(item.price - (item.price * (item.discount / 100)))}
+                                    </p>
+                                  </>
+                                  : <p className='bold'>
+                                    {moneyMask(item.price)}
+                                  </p>
+                                }
+                              </div>
                             </div>
-                            <p className='d-flex justify-content-end bold'>{moneyMask(item.price * item.quantity)}</p>
-                          </div>
-                        </div>
-                      ))
-                      :
-                      <div className='row h-100'>
-                        <div className='m-auto' style={{ width: '50%', height: '50%', margin: 'auto' }}>
-                          <img className='img-fluid' src={emptyBag} />
-                          <p className='dash-title text-center'>Sacola vazia...</p>
-                          <p className='text-muted text-center'>Adicione produtos para ir à tela de pagamento</p>
-                        </div>
-                      </div>}
+                          ))
+                          :
+                          <div className='row h-100'>
+                            <div className='m-auto' style={{ width: '50%', height: '50%', margin: 'auto' }}>
+                              <img className='img-fluid' src={emptyBag} />
+                              <p className='dash-title text-center'>Sacola vazia...</p>
+                              <p className='text-muted text-center'>Adicione produtos para ir à tela de pagamento</p>
+                            </div>
+                          </div>}
+                      </>
+                      : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
                   </>
-                  : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
+                  :
+                  <div className='row h-100'>
+                    <div className='m-auto' style={{ width: '50%', height: '50%', margin: 'auto' }}>
+                      <img className='img-fluid' src={emptyBag} />
+                      <p className='dash-title text-center'>Sacola vazia...</p>
+                      <p className='text-muted text-center'>Faça login para carregar seu carrinho!</p>
+                    </div>
+                  </div>}
               </div>
 
               <div className="ms-auto">

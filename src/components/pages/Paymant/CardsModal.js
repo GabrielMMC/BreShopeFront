@@ -15,11 +15,12 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: 550,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
-  borderRadius: '.4rem'
+  borderRadius: '.4rem',
+  overflowY: 'auto',
 };
 
 //Props coming from the CardPayment and MultiPayment screens
@@ -79,7 +80,7 @@ export default function CardsModal({ card, setCard, indexCard }) {
   return (
     <div>
       <span className='link-p' onClick={handleOpen}>Selecione um cartão</span>
-      <Modal aria-labelledby="transition-modal-title" aria-describedby="transition-modal-description" open={open} onClose={handleClose} closeAfterTransition
+      <Modal sx={{ overflowY: 'auto' }} aria-labelledby="transition-modal-title" aria-describedby="transition-modal-description" open={open} onClose={handleClose} closeAfterTransition
         BackdropComponent={Backdrop} BackdropProps={{ timeout: 500, }}>
         <Fade in={open}>
           <Box sx={style}>
@@ -90,7 +91,7 @@ export default function CardsModal({ card, setCard, indexCard }) {
                 {cards.length > 0
                   ?
                   cards.map((item, index) => (
-                    <div key={index} className="row payment-card mb-5 m-auto pointer" onClick={() => handleChange(item)}>
+                    <div key={index} className="row payment-card my-3 m-auto pointer" onClick={() => handleChange(item)}>
                       <div className="col-12 mt-4 bg-dark" style={{ height: '2rem' }}></div>
 
                       <div className="d-flex">
@@ -102,9 +103,9 @@ export default function CardsModal({ card, setCard, indexCard }) {
                         </div>
                       </div>
 
-                      <div className="col-12">
-                        <p>**** **** **** {item.last_four_digits}</p>
+                      <div className="col-md-12 my-2">
                         <p>{item.holder_name}</p>
+                        <p>**** **** **** {item.last_four_digits}</p>
                         <div className="d-flex" style={{ fontSize: '.8rem' }}>
                           <div className='d-flex'>
                             <p className='me-2'>Validade</p>

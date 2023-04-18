@@ -46,7 +46,7 @@ const RoutesContainer = () => {
 
   dispatch({ type: "login", payload: { token: token, user: user } });
   dispatch({ type: "cart_items", payload: cartItems ? JSON.parse(cartItems) : '' });
-  dispatch({ type: "dados", payload: breshop ? { breshop: JSON.parse(breshop) } : null });
+  dispatch({ type: "breshop", payload: breshop ? JSON.parse(breshop) : null });
 
   return (
     <Routes>

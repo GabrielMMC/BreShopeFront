@@ -13,10 +13,12 @@ import { moneyMask } from '../../utilities/masks/currency'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { API_URL, GET_FETCH, POST_FETCH, URL } from '../../../variables'
 import { CircularProgress, Rating, Pagination, Typography } from '@mui/material'
+import { renderToast } from '../../utilities/Alerts'
 
 const Product = () => {
   const [isCalled, setIsCalled] = React.useState(false);
-  const [waitTime, setWaitTime] = React.useState(5000); // tempo de espera em milissegundos (5 segundos)
+  const [errorTimer, setErrorTimer] = React.useState(false);
+  const [waitTime, setWaitTime] = React.useState(5000);
 
   const [search, setsearch] = React.useState('')
   const [ratings, setRatings] = React.useState([])
@@ -104,13 +106,21 @@ const Product = () => {
   }
 
   const handleAddCart = async () => {
-    setLoadingCart(true)
-    const response = await POST_FETCH({ url: `${URL}api/cart/create`, body: { product_id: product.id, quantity: 1 }, token })
-    // console.log('resp', response)
-    if (response?.status) {
-      dispatch({ type: 'toggle_cart', toggled: true })
+    if (token) {
+      setLoadingCart(true)
+      const response = await POST_FETCH({ url: `${URL}api/cart/create`, body: { product_id: product.id, quantity: 1 }, token })
+      // console.log('resp', response)
+      if (response?.status) {
+        dispatch({ type: 'toggle_cart', toggled: true })
+      }
+      setLoadingCart(false)
+    } else {
+      if (!errorTimer) {
+        setErrorTimer(true)
+        renderToast({ type: 'error', error: 'Faça login para adicionar um produto ao carrinho!' })
+        setTimeout(() => setErrorTimer(false), 3000)
+      }
     }
-    setLoadingCart(false)
   }
 
   const handleFilterChange = (value) => {

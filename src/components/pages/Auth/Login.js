@@ -47,7 +47,7 @@ const Login = () => {
         localStorage.setItem("breshop", JSON.stringify(response.user.breshop));
 
         dispatch({ type: 'login', payload: { token: response.access_token, user: response.user } });
-        mudarDados({ breshop: response.user.breshop });
+        dispatch({ type: 'breshop', payload: response.user.breshop });
 
         history('/')
       } else {
@@ -63,13 +63,13 @@ const Login = () => {
         <div className="col-md-7 d-flex align-items-center justify-content-center bg-gradient">
           <div className="d-flex justify-content-center flex-column">
             <div style={{ width: 300, height: 300, margin: 'auto' }}>
-              <img src={logo} className='img-fluid' alt="logo" />
+              <img src={logo} className='img-fluid pointer' alt="logo" onClick={() => history('/')} />
             </div>
-            <div className='d-flex flex-column m-auto text-white lead'>
-              <p><BsBagCheck /> Compre e venda</p>
-              <p><BsGraphUp /> Analíse seu negócio</p>
-              <p><BsSearch /> Garimpe peças</p>
-              <p><BsHeart /> Fidelize novos clientes</p>
+            <div className='d-flex flex-column m-auto lead'>
+              <p className='text-white'><BsBagCheck /> Compre e venda</p>
+              <p className='text-white'><BsGraphUp /> Analíse seu negócio</p>
+              <p className='text-white'><BsSearch /> Garimpe peças</p>
+              <p className='text-white'><BsHeart /> Fidelize novos clientes</p>
             </div>
           </div>
         </div>

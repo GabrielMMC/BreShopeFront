@@ -1,6 +1,6 @@
 import React from "react"
 import { LoadingButton } from "@mui/lab"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import useForm from "../../utilities/useForm"
 import { useNavigate } from "react-router-dom"
 import SaveIcon from "@mui/icons-material/Save"
@@ -29,7 +29,8 @@ const Breshop = () => {
   const [loadingSave, setLoadingSave] = React.useState(false)
 
   const history = useNavigate()
-  const token = useSelector(state => state.AppReducer.token);
+  const dispatch = useDispatch()
+  const token = useSelector(state => state.AppReducer.token)
 
   React.useEffect(() => {
     getData()
@@ -75,9 +76,13 @@ const Breshop = () => {
 
     if (edit) response = await POST_FETCH_FORMDATA({ url: `${URL}api/update_breshop`, body, token })
     if (!edit) response = await POST_FETCH_FORMDATA({ url: `${URL}api/store_breshop`, body, token })
+    // console.log('response', response)
 
-    console.log('response', response)
-    if (response.status) renderToast({ type: 'success', error: response.message })
+    if (response.status) {
+      !edit && dispatch({ type: 'breshop', payload: response.breshop })
+      renderToast({ type: 'success', error: response.message })
+      history('/profile/products')
+    }
     else renderToast({ type: 'error', error: response.message })
 
     setLoadingSave(false)

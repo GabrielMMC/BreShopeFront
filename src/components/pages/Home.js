@@ -2,11 +2,11 @@ import React from "react";
 import Navbar from "./Navbar";
 import Card from './Card';
 import { CircularProgress, Pagination } from "@mui/material";
-import { GET_PUBLIC_FETCH, URL } from '../../variables';
+import { DELETE_FETCH, GET_PUBLIC_FETCH, POST_FETCH, URL } from '../../variables';
 import Slider from "react-slick";
 import './Private/SideBar/styles/index.css';
 import Footer from "./Footer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { settings } from "../utilities/Settings";
 import { FaTshirt } from "react-icons/fa";
 import { RiTShirt2Line } from "react-icons/ri";
@@ -19,6 +19,9 @@ import Accordion from "./Accordion/Accordion";
 import CategoryCard from "./CategoryCard";
 import BreshopCard from "./BreshopCard";
 import CardSkeleton from "./CardSkeleton";
+import { renderToast } from "../utilities/Alerts";
+import { handleAddWishlist, handleDeleteWishlist } from "../utilities/Functions";
+import BreshopSkeleton from "./BreshopSkeleton";
 
 const Home = () => {
   const [types, setTypes] = React.useState('')
@@ -29,25 +32,29 @@ const Home = () => {
   const [materials, setMaterials] = React.useState('')
   const [loading, setLoading] = React.useState(true)
   const [saleLoading, setSaleLoading] = React.useState(false)
+  const [breshopLoading, setBreshopLoading] = React.useState(false)
 
   const [selectedTypes, setSelectedTypes] = React.useState([])
   const [selectedStyles, setSelectedStyles] = React.useState([])
   // const [price, setPrice] = React.useState('')
   const [selectedMaterials, setSelectedMaterials] = React.useState([])
   const [productPagination, setProductPagination] = React.useState({
-    totalItems: '', pageNumber: 0, perPage: 15
+    totalItems: '', pageNumber: 0, perPage: 12
   })
   const [salePagination, setSalePagination] = React.useState({
-    totalItems: '', pageNumber: 0, perPage: 15
+    totalItems: '', pageNumber: 0, perPage: 12
   })
   const [breshopPagination, setBreshopPagination] = React.useState({
-    totalItems: '', pageNumber: 0, perPage: 15
+    totalItems: '', pageNumber: 0, perPage: 12
   })
 
   const saleRef = React.useRef(null);
+  const productRef = React.useRef(null);
   const breshopRef = React.useRef(null);
 
+  const dispatch = useDispatch()
   const search = useSelector(store => store.AppReducer.search);
+  const wishlist_products = useSelector(store => store.AppReducer.wishlist_items);
 
   React.useEffect(() => {
     if (!loading) {
@@ -83,7 +90,7 @@ const Home = () => {
     const typeIds = selectedTypes.map(item => item.id)
     const materialIds = selectedMaterials.map(item => item.id)
     const response = await GET_PUBLIC_FETCH({
-      url: `${URL}api/get_all_products?search=${search}&page=${productPagination.pageNumber}&types=${typeIds}&styles=${styleIds}&materials=${materialIds}`
+      url: `${URL}api/get_all_products?search=${search}&page=${productPagination.pageNumber + 1}&types=${typeIds}&styles=${styleIds}&materials=${materialIds}`
     })
     // console.log('resp', response)
     if (response.status) {
@@ -112,13 +119,27 @@ const Home = () => {
 
 
   const getBreshops = async () => {
+    setBreshopLoading(true)
     const response = await GET_PUBLIC_FETCH({
       url: `${URL}api/public/breshops?search=${search}&page=${breshopPagination.pageNumber + 1}`
     })
     // console.log('resp breshop', response)
     setBreshops(response.breshops)
     setBreshopPagination({ ...breshopPagination, totalItems: response.pagination.total_pages })
+    setBreshopLoading(false)
   }
+
+  const handleAddWishlistWrapper = (id, product, products, errorTimer, setErrorTimer) => {
+    handleAddWishlist(id, product, products, errorTimer, setErrorTimer, (wishlistProducts) => {
+      dispatch({ type: 'wishlist_items', payload: wishlistProducts })
+    });
+  };
+
+  const handleDeleteWishlistWrapper = (id, products) => {
+    handleDeleteWishlist(id, products, (wishlistProducts) => {
+      dispatch({ type: 'wishlist_items', payload: wishlistProducts })
+    });
+  };
 
   return (
     <>
@@ -138,7 +159,7 @@ const Home = () => {
       </div>
       <div className='w-principal m-auto my-5'>
 
-        <div className="my-5">
+        <div className="my-5" ref={productRef}>
           <h6 className="title ms-3">Produtos postados recentemente</h6>
           <div className="row">
             <div className="col-md-2">
@@ -155,7 +176,7 @@ const Home = () => {
                     {products.length > 0 ?
                       products.map(item => (
                         <div key={item.id}>
-                          <Card product={item} />
+                          <Card product={item} handleAddWishlist={handleAddWishlistWrapper} handleDeleteWishlist={handleDeleteWishlistWrapper} wishlistProducts={wishlist_products} />
                         </div>
                       ))
                       : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem produtos cadastrados'}</p>}
@@ -165,12 +186,13 @@ const Home = () => {
                     <div className='d-flex justify-content-center mt-3'>
                       <Pagination color='yellow' shape="rounded" count={Math.ceil(productPagination.totalItems / productPagination.perPage)}
                         page={productPagination.pageNumber + 1} onChange={(e, page) => {
-                          window.scrollTo(0, 0); setProductPagination({ ...productPagination, pageNumber: page - 1 })
+                          productRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                          setProductPagination({ ...productPagination, pageNumber: page - 1 })
                         }
                         } />
                     </div>}
                 </>
-                : <div className='d-flex flex-wrap justify-content-center'><CardSkeleton totalItems={9} /></div>}
+                : <div className='d-flex flex-wrap justify-content-center'><CardSkeleton totalItems={12} /></div>}
             </div>
           </div>
         </div>
@@ -185,7 +207,7 @@ const Home = () => {
                     {saleProducts.length > 0 ?
                       saleProducts.map(item => (
                         <div key={item.id}>
-                          <Card product={item} />
+                          <Card product={item} handleAddWishlist={handleAddWishlistWrapper} handleDeleteWishlist={handleDeleteWishlistWrapper} wishlistProducts={wishlist_products} />
                         </div>
                       ))
                       : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem promoções cadastradas'}</p>}
@@ -200,7 +222,8 @@ const Home = () => {
                         }
                         } />
                     </div>}
-                </> : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
+                </>
+                : <div className='d-flex flex-wrap justify-content-center'><CardSkeleton totalItems={12} /></div>}
             </div>
           </div>
         </div>
@@ -218,25 +241,29 @@ const Home = () => {
 
         <div className="my-5 py-5" ref={breshopRef}>
           <h6 className="title ms-3">Lojas populares</h6>
-          <div className="d-flex flex-wrap m-3 pointer">
-            {breshops.length > 0 ?
-              breshops.map(item => (
-                <div key={item.id}>
-                  <BreshopCard shop={item} />
-                </div>
-              ))
-              : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem lojas cadastradas'}</p>}
-          </div>
+          {!breshopLoading ?
+            <>
+              <div className="d-flex flex-wrap justify-content-center m-3 pointer">
+                {breshops.length > 0 ?
+                  breshops.map(item => (
+                    <div key={item.id} className="mb-5">
+                      <BreshopCard shop={item} />
+                    </div>
+                  ))
+                  : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem lojas cadastradas'}</p>}
+              </div>
 
-          {breshops.length > 0 && breshopPagination.totalItems &&
-            <div className='d-flex justify-content-center mt-3'>
-              <Pagination color='yellow' shape="rounded" count={Math.ceil(breshopPagination.totalItems / breshopPagination.perPage)}
-                page={breshopPagination.pageNumber + 1} onChange={(e, page) => {
-                  breshopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                  setBreshopPagination({ ...breshopPagination, pageNumber: page - 1 })
-                }
-                } />
-            </div>}
+              {breshops.length > 0 && breshopPagination.totalItems &&
+                <div className='d-flex justify-content-center mt-3'>
+                  <Pagination color='yellow' shape="rounded" count={Math.ceil(breshopPagination.totalItems / breshopPagination.perPage)}
+                    page={breshopPagination.pageNumber + 1} onChange={(e, page) => {
+                      breshopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                      setBreshopPagination({ ...breshopPagination, pageNumber: page - 1 })
+                    }
+                    } />
+                </div>}
+            </>
+            : <div className='d-flex flex-wrap justify-content-center'><BreshopSkeleton totalItems={9} /></div>}
         </div>
       </div>
       <Footer />
