@@ -37,7 +37,7 @@ function ListProducts() {
   const getData = async () => {
     setLoading(true)
     const response = await GET_FETCH({
-      url: `products/?page=${pagination.pageNumber + 1}&dateOf=${dateOf ? dateOf : ''}&dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
+      url: `products?page=${pagination.pageNumber + 1}&dateOf=${dateOf ? dateOf : ''}&dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
     })
     // console.log('resp', response)
 

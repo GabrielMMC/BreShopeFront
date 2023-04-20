@@ -40,7 +40,7 @@ const RecipientOrders = () => {
     setAllow(false); setLoading(true)
 
     const status = getStatus()
-    const response = await GET_FETCH({ url: `orders/all/?page=${pagination.pageNumber + 1}&status=${status ? status : ''}&dateOf=${dateOf ? dateOf : ''}&dateFor=${dateFor ? dateFor : ''}&search=${search}&year_orders=${year}`, token })
+    const response = await GET_FETCH({ url: `orders/all?page=${pagination.pageNumber + 1}&status=${status ? status : ''}&dateOf=${dateOf ? dateOf : ''}&dateFor=${dateFor ? dateFor : ''}&search=${search}&year_orders=${year}`, token })
 
     console.log('resp', response)
     setOrders(response.orders); setLoading(false)
