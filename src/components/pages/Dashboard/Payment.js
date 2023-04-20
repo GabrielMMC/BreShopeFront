@@ -123,7 +123,7 @@ const Payment = () => {
 
   return (
     // -------------------------Cards-Content-------------------------
-    <div>
+    <div className='anime-left'>
       <h6 className="dash-title">Cartões</h6>
       {!loading ? <div className="d-flex flex-wrap">
         {data.length > 0
@@ -155,7 +155,7 @@ const Payment = () => {
             </div>
           ))
           : <p>Sem cartões cadastrados</p>}
-      </div> : <div className="d-flex justify-content-center p-5"><CircularProgress color='inherit' /></div>}
+      </div> : <div className="d-flex justify-content-center p-5"><CircularProgress /></div>}
 
       {/* -------------------------Card-fields-section------------------------- */}
       <div className="row my-5">

@@ -26,7 +26,7 @@ const style = {
   position: "absolute",
   left: "50%",
   width: "50%",
-  height: "100%",
+  minHeight: "100%",
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
@@ -220,7 +220,7 @@ export default function MoreInfo(props) {
 
   return (
     <div>
-      <IconButton color='inherit' onClick={handleOpen}>
+      <IconButton color='success' onClick={handleOpen}>
         <VisibilityIcon size={17} />
       </IconButton>
 
@@ -231,6 +231,7 @@ export default function MoreInfo(props) {
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
+        sx={{ overflowY: 'auto', height: '100%' }}
         BackdropProps={{
           timeout: 500,
         }}

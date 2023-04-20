@@ -100,14 +100,13 @@
 
 .payment-card {
   border-radius: .6rem;
-  background-color: #AEAEAE;
-  /* background-color: #ff4c4c; */
+  background-color: #F5C469;
   width: 400px;
   height: 200px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
-.payment-card p,
+/* .payment-card p,
 h6,
 h5,
 h4,
@@ -119,7 +118,7 @@ h1 {
   padding: 0 !important;
   margin-bottom: 0 !important;
   font-family: 'Courier New', Courier, monospace;
-}
+} */
 
 .focus {
   transition: all 5s !important;

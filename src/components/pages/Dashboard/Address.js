@@ -131,12 +131,12 @@ const Address = () => {
   const clearFields = () => { setCep(''); setCity(''); setState(''); setNumber(''); setNbhd(''); setStreet(''); setId('') }
 
   return (
-    <>
+    <div className="anime-left">
+      <h6 className="dash-title">Endereços</h6>
       {!loading ? (
         <>
           {/* -------------------------Personal-address-section------------------------- */}
           <div className="row">
-            <h6 className="dash-title">Endereços</h6>
             {/* Counter of shipping addresses and personal addresses */}
             {data.length > 0 ? (data.map((item) => (
               <div key={item.id} className="col-md-12 my-2 d-flex mb-3 p-3 bg-gray rounded">
@@ -156,7 +156,7 @@ const Address = () => {
           </div>
         </>
       ) : (
-        <div className="d-flex justify-content-center p-5"><CircularProgress color='inherit' /></div>
+        <div className="d-flex justify-content-center p-5"><CircularProgress /></div>
       )}
       {/* -------------------------Address-fields------------------------- */}
       <div className="row">
@@ -239,7 +239,7 @@ const Address = () => {
           <SavePreset backPath={'/profile'} handleSave={handleSave} loading={loadingSave} />
         </form>}
       {!add && <div className='anime-right mt-2'><Typography>Cadastre endereços para começar!</Typography></div>}
-    </>
+    </div>
   );
 };
 

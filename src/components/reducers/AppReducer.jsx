@@ -1,11 +1,14 @@
 const INITIAL_STATE = {
     user: {},
     cart_items: [],
+    wishlist_items: [],
     token: null,
     breshop: null,
     toggled: false,
+    wishlist_toggled: false,
     collapsed: false,
     search: '',
+    linkIsAllowed: true
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -16,12 +19,23 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 ...action.payload
             };
+        case 'breshop':
+            return {
+                ...state,
+                breshop: action.payload,
+
+            };
 
         case 'logout':
             return {
                 ...state,
                 token: null,
+                breshop: null,
                 user: {},
+                cart_items: [],
+                wishlist_items: [],
+                search: ''
+
             };
         case 'user':
             return {
@@ -33,7 +47,11 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 token: action.payload.token,
                 user: action.payload.user,
-
+            };
+        case 'breshop':
+            return {
+                ...state,
+                breshop: action.payload
             };
         case 'cart_items':
             return {
@@ -41,16 +59,31 @@ export default (state = INITIAL_STATE, action) => {
                 cart_items: action.payload,
 
             };
+        case 'wishlist_items':
+            return {
+                ...state,
+                wishlist_items: action.payload,
+
+            };
         case 'toggle_cart':
             return {
                 ...state,
                 toggled: action.toggled,
             };
+        case 'toggle_wishlist':
+            return {
+                ...state,
+                wishlist_toggled: action.toggled,
+            };
         case 'search':
             return {
                 ...state,
                 search: action.payload,
-
+            };
+        case 'link':
+            return {
+                ...state,
+                linkIsAllowed: action.payload,
             };
         default:
             return { ...state };

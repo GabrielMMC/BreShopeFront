@@ -13,6 +13,11 @@ code {
 p{
   font-size: 16px;
   color: rgba(0, 0, 0, 0.60);
+  margin: 0;
+}
+
+.min-height{
+  min-height: calc(100vh - 400px);
 }
 
 .price {
@@ -287,6 +292,7 @@ p{
   background-color: white;
   padding: 20px;
   height: 100%;
+  overflow-y: auto;
 }
 
 .search-container {
@@ -475,4 +481,32 @@ margin: none;
   font-size: 12px;
   color: rgba(0, 0, 0, 0.60);
 }
+
+.cart-section{
+  display: block;
+}
+
+@media screen and (max-width: 990px) {
+  .cart-section{
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.dropdown-active:active{
+  background-color: #693B9F !important;
+}
+
+.alert-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
 

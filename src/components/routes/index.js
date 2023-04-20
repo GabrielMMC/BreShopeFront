@@ -23,22 +23,12 @@ import Building from "../pages/Building";
 import ListSales from "../pages/Dashboard/Sale/ListSales";
 import { EditSale } from "../pages/Dashboard/Sale/EditSale";
 
-const PrivateRoute = (props) => {
-  const token = useSelector((state) => state.AppReducer.token);
-
-  return token != null ? (
-    <Home {...props}></Home>
-  ) : (
-    <Navigate to={{ pathname: "/login", state: { from: props.location } }} />
-  );
-};
-
 const LoginRoute = (props) => {
   const token = useSelector((state) => state.AppReducer.token);
   return token == null ? (
     <Login {...props} />
   ) : (
-    <Navigate to={{ pathname: "/home", state: { from: props.location } }} />
+    <Navigate to={{ pathname: "/", state: { from: props.location } }} />
   );
 };
 
@@ -56,7 +46,7 @@ const RoutesContainer = () => {
 
   dispatch({ type: "login", payload: { token: token, user: user } });
   dispatch({ type: "cart_items", payload: cartItems ? JSON.parse(cartItems) : '' });
-  dispatch({ type: "dados", payload: breshop ? { breshop: JSON.parse(breshop) } : null });
+  dispatch({ type: "breshop", payload: breshop ? JSON.parse(breshop) : null });
 
   return (
     <Routes>
@@ -65,7 +55,6 @@ const RoutesContainer = () => {
       <Route path={"product/:id"} element={<Product />} />
       <Route path={"breshop/:id"} element={<BreshopPublic />} />
       <Route path={"/payment"} element={<PaymentScreen />} />
-      <Route path={"/home"} element={<PrivateRoute />} />
       <Route path={"/profile"} element={<Profile />}>
         <Route path={"address"} element={<Address />} />
         <Route path={"payment"} element={<Payment />} />

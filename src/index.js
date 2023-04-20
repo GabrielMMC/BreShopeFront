@@ -13,6 +13,7 @@ import 'bootstrap/dist/js/bootstrap.js';
 import './index.css';
 
 const queryClient = new QueryClient();
+window.history.scrollRestoration = 'manual'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

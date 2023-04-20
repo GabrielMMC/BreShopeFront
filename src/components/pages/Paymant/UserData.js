@@ -36,7 +36,7 @@ const UserData = ({ user, setUser, setCart }) => {
   // -------------------------Getting-data----------------------------
   const getData = async () => {
     const resp = await GET_FETCH({ url: 'customers', token })
-    console.log('user data', resp)
+    // console.log('user data', resp)
     //If the request returns true, the user state will be updated with the avaible data
     if (resp.status) {
       const phone = `${resp.customer?.phones?.mobile_phone?.area_code}${resp.customer?.phones?.mobile_phone?.number}`
@@ -106,7 +106,6 @@ const UserData = ({ user, setUser, setCart }) => {
                   }}
                   onBlur={() => setError('gender', user, setUser)} required>
                   {!genderId && <option>Escolha um gênero</option>}
-                  {console.log('edasd', genders)}
                   {genders.map(item => (
                     <option key={item.id} value={item.id}>{item.name}</option>
                   ))}

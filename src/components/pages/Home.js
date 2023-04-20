@@ -2,11 +2,11 @@ import React from "react";
 import Navbar from "./Navbar";
 import Card from './Card';
 import { CircularProgress, Pagination } from "@mui/material";
-import { GET_PUBLIC_FETCH, URL } from '../../variables';
+import { DELETE_FETCH, GET_PUBLIC_FETCH, POST_FETCH, URL } from '../../variables';
 import Slider from "react-slick";
 import './Private/SideBar/styles/index.css';
 import Footer from "./Footer";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { settings } from "../utilities/Settings";
 import { FaTshirt } from "react-icons/fa";
 import { RiTShirt2Line } from "react-icons/ri";
@@ -18,6 +18,10 @@ import art from '../../assets/art.png'
 import Accordion from "./Accordion/Accordion";
 import CategoryCard from "./CategoryCard";
 import BreshopCard from "./BreshopCard";
+import CardSkeleton from "./CardSkeleton";
+import { renderToast } from "../utilities/Alerts";
+import { handleAddWishlist, handleDeleteWishlist } from "../utilities/Functions";
+import BreshopSkeleton from "./BreshopSkeleton";
 
 const Home = () => {
   const [types, setTypes] = React.useState('')
@@ -27,27 +31,35 @@ const Home = () => {
   const [breshops, setBreshops] = React.useState([])
   const [materials, setMaterials] = React.useState('')
   const [loading, setLoading] = React.useState(true)
+  const [saleLoading, setSaleLoading] = React.useState(false)
+  const [breshopLoading, setBreshopLoading] = React.useState(false)
 
   const [selectedTypes, setSelectedTypes] = React.useState([])
   const [selectedStyles, setSelectedStyles] = React.useState([])
   // const [price, setPrice] = React.useState('')
   const [selectedMaterials, setSelectedMaterials] = React.useState([])
   const [productPagination, setProductPagination] = React.useState({
-    totalItems: '', pageNumber: 0, perPage: 15
+    totalItems: '', pageNumber: 0, perPage: 12
   })
   const [salePagination, setSalePagination] = React.useState({
-    totalItems: '', pageNumber: 0, perPage: 15
+    totalItems: '', pageNumber: 0, perPage: 12
   })
   const [breshopPagination, setBreshopPagination] = React.useState({
-    totalItems: '', pageNumber: 0, perPage: 15
+    totalItems: '', pageNumber: 0, perPage: 12
   })
 
+  const saleRef = React.useRef(null);
+  const productRef = React.useRef(null);
+  const breshopRef = React.useRef(null);
+
+  const dispatch = useDispatch()
   const search = useSelector(store => store.AppReducer.search);
+  const wishlist_products = useSelector(store => store.AppReducer.wishlist_items)
 
   React.useEffect(() => {
     if (!loading) {
-      getData()
-      getSaleProducts()
+      salePagination.pageNumber === 0 ? getSaleProducts() : setSalePagination({ ...salePagination, pageNumber: 0 })
+      productPagination.pageNumber === 0 ? getData() : setProductPagination({ ...productPagination, pageNumber: 0 })
     }
   }, [selectedTypes, selectedMaterials, selectedStyles])
 
@@ -78,7 +90,7 @@ const Home = () => {
     const typeIds = selectedTypes.map(item => item.id)
     const materialIds = selectedMaterials.map(item => item.id)
     const response = await GET_PUBLIC_FETCH({
-      url: `${URL}api/get_all_products?search=${search}&page=${productPagination.pageNumber}&types=${typeIds}&styles=${styleIds}&materials=${materialIds}`
+      url: `${URL}api/get_all_products?search=${search}&page=${productPagination.pageNumber + 1}&types=${typeIds}&styles=${styleIds}&materials=${materialIds}`
     })
     // console.log('resp', response)
     if (response.status) {
@@ -92,6 +104,7 @@ const Home = () => {
   }
 
   const getSaleProducts = async () => {
+    setSaleLoading(true)
     const styleIds = selectedStyles.map(item => item.id)
     const typeIds = selectedTypes.map(item => item.id)
     const materialIds = selectedMaterials.map(item => item.id)
@@ -101,16 +114,31 @@ const Home = () => {
     // console.log('resp sale', response)
     setSaleProducts(response.sale_products)
     setSalePagination({ ...salePagination, totalItems: response.pagination.total_pages })
+    setSaleLoading(false)
   }
 
 
   const getBreshops = async () => {
+    setBreshopLoading(true)
     const response = await GET_PUBLIC_FETCH({
       url: `${URL}api/public/breshops?search=${search}&page=${breshopPagination.pageNumber + 1}`
     })
     // console.log('resp breshop', response)
     setBreshops(response.breshops)
     setBreshopPagination({ ...breshopPagination, totalItems: response.pagination.total_pages })
+    setBreshopLoading(false)
+  }
+
+  const handleAddWishlistWrapper = (id, product, products, errorTimer, setErrorTimer) => {
+    handleAddWishlist(id, product, products, errorTimer, setErrorTimer, (wishlistProducts) => {
+      dispatch({ type: 'wishlist_items', payload: wishlistProducts })
+    })
+  }
+
+  const handleDeleteWishlistWrapper = (id, products) => {
+    handleDeleteWishlist(id, products, (wishlistProducts) => {
+      dispatch({ type: 'wishlist_items', payload: wishlistProducts })
+    })
   }
 
   return (
@@ -130,95 +158,114 @@ const Home = () => {
         </div>
       </div>
       <div className='w-principal m-auto my-5'>
-        <div className="row my-5">
-          <h6 className="title mx-4">Produtos postados recentemente</h6>
-          <div className="col-md-2">
-            <Accordion styles={styles} types={types} materials={materials}
-              selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles}
-              selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes}
-              selectedMaterials={selectedMaterials} setSelectedMaterials={setSelectedMaterials} />
-          </div>
 
-          <div className='col-md-10'>
-            {!loading ?
-              <>
-                <div className="d-flex flex-wrap">
-                  {products.length > 0 ?
-                    products.map(item => (
-                      <div key={item.id}>
-                        <Card product={item} />
-                      </div>
-                    ))
-                    : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem produtos cadastrados'}</p>}
-                </div>
-
-                {products.length > 0 && productPagination.totalItems &&
-                  <div className='d-flex justify-content-center mt-3'>
-                    <Pagination color='yellow' shape="rounded" count={Math.ceil(productPagination.totalItems / productPagination.perPage)}
-                      page={productPagination.pageNumber + 1} onChange={(e, page) => {
-                        window.scrollTo(0, 0); setProductPagination({ ...productPagination, pageNumber: page - 1 })
-                      }
-                      } />
-                  </div>}
-              </>
-              : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
-          </div>
-        </div>
-
-        <div className="row">
-          <h6 className="title mx-4">Promoções disponíveis</h6>
-          <div className="col-12">
-            <div className="d-flex flex-wrap">
-              {saleProducts.length > 0 ?
-                saleProducts.map(item => (
-                  <div key={item.id}>
-                    <Card product={item} />
-                  </div>
-                ))
-                : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem promoções cadastradas'}</p>}
+        <div className="my-5" ref={productRef}>
+          <h6 className="title ms-3">Produtos postados recentemente</h6>
+          <div className="row">
+            <div className="col-md-2">
+              <Accordion styles={styles} types={types} materials={materials}
+                selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles}
+                selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes}
+                selectedMaterials={selectedMaterials} setSelectedMaterials={setSelectedMaterials} />
             </div>
 
-            {saleProducts.length > 0 && salePagination.totalItems &&
-              <div className='d-flex justify-content-center mt-3'>
-                <Pagination color='yellow' shape="rounded" count={Math.ceil(salePagination.totalItems / salePagination.perPage)}
-                  page={salePagination.pageNumber + 1} onChange={(e, page) => {
-                    window.scrollTo(0, 0); setSalePagination({ ...salePagination, pageNumber: page - 1 })
-                  }
-                  } />
-              </div>}
+            <div className='col-md-10'>
+              {!loading ?
+                <>
+                  <div className="d-flex flex-wrap">
+                    {products.length > 0 ?
+                      products.map(item => (
+                        <div key={item.id}>
+                          <Card product={item} handleAddWishlist={handleAddWishlistWrapper} handleDeleteWishlist={handleDeleteWishlistWrapper} wishlistProducts={wishlist_products} />
+                        </div>
+                      ))
+                      : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem produtos cadastrados'}</p>}
+                  </div>
+
+                  {products.length > 0 && productPagination.totalItems &&
+                    <div className='d-flex justify-content-center mt-3'>
+                      <Pagination color='yellow' shape="rounded" count={Math.ceil(productPagination.totalItems / productPagination.perPage)}
+                        page={productPagination.pageNumber + 1} onChange={(e, page) => {
+                          productRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                          setProductPagination({ ...productPagination, pageNumber: page - 1 })
+                        }
+                        } />
+                    </div>}
+                </>
+                : <div className='d-flex flex-wrap'><CardSkeleton totalItems={12} /></div>}
+            </div>
           </div>
         </div>
 
-        <div className="my-5">
-          <h6 className="title mx-4">Categorias mais visitadas</h6>
+        <div className="my-5 py-5">
+          <h6 className="title ms-3">Estilos mais procurados</h6>
           <div className="row justify-content-center">
-            <CategoryCard title='Casual' icon={FaTshirt} />
-            <CategoryCard title='Luxuoso' icon={GiDress} />
-            <CategoryCard title='Urbano' icon={IoIosGlasses} />
-            <CategoryCard title='Surfe' icon={GiUnderwearShorts} />
-            <CategoryCard title='Rocker' icon={GiGuitar} />
+            <CategoryCard title='Casual' icon={FaTshirt} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
+            <CategoryCard title='Luxuoso' icon={GiDress} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
+            <CategoryCard title='Urbano' icon={IoIosGlasses} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
+            <CategoryCard title='Surfe' icon={GiUnderwearShorts} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
+            <CategoryCard title='Rocker' icon={GiGuitar} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
           </div>
         </div>
 
-        <h6 className="title mx-4 mt-5">Lojas populares</h6>
-        <div className="d-flex flex-wrap m-3 pointer">
-          {breshops.length > 0 ?
-            breshops.map(item => (
-              <div key={item.id}>
-                <BreshopCard shop={item} />
-              </div>
-            ))
-            : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem lojas cadastradas'}</p>}
+        <div className="my-5 py-5" ref={saleRef}>
+          <h6 className="title ms-3">Promoções disponíveis</h6>
+          <div className="row">
+            <div className="col-12">
+              {!saleLoading ?
+                <>
+                  <div className="d-flex flex-wrap">
+                    {saleProducts.length > 0 ?
+                      saleProducts.map(item => (
+                        <div key={item.id}>
+                          <Card product={item} handleAddWishlist={handleAddWishlistWrapper} handleDeleteWishlist={handleDeleteWishlistWrapper} wishlistProducts={wishlist_products} />
+                        </div>
+                      ))
+                      : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem promoções cadastradas'}</p>}
+                  </div>
+
+                  {saleProducts.length > 0 && salePagination.totalItems &&
+                    <div className='d-flex justify-content-center mt-3'>
+                      <Pagination color='yellow' shape="rounded" count={Math.ceil(salePagination.totalItems / salePagination.perPage)}
+                        page={salePagination.pageNumber + 1} onChange={(e, page) => {
+                          saleRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                          setSalePagination({ ...salePagination, pageNumber: page - 1 })
+                        }
+                        } />
+                    </div>}
+                </>
+                : <div className='d-flex flex-wrap'><CardSkeleton totalItems={12} /></div>}
+            </div>
+          </div>
         </div>
 
-        {breshops.length > 0 && breshopPagination.totalItems &&
-          <div className='d-flex justify-content-center mt-3'>
-            <Pagination color='yellow' shape="rounded" count={Math.ceil(breshopPagination.totalItems / breshopPagination.perPage)}
-              page={breshopPagination.pageNumber + 1} onChange={(e, page) => {
-                window.scrollTo(0, 0); setBreshopPagination({ ...breshopPagination, pageNumber: page - 1 })
-              }
-              } />
-          </div>}
+
+        <div className="my-5 py-5" ref={breshopRef}>
+          <h6 className="title ms-3">Lojas populares</h6>
+          {!breshopLoading ?
+            <>
+              <div className="d-flex flex-wrap my-4 pointer">
+                {breshops.length > 0 ?
+                  breshops.map(item => (
+                    <div key={item.id} className="mb-5">
+                      <BreshopCard shop={item} />
+                    </div>
+                  ))
+                  : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem lojas cadastradas'}</p>}
+              </div>
+
+              {breshops.length > 0 && breshopPagination.totalItems &&
+                <div className='d-flex justify-content-center mt-3'>
+                  <Pagination color='yellow' shape="rounded" count={Math.ceil(breshopPagination.totalItems / breshopPagination.perPage)}
+                    page={breshopPagination.pageNumber + 1} onChange={(e, page) => {
+                      breshopRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                      setBreshopPagination({ ...breshopPagination, pageNumber: page - 1 })
+                    }
+                    } />
+                </div>}
+            </>
+            : <div className='d-flex flex-wrap'><BreshopSkeleton totalItems={4} /></div>}
+        </div>
       </div>
       <Footer />
     </>

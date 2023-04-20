@@ -5,7 +5,7 @@ import Addresses from './Addresses'
 import Container from '../Container'
 import ChargeModal from './ChargeModal'
 import { LoadingButton } from '@mui/lab'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { MdClose, MdCheck } from 'react-icons/md'
 import { renderToast } from '../../utilities/Alerts'
@@ -37,11 +37,9 @@ const PaymentScreen = () => {
   const [cartItems, setCartItems] = React.useState('')
   const [errors, setErrors] = React.useState({ address: false, payment: false, user: false })
 
-  const token = useSelector(state => state.AppReducer.token)
-  // if (!cartItems) setCartItems([])
-
   const history = useNavigate()
-  // console.log('cart_items', cartItems)
+  const dispatch = useDispatch()
+  const token = useSelector(state => state.AppReducer.token)
 
   // -----------------------------------------------------------------
   //******************************************************************
@@ -57,14 +55,14 @@ const PaymentScreen = () => {
 
       cartItems.forEach(item => {
         //Sum of price with discount and quantity
-        const price = item.price;
+        const price = Number(item.price);
         if (item.discount) {
           const discount = item.discount / 100;
-          finalPrice += price * (1 - discount);
+          finalPrice += price - price * discount;
         } else {
           finalPrice += price
         }
-        // finalPrice = parseFloat(finalPrice.toFixed(2)) * 100
+        finalPrice = Math.round(finalPrice)
 
         // Shipping.temp does not contain the promotion id, it is added and created an item object within shipping.result
         // if (!shipping.temp.includes(item.provider_sale_id)) {
@@ -74,7 +72,7 @@ const PaymentScreen = () => {
         //   shipping.result.push({ description: item.sale.name, amount: item.delivery_price, id: item.product_id })
         // }
       })
-      console.log('finalPrice', finalPrice)
+      console.log('values', cartItems, finalPrice)
       //Setting states
       setTotal(finalPrice)
       setInterest(getInterest("1", finalPrice))
@@ -108,7 +106,6 @@ const PaymentScreen = () => {
     //validating the multi payment section, case has empty or wrong values is returned true for error variable
     if (method === 'multi_payment') {
       if (Number(card[0].amount.value) + Number(card[1].amount.value) !== total) {
-        console.log('teste', total, Number(card[0].amount.value) + Number(card[1].amount.value))
         errorPayment = true
         renderToast({ type: 'error', error: 'Verifique o saldo utilizado no multi pagamento!' })
       }
@@ -134,7 +131,8 @@ const PaymentScreen = () => {
           "description": item.description,
           "shipping_amount": item.delivery_price,
           "quantity": item.quantity ? item.quantity : 1,
-          "amount": Number(price),
+          "discount": item.discount ?? null,
+          "amount": Math.round(price),
         }]
       })
 
@@ -227,13 +225,14 @@ const PaymentScreen = () => {
           renderToast({ type: 'success', error: 'Pedido gerado com sucesso!' });
           history('/profile/orders')
         }
+        dispatch({ type: 'cart_items', payload: [] })
       }
 
       else renderToast({ type: 'error', error: response.message })
       setTimeout(setLoadingSave(false), 2000)
 
     } else {
-      console.log('errors', { address: errorAddress, payment: errorPayment, user: errorUser }, address)
+      // console.log('errors', { address: errorAddress, payment: errorPayment, user: errorUser }, address)
     }
 
   }
@@ -382,26 +381,53 @@ const PaymentScreen = () => {
           {/* --------------------------Products-Section-------------------------- */}
           <div className='d-flex align-content-between flex-wrap col-lg-3 p-4'>
             <div className='w-100'>
-              <Typography>Produtos do carrinho</Typography>
-              {console.log('cart', cartItems)}
-              {!loadingShipping ?
-                cartItems.map(item => (
-                  <div className='product' key={item.id}>
-                    <div className="d-flex">
-                      <div className='rounded' style={{ minWidth: '40%', minHeight: '40%', maxWidth: 150 }}>
-                        <img src={`${STORAGE_URL + item.thumb}`} className='img-fluid' alt="product" />
+              <p className='bold'>Produtos do carrinho</p>
+              <div className="cart-section">
+                {!loadingShipping ?
+                  cartItems.map(item => (
+                    <div className='product m-auto mt-3' key={item.id} style={{ maxWidth: 350, minWidth: 200 }}>
+                      <div className="d-flex flex-wrap">
+                        <div className="col-6">
+                          <div className="position-relative" style={{ maxWidth: 150 }}>
+                            <img src={`${STORAGE_URL + item.thumb}`} className='img-fluid' alt="product" />
+                            {item.discount &&
+                              <div className='sale'>
+                                <p className='h6'>{item.discount}%</p>
+                              </div>}
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className="d-flex align-content-between flex-wrap h-100">
+                            <div className='w-100'>
+                              <p>{item.name}</p>
+                              <p className='small m-auto'>{item.description}</p>
+                            </div>
+                            <div className="w-100">
+                              {/* <p className='bold'>{moneyMask(item.price)} x {item.quantity}Un</p> */}
+
+                              <div className='mx-2 align-self-start'>
+                                {item.discount ?
+                                  <>
+                                    <p className='bold'>
+                                      <del>{moneyMask(item.price)}</del>
+                                    </p>
+                                    <p style={{ color: '#DC3545', fontWeight: 'bold' }}>
+                                      {moneyMask(item.price - (item.price * (item.discount / 100)))}
+                                    </p>
+                                  </>
+                                  : <p className='bold'>
+                                    {moneyMask(item.price)}
+                                  </p>
+                                }
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <span className='small m-auto'>{item.description}</span>
                     </div>
-
-                    <div className='d-flex justify-content-around'>
-                      <span className='small'>{item.name}</span>
-                      <span className="small">{moneyMask(item.price)} x {item.quantity}Un</span>
-                    </div>
-
-                  </div>
-                ))
-                : <Skeleton className='product' variant="rectangular" height={100} />}
+                  ))
+                  : <Skeleton className='product' variant="rectangular" height={100} />}
+              </div>
             </div>
 
             {/* --------------------------Shipping-Section-------------------------- */}
@@ -409,12 +435,12 @@ const PaymentScreen = () => {
               {!loadingShipping ?
                 <>
                   <div className="row">
-                    <span className='col-12'>Entregas das promoções:</span>
-                    <span className='small col-12'>{getAddress()}</span>
+                    <p>Endereço de entrega:</p>
+                    <p className='small'>{getAddress() ?? 'Sem endereço de entrega'}</p>
                   </div>
                   <div className="row">
                     {shippingsTotal.map(item => (
-                      <span className='small col-12' key={item.id}>{item.description}: {moneyMask(item.amount)}</span>
+                      <p className='small' key={item.id}>{item.description}: {moneyMask(item.amount)}</p>
                     ))}
                   </div>
                 </>
@@ -427,15 +453,15 @@ const PaymentScreen = () => {
               {/* --------------------------Interest-Section-------------------------- */}
               {card && Array.isArray(card) &&
                 <div className='row my-3'>
-                  <span>Créditos: </span>
+                  <p>Créditos: </p>
                   {card.map((item, index) => (
-                    <span className='small col-12' key={index}>{moneyMask(item.amount.value)} + {moneyMask(item.installments.interest)}</span>))}
-                  <span className='small'>Em pendente: {moneyMask(total - (Number(card[0].amount.value) + Number(card[1].amount.value)))}</span>
+                    <p key={index}>{moneyMask(item.amount.value)} + {moneyMask(item.installments.interest)}</p>))}
+                  <p>Em pendente: {moneyMask(total - (Number(card[0].amount.value) + Number(card[1].amount.value)))}</p>
                 </div>
               }
               {card && !Array.isArray(card) && <div className="row my-2">
-                <span>Créditos: </span>
-                <span className='small col-12'>{moneyMask(total)} + {moneyMask(interest)}</span>
+                <p>Créditos: </p>
+                <p>{moneyMask(total)} + {moneyMask(interest)}</p>
               </div>
               }
 
@@ -443,14 +469,14 @@ const PaymentScreen = () => {
               {!loadingShipping ?
                 <>
                   <div className="my-3">
-                    <span>Produtos + frete: </span>
-                    <p className='m-auto small'>{moneyMask(total)}</p>
+                    <p>Produtos + frete: </p>
+                    <p>{moneyMask(total)}</p>
                   </div>
 
                   <div className="my-2 lead" style={{ fontWeight: 'bold' }}>
                     {method !== 'credit_card' && method !== 'multi_payment'
-                      ? <p className='m-auto'>Total: {moneyMask(total)}</p>
-                      : <p className='m-auto'>Total: {moneyMask((Array.isArray(card) ? card[0].installments.interest + card[1].installments.interest + total : total + interest))}</p>
+                      ? <p style={{ fontSize: 24 }}>Total: {moneyMask(total)}</p>
+                      : <p style={{ fontSize: 24 }}>Total: {moneyMask((Array.isArray(card) ? card[0].installments.interest + card[1].installments.interest + total : total + interest))}</p>
                     }
                   </div>
                 </>

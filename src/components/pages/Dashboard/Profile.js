@@ -18,7 +18,7 @@ const Profile = () => {
   const location = useLocation()
   const history = useNavigate()
   const breshop = useSelector(state => state.AppReducer.breshop)
-  // console.log('breshop', breshop)
+  console.log('breshop', breshop)
 
   return (
     <Container>
