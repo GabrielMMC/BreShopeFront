@@ -118,7 +118,7 @@ export default function CardsModal({ card, setCard, indexCard }) {
                   )
                   : <p>Sem cartões cadastrados</p>}
               </>
-              : <div className="d-flex justify-content-center p-5"><CircularProgress color='inherit' /></div>}
+              : <div className="d-flex justify-content-center p-5"><CircularProgress /></div>}
           </Box>
         </Fade>
       </Modal>

@@ -8,6 +8,7 @@ const INITIAL_STATE = {
     wishlist_toggled: false,
     collapsed: false,
     search: '',
+    linkIsAllowed: true
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -78,7 +79,11 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 search: action.payload,
-
+            };
+        case 'link':
+            return {
+                ...state,
+                linkIsAllowed: action.payload,
             };
         default:
             return { ...state };

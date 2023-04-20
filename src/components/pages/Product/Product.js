@@ -14,6 +14,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { API_URL, GET_FETCH, POST_FETCH, URL } from '../../../variables'
 import { CircularProgress, Rating, Pagination, Typography } from '@mui/material'
 import { renderToast } from '../../utilities/Alerts'
+import { handleAddWishlist, handleDeleteWishlist } from '../../utilities/Functions'
 
 const Product = () => {
   const [isCalled, setIsCalled] = React.useState(false);
@@ -39,6 +40,7 @@ const Product = () => {
   const params = useParams()
   const dispatch = useDispatch()
   const token = useSelector(state => state.AppReducer.token)
+  const wishlist_products = useSelector(store => store.AppReducer.wishlist_items)
 
 
   React.useEffect(() => {
@@ -128,6 +130,18 @@ const Product = () => {
       setRatings([])
       setFilterRating(value)
     }
+
+  }
+  const handleAddWishlistWrapper = (id, product, products, errorTimer, setErrorTimer) => {
+    handleAddWishlist(id, product, products, errorTimer, setErrorTimer, (wishlistProducts) => {
+      dispatch({ type: 'wishlist_items', payload: wishlistProducts })
+    })
+  }
+
+  const handleDeleteWishlistWrapper = (id, products) => {
+    handleDeleteWishlist(id, products, (wishlistProducts) => {
+      dispatch({ type: 'wishlist_items', payload: wishlistProducts })
+    })
   }
 
   return (
@@ -230,7 +244,7 @@ const Product = () => {
                     {breshopProducts.length > 0 ?
                       breshopProducts.map(item => (
                         <div key={item.id}>
-                          <Card product={item} />
+                          <Card product={item} handleAddWishlist={handleAddWishlistWrapper} handleDeleteWishlist={handleDeleteWishlistWrapper} wishlistProducts={wishlist_products} />
                         </div>
                       ))
                       : <p className="ms-4 lead">{search ? `Sem registros de ${search}` : 'Sem produtos cadastrados'}</p>}

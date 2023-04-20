@@ -9,6 +9,9 @@ import ImagesModal from './Paymant/ImagesModal'
 import { renderToast } from '../utilities/Alerts'
 import { GET_PUBLIC_FETCH } from '../../variables'
 import { CircularProgress, Rating, Pagination, Typography } from '@mui/material'
+import { handleAddWishlist, handleDeleteWishlist } from '../utilities/Functions'
+import { useDispatch, useSelector } from 'react-redux'
+import CardSkeleton from './CardSkeleton'
 
 const Breshop = () => {
   // -----------------------------------------------------------------
@@ -19,6 +22,7 @@ const Breshop = () => {
   // Booleans
   const [loading, setLoading] = React.useState(true)
   const [loadingRating, setLoadingRating] = React.useState(false)
+  const [loadingProduct, setLoadingProduct] = React.useState(false)
   // Strings
   const [breshop, setBreshop] = React.useState('')
   const [filterRating, setFilterRating] = React.useState('')
@@ -32,8 +36,12 @@ const Breshop = () => {
   const [ratingPagination, setRatingPagination] = React.useState({
     totalItems: '', pageNumber: 1, perPage: 1, lastPage: 1
   })
+  const productRef = React.useRef()
 
   const params = useParams()
+  const dispatch = useDispatch()
+  const wishlist_products = useSelector(store => store.AppReducer.wishlist_items)
+
 
   // This code block is using React's useEffect hook to set up event listeners and fetch data.
 
@@ -72,7 +80,8 @@ const Breshop = () => {
   // Runs when breshopPagination.pageNumber or breshop changes. Calls getBreshopProducts if pageNumber is 0, otherwise sets pageNumber to 0.
   React.useEffect(() => {
     if (!loading && breshop.id) {
-      breshopPagination.pageNumber === 0 ? getBreshopProducts() : setBreshopPagination({ ...breshopPagination, pageNumber: 0 })
+      // breshopPagination.pageNumber === 0 ? getBreshopProducts() : setBreshopPagination({ ...breshopPagination, pageNumber: 0 })
+      getBreshopProducts()
     }
   }, [breshopPagination.pageNumber, breshop])
 
@@ -113,10 +122,11 @@ const Breshop = () => {
 
   // Fetches products for a breshop and updates the state with the response data.
   const getBreshopProducts = async () => {
+    setLoadingProduct(true)
     const response = await GET_PUBLIC_FETCH({ url: `${URL}api/public/breshops/${breshop.id}/products?page=${breshopPagination.pageNumber}` })
-    // console.log('breshops products', response)
     setBreshopProducts(response.breshop_products)
     setBreshopPagination({ ...breshopPagination, totalItems: response.pagination.total_pages })
+    setLoadingProduct(false)
   }
 
   // Updates the filter rating state if the selected value is different from the current value, and clears the ratings state to trigger a new fetch.
@@ -125,6 +135,18 @@ const Breshop = () => {
       setRatings([])
       setFilterRating(value)
     }
+  }
+
+  const handleAddWishlistWrapper = (id, product, products, errorTimer, setErrorTimer) => {
+    handleAddWishlist(id, product, products, errorTimer, setErrorTimer, (wishlistProducts) => {
+      dispatch({ type: 'wishlist_items', payload: wishlistProducts })
+    })
+  }
+
+  const handleDeleteWishlistWrapper = (id, products) => {
+    handleDeleteWishlist(id, products, (wishlistProducts) => {
+      dispatch({ type: 'wishlist_items', payload: wishlistProducts })
+    })
   }
 
   return (
@@ -153,16 +175,16 @@ const Breshop = () => {
             <hr />
 
             {/* -------------------------Other-products-section------------------------- */}
-            <div className="row my-5">
+            <div className="row my-5" ref={productRef}>
               <p className='dash-title'>Produtos da loja</p>
 
-              {!loading ?
+              {!loadingProduct ?
                 <>
                   <div className="d-flex flex-wrap">
                     {breshopProducts.length > 0 ?
                       breshopProducts.map(item => (
                         <div key={item.id}>
-                          <Card product={item} />
+                          <Card product={item} handleAddWishlist={handleAddWishlistWrapper} handleDeleteWishlist={handleDeleteWishlistWrapper} wishlistProducts={wishlist_products} />
                         </div>
                       ))
                       : <p>Sem produtos cadastrados</p>}
@@ -172,12 +194,13 @@ const Breshop = () => {
                     <div className='d-flex justify-content-center mt-3'>
                       <Pagination color='yellow' shape="rounded" count={Math.ceil(breshopPagination.totalItems / breshopPagination.perPage)}
                         page={breshopPagination.pageNumber + 1} onChange={(e, page) => {
-                          window.scrollTo(0, 0); setBreshopPagination({ ...breshopPagination, pageNumber: page - 1 })
+                          productRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                          setBreshopPagination({ ...breshopPagination, pageNumber: page - 1 })
                         }
                         } />
                     </div>}
                 </>
-                : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>}
+                : <div className='d-flex flex-wrap justify-content-center'><CardSkeleton totalItems={12} /></div>}
             </div>
             <hr />
             {/* -------------------------Comments-section------------------------- */}

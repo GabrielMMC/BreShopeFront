@@ -25,16 +25,23 @@ export const handleDeleteWishlist = async (id, products, onDeleteWishlist) => {
   await DELETE_FETCH({ url: `wishlists/delete/${id}`, token })
 }
 
-export const copyLink = (link) => {
-  navigator.clipboard.writeText(link);
-  toast.info('Link copiado com sucesso!', {
-    position: "bottom-center",
-    autoClose: 1000,
-    hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-  });
+export const copyLink = (link, linkIsAllowed, handleLinkChange) => {
+  console.log('link', linkIsAllowed)
+  if (linkIsAllowed) {
+    handleLinkChange(false)
+    navigator.clipboard.writeText(link);
+    toast.info('Link copiado com sucesso!', {
+      position: "bottom-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+    setTimeout(() => handleLinkChange(true), 1800)
+  }
+
 };

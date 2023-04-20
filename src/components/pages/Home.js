@@ -54,12 +54,12 @@ const Home = () => {
 
   const dispatch = useDispatch()
   const search = useSelector(store => store.AppReducer.search);
-  const wishlist_products = useSelector(store => store.AppReducer.wishlist_items);
+  const wishlist_products = useSelector(store => store.AppReducer.wishlist_items)
 
   React.useEffect(() => {
     if (!loading) {
-      getData()
-      getSaleProducts()
+      salePagination.pageNumber === 0 ? getSaleProducts() : setSalePagination({ ...salePagination, pageNumber: 0 })
+      productPagination.pageNumber === 0 ? getData() : setProductPagination({ ...productPagination, pageNumber: 0 })
     }
   }, [selectedTypes, selectedMaterials, selectedStyles])
 
@@ -132,14 +132,14 @@ const Home = () => {
   const handleAddWishlistWrapper = (id, product, products, errorTimer, setErrorTimer) => {
     handleAddWishlist(id, product, products, errorTimer, setErrorTimer, (wishlistProducts) => {
       dispatch({ type: 'wishlist_items', payload: wishlistProducts })
-    });
-  };
+    })
+  }
 
   const handleDeleteWishlistWrapper = (id, products) => {
     handleDeleteWishlist(id, products, (wishlistProducts) => {
       dispatch({ type: 'wishlist_items', payload: wishlistProducts })
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -172,7 +172,7 @@ const Home = () => {
             <div className='col-md-10'>
               {!loading ?
                 <>
-                  <div className="d-flex flex-wrap justify-content-center">
+                  <div className="d-flex flex-wrap">
                     {products.length > 0 ?
                       products.map(item => (
                         <div key={item.id}>
@@ -192,8 +192,19 @@ const Home = () => {
                         } />
                     </div>}
                 </>
-                : <div className='d-flex flex-wrap justify-content-center'><CardSkeleton totalItems={12} /></div>}
+                : <div className='d-flex flex-wrap'><CardSkeleton totalItems={12} /></div>}
             </div>
+          </div>
+        </div>
+
+        <div className="my-5 py-5">
+          <h6 className="title ms-3">Estilos mais procurados</h6>
+          <div className="row justify-content-center">
+            <CategoryCard title='Casual' icon={FaTshirt} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
+            <CategoryCard title='Luxuoso' icon={GiDress} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
+            <CategoryCard title='Urbano' icon={IoIosGlasses} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
+            <CategoryCard title='Surfe' icon={GiUnderwearShorts} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
+            <CategoryCard title='Rocker' icon={GiGuitar} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
           </div>
         </div>
 
@@ -203,7 +214,7 @@ const Home = () => {
             <div className="col-12">
               {!saleLoading ?
                 <>
-                  <div className="d-flex flex-wrap justify-content-center">
+                  <div className="d-flex flex-wrap">
                     {saleProducts.length > 0 ?
                       saleProducts.map(item => (
                         <div key={item.id}>
@@ -223,27 +234,17 @@ const Home = () => {
                         } />
                     </div>}
                 </>
-                : <div className='d-flex flex-wrap justify-content-center'><CardSkeleton totalItems={12} /></div>}
+                : <div className='d-flex flex-wrap'><CardSkeleton totalItems={12} /></div>}
             </div>
           </div>
         </div>
 
-        <div className="my-5 py-5">
-          <h6 className="title ms-3">Categorias mais visitadas</h6>
-          <div className="row justify-content-center">
-            <CategoryCard title='Casual' icon={FaTshirt} />
-            <CategoryCard title='Luxuoso' icon={GiDress} />
-            <CategoryCard title='Urbano' icon={IoIosGlasses} />
-            <CategoryCard title='Surfe' icon={GiUnderwearShorts} />
-            <CategoryCard title='Rocker' icon={GiGuitar} />
-          </div>
-        </div>
 
         <div className="my-5 py-5" ref={breshopRef}>
           <h6 className="title ms-3">Lojas populares</h6>
           {!breshopLoading ?
             <>
-              <div className="d-flex flex-wrap justify-content-center m-3 pointer">
+              <div className="d-flex flex-wrap my-4 pointer">
                 {breshops.length > 0 ?
                   breshops.map(item => (
                     <div key={item.id} className="mb-5">
@@ -263,7 +264,7 @@ const Home = () => {
                     } />
                 </div>}
             </>
-            : <div className='d-flex flex-wrap justify-content-center'><BreshopSkeleton totalItems={9} /></div>}
+            : <div className='d-flex flex-wrap'><BreshopSkeleton totalItems={4} /></div>}
         </div>
       </div>
       <Footer />

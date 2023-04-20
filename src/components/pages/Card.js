@@ -10,12 +10,15 @@ import { useNavigate } from 'react-router-dom';
 import { Tooltip } from '@mui/material';
 import { moneyMask } from '../utilities/masks/currency';
 import { copyLink } from '../utilities/Functions';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Card({ product, handleAddWishlist, handleDeleteWishlist, wishlistProducts }) {
-  const history = useNavigate()
-
-  const [errorTimer, setErrorTimer] = React.useState(false)
   const [isWished, setIsWished] = React.useState(false)
+  const [errorTimer, setErrorTimer] = React.useState(false)
+  const linkIsAllowed = useSelector(state => state.AppReducer.linkIsAllowed)
+
+  const history = useNavigate()
+  const dispatch = useDispatch()
 
   React.useEffect(() => {
     if (wishlistProducts) setIsWished(wishlistProducts.filter(item => item.id === product.id)[0])
@@ -25,6 +28,10 @@ export default function Card({ product, handleAddWishlist, handleDeleteWishlist,
   let tooltip = false
   if (name.length > 40) { name = name.splice(0, 40).toString().replace(/,/g, '') + '...'; tooltip = true }
   else { name = name.toString().replace(/,/g, ''); tooltip = false }
+
+  const handleLinkChange = (status) => {
+    dispatch({ type: 'link', payload: status })
+  }
 
   return (
     <>
@@ -69,7 +76,7 @@ export default function Card({ product, handleAddWishlist, handleDeleteWishlist,
               <IconButton aria-label="add to favorites" onClick={() => isWished ? handleDeleteWishlist(product.id, wishlistProducts) : handleAddWishlist(product.id, product, wishlistProducts, errorTimer, setErrorTimer)}>
                 <FavoriteIcon sx={{ color: isWished && '#DC3545' }} />
               </IconButton>
-              <IconButton aria-label="share" onClick={() => copyLink(`${THIS_URL}product/${product.id}`)}>
+              <IconButton aria-label="share" onClick={() => copyLink(`${THIS_URL}product/${product.id}`, linkIsAllowed, handleLinkChange)}>
                 <ShareIcon />
               </IconButton>
             </div>
