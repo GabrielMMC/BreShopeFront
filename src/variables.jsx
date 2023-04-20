@@ -174,11 +174,12 @@ export async function POST_PUBLIC_FETCH(props) {
 }
 
 export async function GET_FETCH(props) {
+  const token = localStorage.getItem('token')
   return (fetch(`${URL}api/${props.url}`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
-      'Authorization': `Bearer ${props.token}`
+      'Authorization': `Bearer ${token}`
     }
   }).then(async (response) => {
     const resp = await response.json()
