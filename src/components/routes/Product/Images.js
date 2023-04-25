@@ -29,7 +29,7 @@ export default function Images(props) {
   return (
     <div>
       <div style={{ width: 100, height: 100, margin: 'auto' }}>
-        <img onClick={handleOpen} onLoad={() => setThumbLoaded(true)} className={`w-100 h-100 rounded pointer ${!thumbLoaded && 'd-none'}`} src={`${STORAGE_URL + '/' + props.thumb}`} alt="product" />
+        <img onClick={handleOpen} onLoad={() => setThumbLoaded(true)} className={`w-100 h-100 rounded pointer ${!thumbLoaded && 'd-none'}`} src={`${STORAGE_URL + props.thumb}`} alt="product" />
         {!thumbLoaded && <Skeleton className='position-absolute' variant="rectangular" width={100} height={100} animation='wave' sx={{ borderRadius: '.4rem' }} />}
       </div>
       <Modal
