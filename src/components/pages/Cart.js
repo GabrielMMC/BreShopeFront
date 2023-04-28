@@ -40,20 +40,16 @@ const Cart = () => {
   const dispatch = useDispatch()
   const token = useSelector(state => state.AppReducer.token)
   const toggled = useSelector(state => state.AppReducer.toggled)
-  const notify = useSelector(state => state.AppReducer?.cart_items?.cart_items?.length)
-
-  React.useEffect(() => {
-    if (token) getData()
-  }, [toggled])
+  const notify = useSelector(state => state.AppReducer?.cart_notify)
 
   const getData = async () => {
-    setLoading(true)
     const response = await GET_FETCH({ url: 'cart', token })
     // console.log('resp cart', response)
 
     if (response.status) {
       setProducts(response.cart_products)
-      dispatch({ type: 'cart_items', payload: { cart_items: response.cart_products } })
+      localStorage.setItem("cart_notify", response.cart_products.length)
+      dispatch({ type: 'cart_notify', payload: response.cart_products.length })
     }
     else {
       renderToast({ type: 'error', error: response.message })
@@ -82,12 +78,17 @@ const Cart = () => {
 
   const handleDelete = async (id) => {
     setProducts(products.filter(item => item.product_id !== id))
-    DELETE_FETCH({ url: `cart/delete/${id}`, token })
+    const response = await DELETE_FETCH({ url: `cart/delete/${id}`, token })
+    if (response.status) {
+      localStorage.setItem("cart_notify", notify - 1)
+      dispatch({ type: 'cart_notify', payload: notify - 1 })
+    }
   }
 
   const toggleOpen = () => {
+    setLoading(true)
+    getData()
     dispatch({ type: 'toggle_cart', toggled: !toggled })
-    dispatch({ type: 'cart_items', payload: { cart_items: products } })
   }
 
   return (

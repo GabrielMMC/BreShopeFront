@@ -1,19 +1,17 @@
 import React, { useCallback, useState } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { logout, mudarDados } from '../../components/actions/AppActions';
+import { logout } from '../../components/actions/AppActions';
 import { useDispatch, useSelector } from 'react-redux';
 import user4 from '../../assets/no_user.png';
 import { MdExitToApp } from 'react-icons/md';
 import { CgProfile } from 'react-icons/cg';
-import { FaBars } from 'react-icons/fa';
 import logo from '../../assets/logo.png';
-import { IconButton, Input } from '@mui/material';
 import { MdSearch } from 'react-icons/md';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import { GET_FETCH, STORAGE_URL } from '../../variables';
+import { STORAGE_URL } from '../../variables';
 import Cart from './Cart';
 import Wishlist from './Wishlist';
+import noUser from '../../assets/no_user.png'
 
 const Navbar = (props) => {
   const search = useSelector(store => store.AppReducer.search);
@@ -48,7 +46,7 @@ const Navbar = (props) => {
     <nav className='w-100 bg-purple'>
       <div className="w-principal d-flex justify-content-between align-items-center m-auto">
         <div className="ms-3" style={{ maxWidth: 75, maxHeight: 75 }}>
-          <Link to={'/'}><img className='img-fluid' src={logo} alt='logo'></img></Link>
+          <Link to={'/'}><img style={{ width: 75, height: 75 }} className='img-fluid' src={logo} alt='logo'></img></Link>
         </div>
 
 
@@ -68,7 +66,7 @@ const Navbar = (props) => {
           <div className="me-3 bg-purple">
             <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
               <DropdownToggle className="btn header-item waves-effect" id="page-header-user-dropdown" tag="button">
-                <img className="rounded-circle header-profile-user" src={`${STORAGE_URL}/${user.file ? user.file : 'no_user.png'}`} onError={(e) => e.target.src = user4} height="50" width='50' style={{ objectFit: "cover", backgroundColor: '#fff' }} alt="Header Avatar" />
+                <img className="rounded-circle header-profile-user" src={user.file ? `${STORAGE_URL}/${user.file}` : noUser} onError={(e) => e.target.src = user4} height="50" width='50' style={{ objectFit: "cover", backgroundColor: '#fff' }} alt="Header Avatar" />
               </DropdownToggle>
               <DropdownMenu end>
                 {user.id ?

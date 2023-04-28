@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
     user: {},
-    cart_items: [],
-    wishlist_items: [],
+    cart_notify: 0,
+    wishlist_notify: 0,
     token: null,
     breshop: null,
     toggled: false,
@@ -32,8 +32,8 @@ export default (state = INITIAL_STATE, action) => {
                 token: null,
                 breshop: null,
                 user: {},
-                cart_items: [],
-                wishlist_items: [],
+                cart_notify: 0,
+                wishlist_notify: 0,
                 search: ''
 
             };
@@ -53,16 +53,16 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 breshop: action.payload
             };
-        case 'cart_items':
+        case 'cart_notify':
             return {
                 ...state,
-                cart_items: action.payload,
+                cart_notify: action.payload,
 
             };
-        case 'wishlist_items':
+        case 'wishlist_notify':
             return {
                 ...state,
-                wishlist_items: action.payload,
+                wishlist_notify: action.payload,
 
             };
         case 'toggle_cart':

@@ -172,7 +172,7 @@ const Home = () => {
             <div className='col-md-10'>
               {!loading ?
                 <>
-                  <div className="d-flex flex-wrap">
+                  <div className="d-flex flex-wrap justify-content-center">
                     {products.length > 0 ?
                       products.map(item => (
                         <div key={item.id}>
@@ -192,7 +192,7 @@ const Home = () => {
                         } />
                     </div>}
                 </>
-                : <div className='d-flex flex-wrap'><CardSkeleton totalItems={12} /></div>}
+                : <div className='d-flex flex-wrap justify-content-center'><CardSkeleton totalItems={12} /></div>}
             </div>
           </div>
         </div>
@@ -214,7 +214,7 @@ const Home = () => {
             <div className="col-12">
               {!saleLoading ?
                 <>
-                  <div className="d-flex flex-wrap">
+                  <div className="d-flex flex-wrap justify-content-center">
                     {saleProducts.length > 0 ?
                       saleProducts.map(item => (
                         <div key={item.id}>
@@ -234,7 +234,7 @@ const Home = () => {
                         } />
                     </div>}
                 </>
-                : <div className='d-flex flex-wrap'><CardSkeleton totalItems={12} /></div>}
+                : <div className='d-flex flex-wrap justify-content-center'><CardSkeleton totalItems={12} /></div>}
             </div>
           </div>
         </div>
