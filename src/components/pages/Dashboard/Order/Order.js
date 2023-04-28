@@ -41,7 +41,7 @@ const Order = () => {
 
       const status = getStatus()
       const response = await GET_FETCH({
-        url: `orders/?page=${pagination.pageNumber + 1}&status=${status ? status : ''}&dateOf=${dateOf ? dateOf : ''}
+        url: `orders?page=${pagination.pageNumber + 1}&status=${status ? status : ''}&dateOf=${dateOf ? dateOf : ''}
         &dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
       })
 
