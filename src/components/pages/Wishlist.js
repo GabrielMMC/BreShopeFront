@@ -38,15 +38,15 @@ const Wishlist = () => {
   const dispatch = useDispatch()
   const token = useSelector(state => state.AppReducer.token)
   const toggled = useSelector(state => state.AppReducer.wishlist_toggled)
-  const notify = useSelector(state => state.AppReducer?.wishlist_notify)
+  const notify = useSelector(state => state.AppReducer?.wishlist_items?.length)
 
   const getData = async () => {
     const response = await GET_FETCH({ url: 'wishlists', token })
 
     if (response.status) {
       setProducts(response.wishlist_products)
-      localStorage.setItem("wishlist_notify", response.wishlist_products.length)
-      dispatch({ type: 'wishlist_notify', payload: response.wishlist_products.length })
+      localStorage.setItem("wishlist_items", JSON.stringify(response.wishlist_products))
+      dispatch({ type: 'wishlist_items', payload: response.wishlist_products })
     }
     else {
       renderToast({ type: 'error', error: response.message })
@@ -56,11 +56,12 @@ const Wishlist = () => {
   }
 
   const handleDelete = async (id) => {
-    setProducts(products.filter(item => item.id !== id))
+    const filtredProducts = products.filter(item => item.id !== id)
+    setProducts(filtredProducts)
     const response = await DELETE_FETCH({ url: `wishlists/delete/${id}`, token })
     if (response.status) {
-      localStorage.setItem("wishlist_notify", notify - 1)
-      dispatch({ type: 'wishlist_notify', payload: notify - 1 })
+      localStorage.setItem("wishlist_items", JSON.stringify(filtredProducts))
+      dispatch({ type: 'wishlist_items', payload: filtredProducts })
     }
   }
 
@@ -109,9 +110,9 @@ const Wishlist = () => {
                       <>
                         {products?.length !== 0 ?
                           products.map(item => (
-                            <div key={item.id} className="row mb-4 pointer" onClick={(e) => { e.stopPropagation(); e.preventDefault(); dispatch({ type: 'toggle_wishlist', toggled: false }); history(`product/${item.id}`) }}>
+                            <div key={item.id} className="row mb-4 pointer" onClick={() => { dispatch({ type: 'toggle_wishlist', toggled: false }); history(`product/${item.id}`) }}>
                               <div className="col-sm-4 position-relative">
-                                <button onClick={() => handleDelete(item.id)} type='button' className="close-sale" style={{ margin: 0, marginRight: 3, marginTop: -8 }}>
+                                <button onClick={(e) => { e.stopPropagation(); handleDelete(item.id) }} type='button' className="close-sale" style={{ margin: 0, marginRight: 3, marginTop: -8 }}>
                                   <MdOutlineClose color='#FFF' size={25} />
                                 </button>
                                 <img src={`${STORAGE_URL + item.thumb}`} className='img-fluid' alt="product" />

@@ -46,12 +46,13 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(response.user));
         localStorage.setItem("breshop", JSON.stringify(response.user.breshop));
         localStorage.setItem("cart_notify", response.cart_notify);
-        localStorage.setItem("wishlist_notify", JSON.stringify(response.wishlist_notify));
+        localStorage.setItem("wishlist_items", JSON.stringify(response.wishlist_products));
 
         dispatch({ type: 'login', payload: { token: response.access_token, user: response.user } });
         dispatch({ type: 'breshop', payload: response.user.breshop });
         dispatch({ type: 'cart_notify', payload: response.cart_notify })
-        dispatch({ type: 'wishlist_notify', payload: response.wishlist_notify })
+        dispatch({ type: 'wishlist_items', payload: response.wishlist_products })
+
 
         history('/')
       } else {
