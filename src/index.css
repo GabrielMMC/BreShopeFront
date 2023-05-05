@@ -361,6 +361,15 @@ p{
   background-color:#F5F5F5;
 }
 
+.transparent-button {
+  border-radius: 50%;
+  border: none;
+  height: 2rem;
+  width: 2rem;
+  background: none;
+  color: none
+}
+
 .rounded-button {
   border-radius: 10%;
   border: none;

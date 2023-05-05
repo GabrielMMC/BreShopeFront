@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import setError from '../../utilities/Error'
 import { GET_FETCH } from '../../../variables'
 import cpfMask from '../../utilities/masks/cpf'
-import phoneMask from '../../utilities/masks/phone'
+import { phoneMask } from '../../utilities/masks/phone'
 import { CircularProgress, Typography } from '@mui/material'
 
 //Props coming from the PaymentScreen

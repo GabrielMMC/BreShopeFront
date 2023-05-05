@@ -13,6 +13,7 @@ import { MdOutlineLocalShipping, MdOutlineLocalOffer } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import Data from "./Data";
 import './styles.css';
+import UserRefactor from "./UserRefactor";
 
 const Profile = () => {
   const location = useLocation()
@@ -70,7 +71,7 @@ const Profile = () => {
             </nav>
           </div>
           <div className='col-9 p-sm-3'>
-            {location.pathname === '/profile' ? <Data /> : <Outlet />}
+            {location.pathname === '/profile' ? <UserRefactor /> : <Outlet />}
           </div>
         </div>
       </div>

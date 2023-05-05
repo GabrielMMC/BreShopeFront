@@ -26,7 +26,7 @@ const Footer = () => {
       <div className="row w-principal m-auto">
 
         <div className="col-md-3 col-sm-6">
-          <h6>ATENDIMENTO AO CLIENTE</h6>
+          <span className='bold'>ATENDIMENTO AO CLIENTE</span>
           <div className="d-flex flex-column small" onClick={() => history('/building')}>
             <span>Como comprar</span>
             <span>Ajuda</span>
@@ -39,7 +39,7 @@ const Footer = () => {
         </div>
 
         <div className="col-md-3 col-sm-6">
-          <h6>SOBRE A BRESHOP</h6>
+          <span className='bold'>SOBRE A BRESHOP</span>
           <div className="d-flex flex-column small" onClick={() => history('/building')}>
             <span>Sobre nós</span>
             <span>Imprensa</span>
@@ -52,29 +52,29 @@ const Footer = () => {
         </div>
 
         <div className="col-md-3 col-sm-6">
-          <h6>NOS SIGA</h6>
+          <span className='bold'>NOS SIGA</span>
           <div className="d-flex align-items-start flex-column">
             <div>
-              <IconButton><FacebookIcon sx={{ color: '#333' }} /></IconButton>
+              <IconButton aria-label='Facebook'><FacebookIcon sx={{ color: '#333' }} /></IconButton>
               <span className='small'>Facebook</span>
             </div>
             <div>
-              <IconButton><WhatsAppIcon sx={{ color: '#333' }} /></IconButton>
+              <IconButton aria-label='Whatsapp'><WhatsAppIcon sx={{ color: '#333' }} /></IconButton>
               <span className='small'>WhatsApp</span>
             </div>
             <div>
-              <IconButton><InstagramIcon sx={{ color: '#333' }} /></IconButton>
+              <IconButton aria-label='Instagram'><InstagramIcon sx={{ color: '#333' }} /></IconButton>
               <span className='small'>Instagram</span>
             </div>
             <div>
-              <IconButton><MailIcon sx={{ color: '#333' }} /></IconButton>
+              <IconButton aria-label='Email'><MailIcon sx={{ color: '#333' }} /></IconButton>
               <span className='small'>Email</span>
             </div>
           </div>
         </div>
 
         <div className="col-md-3 col-sm-6">
-          <h6>FORMAS DE PAGAMENTO</h6>
+          <span>FORMAS DE PAGAMENTO</span>
           <div className="d-flex flex-wrap align-items-center">
             <img src={mastercard} alt="mastercard" className='footer-img' />
             <img src={maestro} alt="maestro" className='footer-img' />
