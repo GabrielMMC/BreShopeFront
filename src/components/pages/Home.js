@@ -150,9 +150,9 @@ const Home = () => {
             <img src={art} alt="woman-art" className='h-100 d-flex justify-content-center m-auto' />
           </div>
           <div className="col-8 text-center m-auto">
-            <p className='main-title text-white'>Conheça a nossa plataforma e começe a garimpar!</p>
+            <p className='main-title text-white'>Conheça a nossa plataforma e comece a garimpar!</p>
             <p className='subtitle text-white'>A plataforma atualmente se encontra em ambiente de testes</p>
-            <p className='small text-white'>Agradeço se reportar os bugs encontrados, de resto, <del>ta liberada a bagunça</del></p>
+            <p className='small text-white'>Agradeço se reportar os bugs encontrados</p>
             {/* dedo no cu e gritaria */}
           </div>
         </div>
@@ -160,7 +160,7 @@ const Home = () => {
       <div className='w-principal m-auto my-5'>
 
         <div className="my-5" ref={productRef}>
-          <h6 className="title ms-3">Produtos postados recentemente</h6>
+          <h1 className="title ms-3">Produtos postados recentemente</h1>
           <div className="row">
             <div className="col-md-2">
               <Accordion styles={styles} types={types} materials={materials}
@@ -198,7 +198,7 @@ const Home = () => {
         </div>
 
         <div className="my-5 py-5">
-          <h6 className="title ms-3">Estilos mais procurados</h6>
+          <h1 className="title ms-3">Estilos mais procurados</h1>
           <div className="row justify-content-center">
             <CategoryCard title='Casual' icon={FaTshirt} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
             <CategoryCard title='Luxuoso' icon={GiDress} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
@@ -209,7 +209,7 @@ const Home = () => {
         </div>
 
         <div className="my-5 py-5" ref={saleRef}>
-          <h6 className="title ms-3">Promoções disponíveis</h6>
+          <h1 className="title ms-3">Promoções disponíveis</h1>
           <div className="row">
             <div className="col-12">
               {!saleLoading ?
@@ -241,7 +241,7 @@ const Home = () => {
 
 
         <div className="my-5 py-5" ref={breshopRef}>
-          <h6 className="title ms-3">Lojas populares</h6>
+          <h1 className="title ms-3">Lojas populares</h1>
           {!breshopLoading ?
             <>
               <div className="d-flex flex-wrap my-4 pointer">

@@ -37,7 +37,7 @@ const RoutesContainer = () => {
   let token = localStorage.getItem("token");
   let user = localStorage.getItem("user");
   let cartNotify = localStorage.getItem("cart_notify");
-  let wishlistNotify = localStorage.getItem("wishlist_notify");
+  let wishlistItems = localStorage.getItem("wishlist_items");
   let breshop = localStorage.getItem("breshop");
 
   user = JSON.parse(user);
@@ -46,7 +46,7 @@ const RoutesContainer = () => {
   }
 
   dispatch({ type: "login", payload: { token: token, user: user } });
-  dispatch({ type: "wishlist_notify", payload: wishlistNotify });
+  dispatch({ type: "wishlist_items", payload: JSON.parse(wishlistItems) });
   dispatch({ type: "cart_notify", payload: cartNotify });
   dispatch({ type: "breshop", payload: breshop ? JSON.parse(breshop) : null });
 

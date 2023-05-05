@@ -66,17 +66,19 @@ const Wishlist = () => {
   }
 
   const toggleOpen = () => {
-    setLoading(true)
-    getData()
+    if (token) {
+      setLoading(true)
+      getData()
+    }
     dispatch({ type: 'toggle_wishlist', toggled: !toggled })
   }
 
   return (
     <>
       <Badge badgeContent={notify} color="error">
-        <IconButton onClick={toggleOpen}>
+        <button className="transparent-button m-auto" aria-label="Favoritos" onClick={toggleOpen}>
           <FavoriteIcon sx={{ color: 'white' }} />
-        </IconButton>
+        </button>
       </Badge>
 
       <Modal
@@ -97,7 +99,7 @@ const Wishlist = () => {
                 <div className="d-flex align-items-center">
                   <p className='dash-title'>Lista de desejos</p>
                   <div className="ms-auto">
-                    <IconButton onClick={toggleOpen}>
+                    <IconButton aria-label="Fechar" onClick={toggleOpen}>
                       <CloseIcon />
                     </IconButton>
                   </div>

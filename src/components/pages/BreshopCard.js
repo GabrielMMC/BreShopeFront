@@ -6,6 +6,7 @@ import characterLimitMask from '../utilities/masks/characterLimit';
 import dateMask from '../utilities/masks/date';
 
 const BreshopCard = ({ shop }) => {
+  const shopImageUrl = React.useMemo(() => `${URL}storage/${shop.file}`, [shop.file]);
   const history = useNavigate()
   let name = Array.from(shop.name)
   let tooltip = false
@@ -14,8 +15,8 @@ const BreshopCard = ({ shop }) => {
 
   return (
     <div className="d-flex" style={{ maxWidth: 450 }} onClick={() => history(`/breshop/${shop.id}`)}>
-      <div className='d-flex' style={{ height: 125, minWidth: 125, maxWidth: 125 }}>
-        <img className='w-100 h-100 rounded-50' src={`${URL}storage/${shop.file}`} alt="shop" />
+      <div className="d-flex" style={{ height: 125, minWidth: 125, maxWidth: 125 }}>
+        <img className="rounded-50" style={{ height: '100%', width: '100%', objectFit: 'cover' }} src={shopImageUrl} alt="shop" />
       </div>
       <div className="row mx-3">
         <div className="d-flex">

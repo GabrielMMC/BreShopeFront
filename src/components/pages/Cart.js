@@ -58,23 +58,23 @@ const Cart = () => {
     setLoading(false)
   }
 
-  const handleQuantityChange = (value, id) => {
-    if (value >= 0) {
-      setProducts((oldProducts) => oldProducts.map(item => {
-        if (item.product_id === id) item.quantity = value
-        return item
-      }))
+  // const handleQuantityChange = (value, id) => {
+  //   if (value >= 0) {
+  //     setProducts((oldProducts) => oldProducts.map(item => {
+  //       if (item.product_id === id) item.quantity = value
+  //       return item
+  //     }))
 
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+  //     if (timeoutId) {
+  //       clearTimeout(timeoutId);
+  //     }
 
-      setTimeoutId(() =>
-        setTimeout(async () => {
-          await PUT_FETCH({ url: 'cart/update', body: { product_id: id, quantity: value }, token })
-        }, 750))
-    }
-  }
+  //     setTimeoutId(() =>
+  //       setTimeout(async () => {
+  //         await PUT_FETCH({ url: 'cart/update', body: { product_id: id, quantity: value }, token })
+  //       }, 750))
+  //   }
+  // }
 
   const handleDelete = async (id) => {
     setProducts(products.filter(item => item.product_id !== id))
@@ -86,18 +86,20 @@ const Cart = () => {
   }
 
   const toggleOpen = () => {
-    setLoading(true)
-    getData()
+    if (token) {
+      setLoading(true)
+      getData()
+    }
     dispatch({ type: 'toggle_cart', toggled: !toggled })
   }
 
   return (
     <>
-      <Badge badgeContent={notify} color="error">
-        <IconButton onClick={toggleOpen}>
+      <Badge badgeContent={notify > 0 ? notify : null} color="error">
+        <button className="transparent-button m-auto" aria-label="Carrinho de compras" onClick={toggleOpen}>
           <ShoppingCartIcon sx={{ color: 'white' }} />
-        </IconButton>
-      </Badge>
+        </button>
+      </Badge >
 
       <Modal
         aria-labelledby="transition-modal-title"
@@ -117,7 +119,7 @@ const Cart = () => {
                 <div className="d-flex align-items-center">
                   <p className='dash-title'>Carrinho de compras</p>
                   <div className="ms-auto">
-                    <IconButton onClick={toggleOpen}>
+                    <IconButton aria-label="Fechar" onClick={toggleOpen}>
                       <CloseIcon />
                     </IconButton>
                   </div>
@@ -147,9 +149,9 @@ const Cart = () => {
                               </div>
                               <div className="col-sm-3">
                                 <div className="d-flex input-group justify-content-end flex-nowrap">
-                                  <button disabled onClick={() => handleQuantityChange(item.quantity - 1, item.product_id)} className='cart-button' style={{ borderRadius: '.4rem 0 0 .4rem' }}>-</button>
-                                  <input disabled onChange={({ target }) => handleQuantityChange(target.value, item.product_id)} className='form-control text-center' type="text" style={{ maxWidth: '3rem' }} value={item.quantity} />
-                                  <button disabled onClick={() => handleQuantityChange(item.quantity + 1, item.product_id)} className='cart-button' style={{ borderRadius: '0 .4rem .4rem 0' }}>+</button>
+                                  <button disabled className='cart-button' style={{ borderRadius: '.4rem 0 0 .4rem' }}>-</button>
+                                  <input disabled className='form-control text-center' type="text" style={{ maxWidth: '3rem' }} value={item.quantity} />
+                                  <button disabled className='cart-button' style={{ borderRadius: '0 .4rem .4rem 0' }}>+</button>
                                 </div>
                                 {item.discount ?
                                   <>
