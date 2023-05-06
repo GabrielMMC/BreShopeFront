@@ -76,18 +76,18 @@ const Footer = () => {
         <div className="col-md-3 col-sm-6">
           <span>FORMAS DE PAGAMENTO</span>
           <div className="d-flex flex-wrap align-items-center">
-            <img src={mastercard} alt="mastercard" className='footer-img' />
-            <img src={maestro} alt="maestro" className='footer-img' />
-            <img src={visa} alt="visa" className='footer-img' />
-            <img src={discover} alt="discover" className='footer-img' />
-            <img src={amex} alt="amex" className='footer-img' />
-            <img src={aura} alt="aura" className='footer-img' />
-            <img src={jcb} alt="amex" className='footer-img' />
-            <img src={hipercard} alt="hipercard" className='footer-img' />
-            <img src={diners} alt="diners" className='footer-img' />
-            <img src={elo} alt="elo" className='footer-img' />
-            <img src={boleto} alt="boleto" className='footer-img' />
-            <img src={pix} alt="pix" className='footer-img' />
+            <img width="50" height="30" src={mastercard} alt="mastercard" className='footer-img' />
+            <img width="50" height="30" src={maestro} alt="maestro" className='footer-img' />
+            <img width="50" height="30" src={visa} alt="visa" className='footer-img' />
+            <img width="50" height="30" src={discover} alt="discover" className='footer-img' />
+            <img width="50" height="30" src={amex} alt="amex" className='footer-img' />
+            <img width="50" height="30" src={aura} alt="aura" className='footer-img' />
+            <img width="50" height="30" src={jcb} alt="amex" className='footer-img' />
+            <img width="50" height="30" src={hipercard} alt="hipercard" className='footer-img' />
+            <img width="50" height="30" src={diners} alt="diners" className='footer-img' />
+            <img width="50" height="30" src={elo} alt="elo" className='footer-img' />
+            <img width="50" height="30" src={boleto} alt="boleto" className='footer-img' />
+            <img width="50" height="30" src={pix} alt="pix" className='footer-img' />
           </div>
         </div>
       </div>

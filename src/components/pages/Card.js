@@ -13,6 +13,7 @@ import { copyLink } from '../utilities/Functions';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Card({ product, handleAddWishlist, handleDeleteWishlist, wishlistProducts }) {
+  const imageUrl = React.useMemo(() => `${URL}storage/${product.thumb}`, [product.thumb]);
   const [isWished, setIsWished] = React.useState(false)
   const [errorTimer, setErrorTimer] = React.useState(false)
   const linkIsAllowed = useSelector(state => state.AppReducer.linkIsAllowed)
@@ -42,11 +43,12 @@ export default function Card({ product, handleAddWishlist, handleDeleteWishlist,
               <div className='sale'>
                 <p className='h6'>{product.discount}%</p>
               </div>}
-            <CardMedia
-              component="img"
-              height="400"
-              image={`${URL}storage/${product.thumb}`}
-              alt="Paella dish"
+            <img
+              alt="Product thumbnail"
+              loading="lazy"
+              decoding="async"
+              src={imageUrl}
+              style={{ height: '100%', width: '100%', objectFit: 'cover' }}
               onClick={() => history(`/product/${product.id}`)}
             />
             {/* <img className='img-fluid' src={`${URL}storage/${product.images[0].file}`} alt='product' /> */}
