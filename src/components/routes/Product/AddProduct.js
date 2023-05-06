@@ -111,9 +111,9 @@ const AddProduct = ({ edit }) => {
       let response
       if (edit) {
         formData.append('product_id', edit.id)
-        response = await POST_FETCH_FORMDATA({ url: `${API_URL}update_product`, body: formData, token })
+        response = await POST_FETCH_FORMDATA({ url: `${API_URL}products/update`, body: formData, token })
       } else {
-        response = await POST_FETCH_FORMDATA({ url: `${API_URL}store_product`, body: formData, token })
+        response = await POST_FETCH_FORMDATA({ url: `${API_URL}products/create`, body: formData, token })
       }
       // console.log('resp', response)
       if (response.status) {
