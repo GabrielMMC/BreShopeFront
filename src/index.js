@@ -12,19 +12,13 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import './index.css';
 
-const queryClient = new QueryClient();
-window.history.scrollRestoration = 'manual'
+// window.history.scrollRestoration = 'manual'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={createStore(reducers, {}, applyMiddleware(ReduxThunk))}>
-
     <BrowserRouter>
-      <QueryClientProvider
-        client={queryClient}
-      >
-        <App />
-      </QueryClientProvider>
+      <App />
     </BrowserRouter>
   </Provider>
 
