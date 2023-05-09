@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 // export const URL = "http://localhost:8000/"
 export const THIS_URL = "http://localhost:3000/"
 
-export const URL = "https://breshop.website/"
+export const URL = "http://localhost:8000/"
 // export const THIS_URL = "https://bmtest.enterscience.com.br/"
 
 export const API_URL = URL + "api/";
@@ -245,20 +245,13 @@ export const GET_CEP = (value) => {
       const data = await json.json();
 
       if (data.hasOwnProperty("erro")) {
-        // clearCEP();
-        return "error";
+        return false;
       } else {
         return data;
       }
     })
     .catch((error) => {
-      return error;
-      // clearCEP();
-      // setState({
-      //   ...state,
-      //   [item]: { ...state[item], value: "", error: true },
-      // });
-      // renderToast({ type: "error", error: "CEP inválido!" });
+      return false;
     });
   return response;
 };
