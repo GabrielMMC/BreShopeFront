@@ -1,7 +1,6 @@
-import RoutesContainer from './components/routes'
 import { createTheme, ThemeProvider } from '@mui/material'
-import { ToastContent } from './components/utilities/Alerts'
-import './components/pages/Styles/style.css'
+import { ToastContent } from './components/Utilities/Alerts'
+import RoutesContainer from './components/Routes/RoutesContainer';
 
 function App() {
   const Theme = createTheme({
