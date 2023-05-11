@@ -39,6 +39,14 @@ export default function Card({ product, handleAddWishlist, handleDeleteWishlist,
       {!product.sold &&
         <MuiCard onClick={() => ''} sx={{ width: 280, boxShadow: 0 }} className='m-2 pointer'>
           <div className='position-relative' style={{ height: '400px !important', width: '100%' }}>
+            <div className="d-flex align-items-end top-buttons">
+              <IconButton aria-label="add to favorites" onClick={() => isWished ? handleDeleteWishlist(product.id, wishlistProducts) : handleAddWishlist(product.id, product, wishlistProducts, errorTimer, setErrorTimer)}>
+                <FavoriteIcon sx={{ color: isWished && '#DC3545' }} />
+              </IconButton>
+              <IconButton aria-label="share" onClick={() => copyLink(`${THIS_URL}product/${product.id}`, linkIsAllowed, handleLinkChange)}>
+                <ShareIcon />
+              </IconButton>
+            </div>
             {product.discount &&
               <div className='sale'>
                 <p className='h6'>{product.discount}%</p>
@@ -62,33 +70,25 @@ export default function Card({ product, handleAddWishlist, handleDeleteWishlist,
             {/* <img className='img-fluid' src={`${URL}storage/${product.images[0].file}`} alt='product' /> */}
           </div>
           {/* <CardContent sx={{ padding: 0, margin: 0 }}> */}
-          <div className="row align-items-end" style={{ height: 120 }}>
+          <div className="row align-items-end" style={{ height: 80, marginBottom: 60 }}>
             <div className='mx-2 align-self-start' style={{ height: 40 }}>
               {tooltip ?
-                <Tooltip placement='top' arrow title={product.name}><Typography variant="body2" color="text.secondary">{name}</Typography></Tooltip> : <Typography variant="body2" color="text.secondary">{name}</Typography>}
+                <Tooltip placement='top' arrow title={product.name}><Typography>{name}</Typography></Tooltip> : <p>{name}</p>}
             </div>
             <div className='mx-2 align-self-start'>
               {product.discount ?
                 <>
                   <Typography className='me-2' variant="substring" color="text.secondary">
-                    <del>{moneyMask(product.price)}</del>
+                    <del className='bolder'>{moneyMask(product.price)}</del>
                   </Typography>
                   <Typography fontSize={25} variant="substring" sx={{ color: '#DC3545', fontWeight: 'bold' }}>
                     {moneyMask(product.price - (product.price * (product.discount / 100)))}
                   </Typography>
                 </>
-                : <Typography className='m-auto' fontSize={25} variant="substring" sx={{ color: '#262626' }}>
+                : <Typography className='m-auto' fontSize={25} variant="substring" sx={{ color: 'rgba(0, 0, 0, 0.75)', fontWeight: 'bold' }}>
                   {moneyMask(product.price)}
                 </Typography>
               }
-            </div>
-            <div className="d-flex align-items-end">
-              <IconButton aria-label="add to favorites" onClick={() => isWished ? handleDeleteWishlist(product.id, wishlistProducts) : handleAddWishlist(product.id, product, wishlistProducts, errorTimer, setErrorTimer)}>
-                <FavoriteIcon sx={{ color: isWished && '#DC3545' }} />
-              </IconButton>
-              <IconButton aria-label="share" onClick={() => copyLink(`${THIS_URL}product/${product.id}`, linkIsAllowed, handleLinkChange)}>
-                <ShareIcon />
-              </IconButton>
             </div>
           </div>
         </MuiCard>}

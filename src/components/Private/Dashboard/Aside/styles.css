@@ -322,6 +322,13 @@ h1 {
   color: #FFF;
 }
 
+.top-buttons{
+  position: absolute;
+  padding: 8  px 8  px;
+  top: 0;
+  right: 0;
+}
+
 @media (max-width: 500px) {
   .content {
     margin: auto;

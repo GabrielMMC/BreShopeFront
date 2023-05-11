@@ -160,7 +160,8 @@ const Home = () => {
               <Accordion styles={styles} types={types} materials={materials}
                 selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles}
                 selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes}
-                selectedMaterials={selectedMaterials} setSelectedMaterials={setSelectedMaterials} />
+                selectedMaterials={selectedMaterials} setSelectedMaterials={setSelectedMaterials}
+                ref={productRef} />
             </div>
 
             <div className='col-md-10'>
