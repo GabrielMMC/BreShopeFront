@@ -12,7 +12,8 @@ import { handleAddWishlist, handleDeleteWishlist } from '../../Utilities/Functio
 import { renderToast } from '../../Utilities/Alerts'
 import dateMask from '../../Utilities/masks/date'
 
-const Breshop = () => {
+//Props coming from the Product screen
+const Breshop = ({ topRef }) => {
   // -----------------------------------------------------------------
   // *****************************************************************
   // -------------------------States----------------------------------
@@ -35,8 +36,8 @@ const Breshop = () => {
   const [ratingPagination, setRatingPagination] = React.useState({
     totalItems: '', pageNumber: 1, perPage: 1, lastPage: 1
   })
-  const productRef = React.useRef()
 
+  const productRef = React.useRef()
   const params = useParams()
   const dispatch = useDispatch()
   const wishlist_products = useSelector(store => store.AppReducer.wishlist_items)
@@ -78,10 +79,7 @@ const Breshop = () => {
 
   // Runs when breshopPagination.pageNumber or breshop changes. Calls getBreshopProducts if pageNumber is 0, otherwise sets pageNumber to 0.
   React.useEffect(() => {
-    if (!loading && breshop.id) {
-      // breshopPagination.pageNumber === 0 ? getBreshopProducts() : setBreshopPagination({ ...breshopPagination, pageNumber: 0 })
-      getBreshopProducts()
-    }
+    if (!loading && breshop.id) { getBreshopProducts(); window.scrollTo(0, 0) }
   }, [breshopPagination.pageNumber, breshop])
 
   // Runs when ratingPagination.pageNumber changes. Calls getRatings to fetch ratings.
@@ -156,7 +154,7 @@ const Breshop = () => {
             <div className="row my-5">
               <div className="d-flex justify-content-center">
                 <div className="d-flex align-items-center">
-                  <img className='m-auto rounded-50' style={{ width: 75, height: 75 }} src={`${URL}storage/${breshop.file ? breshop.file : 'photos/no_user.png'}`} alt="subject" />
+                  <img className='m-auto rounded-50' style={{ width: 75, height: 75, borderRadius: '50%' }} src={`${URL}storage/${breshop.file ? breshop.file : 'photos/no_user.png'}`} alt="subject" />
                   <div className="d-flex flex-column ms-3">
                     <p>{breshop.name}</p>
                     <Rating name="read-only" value={breshop.average_rating} precision={0.1} readOnly />

@@ -42,6 +42,13 @@ const Cart = () => {
   const toggled = useSelector(state => state.AppReducer.toggled)
   const notify = useSelector(state => state.AppReducer?.cart_notify)
 
+  React.useEffect(() => {
+    if (token) {
+      setLoading(true)
+      getData()
+    }
+  }, [toggled])
+
   const getData = async () => {
     const response = await GET_FETCH({ url: 'cart', token })
     // console.log('resp cart', response)
@@ -86,10 +93,6 @@ const Cart = () => {
   }
 
   const toggleOpen = () => {
-    if (token) {
-      setLoading(true)
-      getData()
-    }
     dispatch({ type: 'toggle_cart', toggled: !toggled })
   }
 

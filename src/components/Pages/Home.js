@@ -18,6 +18,10 @@ import BreshopSkeleton from "./Breshop/BreshopSkeleton";
 import BreshopCard from "./Breshop/BreshopCard";
 import CategoryCard from "./Card/CategoryCard";
 
+const HomeWrapper = React.forwardRef((props, ref) => {
+  return <Home {...props} forwardRef={ref} />;
+});
+
 const Home = () => {
   const [types, setTypes] = React.useState('')
   const [styles, setStyles] = React.useState('')
@@ -267,4 +271,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomeWrapper;

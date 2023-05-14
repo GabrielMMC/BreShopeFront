@@ -48,7 +48,7 @@ const UserData = () => {
         if (form.hasOwnProperty(item)) newForm = { ...newForm, [item]: response.customer?.[item] }
       })
       newForm.gender_id = response.user.gender_id
-      newForm.gender = response.genders.filter(item => item.id === response.user.gender_id)[0].key
+      newForm.gender = response.user.gender_id ? response.genders.filter(item => item.id === response.user.gender_id)[0].key : ''
       newForm.birthdate = response.customer.birthdate ? response.customer.birthdate.substring(0, 10) : ''
       newForm.document = response.customer.document ? cpfMask(response.customer.document).value : ''
       newForm.phone = phone ? phoneMask(phone).value : ''

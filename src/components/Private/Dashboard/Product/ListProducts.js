@@ -16,11 +16,12 @@ function ListProducts() {
   const [dateOf, setDateOf] = React.useState('')
   const [dateFor, setDateFor] = React.useState('')
   const [loading, setLoading] = React.useState(true)
-  const [products, setProducts] = React.useState(null)
+  const [products, setProducts] = React.useState([])
   const [pagination, setPagination] = React.useState({
     totalItems: '', pageNumber: 0, perPage: 10
   })
 
+  const tableRef = React.useRef()
   const history = useNavigate()
   const token = useSelector(state => state.AppReducer.token)
 
@@ -100,7 +101,7 @@ function ListProducts() {
             </tr>
           </thead>
           <tbody>
-            {products && products.map((item, index) => {
+            {products.length > 0 ? products.map((item, index) => {
               const description = handleSize(item.description)
               const title = handleSize(item.name)
               return (
@@ -129,12 +130,12 @@ function ListProducts() {
                   </td>
                 </tr>
               )
-            })}
+            }) : <tr><td colSpan={8} className='text-center'>Sem dados encontrados!</td></tr>}
           </tbody>
         </table> : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>
       }
 
-      {pagination.totalItems &&
+      {products.length > 0 && pagination.totalItems &&
         <div className='d-flex justify-content-end'>
           <Pagination color='primary' shape="rounded" count={Math.ceil(pagination.totalItems / pagination.perPage)}
             page={pagination.pageNumber + 1} onChange={(e, page) => {

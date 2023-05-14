@@ -39,7 +39,7 @@ const EditProduct = () => {
           {!state.redirect && <CircularProgress />}
         </div>
         :
-        <AddProduct edit={state.data.product} />
+        <AddProduct edit={state.data.product} data={{ materials: state.data.materials, styles: state.data.styles, types: state.data.types }} />
       }
     </>
   )

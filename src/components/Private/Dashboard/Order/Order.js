@@ -14,7 +14,7 @@ const Order = () => {
   // -------------------------------------------------------------------
   //********************************************************************
   // -------------------------States------------------------------------
-  const [orders, setOrders] = React.useState('')
+  const [orders, setOrders] = React.useState([])
   const [search, setSearch] = React.useState('')
   const [dateOf, setDateOf] = React.useState('')
   const [dateFor, setDateFor] = React.useState('')
@@ -150,7 +150,7 @@ const Order = () => {
             </tr>
           </thead>
           <tbody>
-            {orders && orders.map((item, index) => {
+            {orders.length > 0 ? orders.map((item, index) => {
               //Getting the status and style for order status
               const { style, status } = handleStatus(item.status)
               return (
@@ -163,7 +163,7 @@ const Order = () => {
                 </tr>
               )
             }
-            )}
+            ) : <tr><td colSpan={5} className='text-center'>Sem dados encontrados!</td></tr>}
           </tbody>
         </table>
         : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>

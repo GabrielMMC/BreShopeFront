@@ -13,7 +13,7 @@ import SavePreset from '../../../Utilities/SavePreset';
 import { CircularProgress } from '@mui/material'
 import { renderToast } from '../../../Utilities/Alerts';
 
-const AddProduct = ({ edit }) => {
+const AddProduct = ({ edit, data }) => {
   // -------------------------------------------------------------------
   //********************************************************************
   // -------------------------States------------------------------------
@@ -50,28 +50,28 @@ const AddProduct = ({ edit }) => {
   // -------------------------Getting-data----------------------------
   React.useEffect(() => {
     const getData = async () => {
-      const response = await GET_FETCH({ url: 'get_data', token })
-      // console.log('resp', response)
 
       if (edit) {
         let sizes = { ...size }
         Object.keys({ ...sizes }).forEach(item => { if (item === edit.size) sizes[item] = true })
         setSize(sizes)
-
+        console.log('data', data)
         setForm({
           name: { ...form.name, value: edit.name },
           size: { ...form.size, value: edit.size },
           thumb: { ...form.thumb, url: edit.thumb },
-          damage: { ...form.damage, value: edit.damage },
+          damage: { ...form.damage, value: edit.damage ? edit.damage : '' },
           description: { ...form.description, value: edit.description },
-          type: { ...form.type, value: edit.type_id, fillOption: response.types },
+          type: { ...form.type, value: edit.type_id, fillOption: data.types },
           price: { ...form.price, value: edit.price, mask: moneyMask(edit.price) },
-          styles: { ...form.styles, value: edit.styles[edit.styles.length - 1], selected: edit.styles, fillOption: response.styles },
-          materials: { ...form.materials, value: edit.materials[edit.materials.length - 1], selected: edit.materials, fillOption: response.materials },
+          styles: { ...form.styles, value: edit.styles[edit.styles.length - 1], selected: edit.styles, fillOption: data.styles },
+          materials: { ...form.materials, value: edit.materials[edit.materials.length - 1], selected: edit.materials, fillOption: data.materials },
           files: edit.images,
         })
         if (edit.damage) setHasDamage(true)
       } else {
+        const response = await GET_FETCH({ url: 'get_data', token })
+        // console.log('resp', response)
         setForm({
           ...form,
           filled: { value: true },
@@ -109,6 +109,8 @@ const AddProduct = ({ edit }) => {
       let response
       if (edit) {
         formData.append('product_id', edit.id)
+        formData.append('has_damage', hasDamage)
+        formData.append('thumb', form.thumb.value ? form.thumb.value : form.thumb.url)
         response = await POST_FETCH_FORMDATA({ url: `${API_URL}products/update`, body: formData, token })
       } else {
         response = await POST_FETCH_FORMDATA({ url: `${API_URL}products/create`, body: formData, token })
@@ -200,14 +202,14 @@ const AddProduct = ({ edit }) => {
                       {!form.thumb.url &&
                         <Typography variant='p' style={{ color: '#666666' }}>Arraste ou escolha a capa do produto</Typography>}
                       {form.thumb.url &&
-                        <img className='w-100 h-100 rounded' alt='product' src={edit ? (form.thumb.noFile ? form.thumb.url : `${URL}storage/${form.thumb.url}`) : form.thumb.url}></img>}
+                        <img className='w-100 h-100' alt='product' src={edit ? (form.thumb.noFile ? form.thumb.url : `${URL}storage/${form.thumb.url}`) : form.thumb.url}></img>}
                       <input hidden onChange={(e) => handleChangeThumb(e.target.files[0])} accept="image/*" multiple type="file" />
                     </Button>
                   </FileDrop>
                 </div>
               </div>
               {/* -------------------------Other-images------------------------- */}
-              <div className="col-xl-6 mt-3 rounded">
+              <div className="col-xl-6 mt-3">
                 <div className='m-auto' style={{ height: 450, width: 450 }}>
                   <FileDrop onDrop={(files, event) => handleChangeFile(files)}>
                     <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">

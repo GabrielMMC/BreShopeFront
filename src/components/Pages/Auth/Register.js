@@ -52,7 +52,7 @@ const Register = () => {
 
         // history('/')
       } else {
-        setErrorMessage(response.message)
+        setErrorMessage(response.error.message)
       }
       setLoadingSave(false)
     }
@@ -67,10 +67,10 @@ const Register = () => {
               <img src={logo} className='img-fluid pointer' alt="logo" onClick={() => history('/')} />
             </div>
             <div className='d-flex flex-column m-auto lead'>
-              <p className='text-white'><BsBagCheck /> Compre e venda</p>
-              <p className='text-white'><BsGraphUp /> Analíse seu negócio</p>
-              <p className='text-white'><BsSearch /> Garimpe peças</p>
-              <p className='text-white'><BsHeart /> Fidelize novos clientes</p>
+              <p className='text-white my-2'><BsBagCheck /> Compre e venda</p>
+              <p className='text-white my-2'><BsGraphUp /> Analíse seu negócio</p>
+              <p className='text-white my-2'><BsSearch /> Garimpe peças</p>
+              <p className='text-white my-2'><BsHeart /> Fidelize novos clientes</p>
             </div>
           </div>
         </div>

@@ -62,7 +62,7 @@ const Product = () => {
   }, [isCalled, waitTime]);
 
   React.useEffect(() => {
-    setLoading(true); setRatings([]); getData()
+    window.scrollTo(0, 0); setLoading(true); setRatings([]); getData()
   }, [params.id])
 
   React.useEffect(() => {
@@ -170,9 +170,9 @@ const Product = () => {
                       </div>
                       : <p className='price'>{moneyMask(product.price)}</p>
                     }
-
+                    {console.log('teste price', product)}
                     <p>
-                      <strong>{moneyMask(product.price)}</strong> em até 12x de <strong>{moneyMask(product.price * (16.37 / 100))}</strong> sem juros no cartão
+                      <strong>{moneyMask(product?.sale?.discount ? product.price - (product.price * (product.sale.discount / 100)) : product.price)}</strong> em até 12x de <strong>{moneyMask(product.price * (16.37 / 100))}</strong> sem juros no cartão
                       Ou em 1x no cartão com até <strong>5% OFF</strong>
                     </p>
                     <p className='mt-2 bold'>Descrição: </p>
