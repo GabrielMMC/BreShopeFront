@@ -92,7 +92,7 @@ const useForm = (initialState) => {
       const maxLength = document.getElementById(fieldName)?.maxLength ?? 0;
       const minLength = document.getElementById(fieldName)?.minLength ?? 0;
       // Check if the field is a string.
-      if (typeof fieldValue === 'string') {
+      if (typeof fieldValue !== 'object') {
         // Check if the field is in the `ignoredFields` array.
         if (!ignoredFields.includes(fieldName)) {
           // Check if the field value is empty or whitespace.
@@ -108,7 +108,8 @@ const useForm = (initialState) => {
         }
       }
       // Check if the field is not a string and is empty or whitespace.
-      else if ((!fieldValue.value || fieldValue.value.trim() === '') && !ignoredFields.includes(fieldName)) {
+      else if ((!fieldValue.value) && !ignoredFields.includes(fieldName)) {
+        console.log('fildvalue', fieldValue)
         validStatus = false;
         setError(fieldName, 'Campo em branco');
       }
