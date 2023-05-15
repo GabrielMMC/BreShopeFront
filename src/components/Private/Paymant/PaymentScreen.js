@@ -40,7 +40,7 @@ const PaymentScreen = () => {
   const history = useNavigate()
   const dispatch = useDispatch()
   const token = useSelector(state => state.AppReducer.token)
-
+  const wishlistItems = useSelector(state => state.AppReducer.wishlist_items)
   // -----------------------------------------------------------------
   //******************************************************************
   // -------------------------Getting-data----------------------------
@@ -218,6 +218,9 @@ const PaymentScreen = () => {
 
       //If it work, will be opened the payment modal if the method was pix or bill
       if (response.status) {
+        dispatch({ type: "wishlist_items", payload: wishlistItems.filter(item => !cartItems.some(cartItem => cartItem.product_id === item.id)) });
+        dispatch({ type: "cart_notify", payload: 0 });
+
         if (method === 'pix' || method === 'boleto') {
           setCharge(response.order.charges[0].last_transaction)
         }

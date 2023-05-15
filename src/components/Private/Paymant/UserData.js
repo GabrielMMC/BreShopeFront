@@ -39,7 +39,9 @@ const UserData = ({ user, setUser, setCart }) => {
     // console.log('user data', resp)
     //If the request returns true, the user state will be updated with the avaible data
     if (resp.status) {
-      const phone = `${resp.customer?.phones?.mobile_phone?.area_code}${resp.customer?.phones?.mobile_phone?.number}`
+      const phone = resp.customer && resp.customer.phones && resp.customer.phones.mobile_phone
+        ? `${resp.customer.phones.mobile_phone.area_code}${resp.customer.phones.mobile_phone.number}`
+        : undefined;
       const birthdate = resp.customer?.birthdate
       const document = resp.customer?.document
 

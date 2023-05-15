@@ -1,9 +1,9 @@
 import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import GuestRoutes from "./GuestRoutes";
-import Building from "../Pages/Building";
 import PaymentScreen from "../Private/Paymant/PaymentScreen";
 import PrivateRoutes from "./PrivateRoutes";
+import NotFound from "../Pages/NotFound";
 
 const RoutesContainer = () => {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const RoutesContainer = () => {
       <Route path={"/*"} element={<GuestRoutes />} />
       <Route path={"/payment"} element={<PaymentScreen />} />
       <Route path={"/profile/*"} element={<PrivateRoutes />} />
-      <Route path="*" element={<Building />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

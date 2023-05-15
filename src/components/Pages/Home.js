@@ -18,10 +18,6 @@ import BreshopSkeleton from "./Breshop/BreshopSkeleton";
 import BreshopCard from "./Breshop/BreshopCard";
 import CategoryCard from "./Card/CategoryCard";
 
-const HomeWrapper = React.forwardRef((props, ref) => {
-  return <Home {...props} forwardRef={ref} />;
-});
-
 const Home = () => {
   const [types, setTypes] = React.useState('')
   const [styles, setStyles] = React.useState('')
@@ -164,8 +160,7 @@ const Home = () => {
               <Accordion styles={styles} types={types} materials={materials}
                 selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles}
                 selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes}
-                selectedMaterials={selectedMaterials} setSelectedMaterials={setSelectedMaterials}
-                ref={productRef} />
+                selectedMaterials={selectedMaterials} setSelectedMaterials={setSelectedMaterials} />
             </div>
 
             <div className='col-md-10'>
@@ -271,4 +266,4 @@ const Home = () => {
   );
 };
 
-export default HomeWrapper;
+export default Home;

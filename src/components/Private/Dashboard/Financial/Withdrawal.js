@@ -14,7 +14,7 @@ import { CircularProgress, IconButton, Pagination, Tooltip, Button } from '@mui/
 const Withdrawal = () => {
   const [data, setData] = React.useState("")
   const [sales, setSales] = React.useState("")
-  const [withdrawals, setWithdrawals] = React.useState("")
+  const [withdrawals, setWithdrawals] = React.useState([])
   const [disabled, setDisabled] = React.useState(false)
   const [search, setSearch] = React.useState('')
   const [searchMask, setSearchMask] = React.useState('')
@@ -181,7 +181,7 @@ const Withdrawal = () => {
           )}
 
           {!loading ?
-            <table className='table table-hover table-striped text-center'>
+            <table className='table table-hover table-striped text-center mt-5'>
               <thead>
                 <tr className='small' style={{ fontWeight: 500 }}>
                   <td>SAQUE</td>
@@ -191,7 +191,7 @@ const Withdrawal = () => {
                 </tr>
               </thead>
               <tbody>
-                {withdrawals && withdrawals.map((item, index) => {
+                {withdrawals.length > 0 ? withdrawals.map((item, index) => {
                   const { style, status } = handleStatus(item.status)
 
                   return (
@@ -202,7 +202,7 @@ const Withdrawal = () => {
                       <td><MoreInfo id={item.id} /></td>
                     </tr>
                   )
-                })}
+                }) : <tr><td colSpan={4} className='text-center'>Sem dados encontrados!</td></tr>}
               </tbody>
             </table>
             : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>

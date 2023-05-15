@@ -101,7 +101,6 @@ const useForm = (initialState) => {
             setError(fieldName, 'Campo em branco');
           }
           // Check if the field value is longer than the maximum length.
-          console.log('caraio viu', fieldValue, fieldValue.length, maxLength)
           if (fieldValue.length < maxLength || fieldValue.length < minLength) {
             validStatus = false;
             setError(fieldName, `São necessários ${maxLength} caracteres`);
