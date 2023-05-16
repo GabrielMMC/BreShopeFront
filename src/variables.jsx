@@ -63,6 +63,13 @@ export async function POST_FETCH_FORMDATA(props) {
   }).then(async (response) => {
     const resp = await response.json()
     return resp
+  }).catch(error => {
+    // if (error) {
+    //   throw 'Tamanho da imagem mui... espera você tá tentando quebrar o sistema?';
+    // }
+    console.log('O meu amigo para de tentar quebrar o sistema')
+    console.log('Error: ' + error)
+    throw 'Houve um erro inesperado';
   })
   )
 }
