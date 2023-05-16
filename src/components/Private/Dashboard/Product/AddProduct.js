@@ -106,21 +106,25 @@ const AddProduct = ({ edit, data }) => {
     formData.append('image', form.thumb.value)
     if (!emptyError) {
       setLoadingSave(true)
-      let response
-      if (edit) {
-        formData.append('product_id', edit.id)
-        formData.append('has_damage', hasDamage)
-        formData.append('thumb', form.thumb.value ? form.thumb.value : form.thumb.url)
-        response = await POST_FETCH_FORMDATA({ url: `${API_URL}products/update`, body: formData, token })
-      } else {
-        response = await POST_FETCH_FORMDATA({ url: `${API_URL}products/create`, body: formData, token })
-      }
-      // console.log('resp', response)
-      if (response.status) {
-        renderToast({ type: 'success', error: response.message })
-        setTimeout(() => history('/profile/products'), 1000)
-      } else {
-        renderToast({ type: 'error', error: response.message })
+      try {
+        let response
+        if (edit) {
+          formData.append('product_id', edit.id)
+          formData.append('has_damage', hasDamage)
+          formData.append('thumb', form.thumb.value ? form.thumb.value : form.thumb.url)
+          response = await POST_FETCH_FORMDATA({ url: `${API_URL}products/update`, body: formData, token })
+        } else {
+          response = await POST_FETCH_FORMDATA({ url: `${API_URL}products/create`, body: formData, token })
+        }
+        // console.log('resp', response)
+        if (response.status) {
+          renderToast({ type: 'success', error: response.message })
+          setTimeout(() => history('/profile/products'), 1000)
+        } else {
+          renderToast({ type: 'error', error: response.message })
+        }
+      } catch (error) {
+        renderToast({ type: 'error', error: error })
       }
       setLoadingSave(false)
     } else {

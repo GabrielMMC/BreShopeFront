@@ -52,7 +52,7 @@ const UserData = () => {
       newForm.birthdate = response.customer.birthdate ? response.customer.birthdate.substring(0, 10) : ''
       newForm.document = response.customer.document ? cpfMask(response.customer.document).value : ''
       newForm.phone = phone ? phoneMask(phone).value : ''
-      newForm.file = { value: '', url: response.user.file ? STORAGE_URL + '/' + response.user.file : '' }
+      newForm.file = { value: '', url: response.user.file ? STORAGE_URL + response.user.file : '' }
 
       setForm(newForm)
       setGenders(response.genders)
@@ -82,16 +82,17 @@ const UserData = () => {
       body.append('birthdate', form.birthdate)
       body.append('gender_id', form.gender_id)
 
-      let response = await POST_FETCH_FORMDATA({ url: `${URL}api/customers/update`, body, token })
-      // console.log('response', response)
-
-      if (response.status) {
-        localStorage.setItem("user", JSON.stringify(response.user))
-        dispatch({ type: "user", payload: (response.user) });
-        renderToast({ type: 'success', error: 'Dados atualizados com sucesso!' })
+      try {
+        let response = await POST_FETCH_FORMDATA({ url: `${URL}api/customers/update`, body, token })
+        if (response.status) {
+          localStorage.setItem("user", JSON.stringify(response.user))
+          dispatch({ type: "user", payload: (response.user) });
+          renderToast({ type: 'success', error: 'Dados atualizados com sucesso!' })
+        }
+        else renderToast({ type: 'error', error: response.message })
+      } catch (error) {
+        renderToast({ type: 'error', error: error })
       }
-      else renderToast({ type: 'error', error: response.message })
-
       setLoadingSave(false)
     }
   }

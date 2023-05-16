@@ -89,17 +89,21 @@ const Breshop = () => {
       body.append('banner', form.file.value)
       body.append('update_recipient', updateRecipient)
 
-      let response = ''
-      if (edit) response = await POST_FETCH_FORMDATA({ url: `${URL}api/update_breshop`, body, token })
-      if (!edit) response = await POST_FETCH_FORMDATA({ url: `${URL}api/store_breshop`, body, token })
-      // console.log('response', response)
+      try {
+        let response = ''
+        if (edit) response = await POST_FETCH_FORMDATA({ url: `${URL}api/update_breshop`, body, token })
+        if (!edit) response = await POST_FETCH_FORMDATA({ url: `${URL}api/store_breshop`, body, token })
+        // console.log('response', response)
 
-      if (response.status) {
-        !edit && dispatch({ type: 'breshop', payload: response.breshop })
-        renderToast({ type: 'success', error: response.message })
-        history('/profile/products')
+        if (response.status) {
+          !edit && dispatch({ type: 'breshop', payload: response.breshop })
+          renderToast({ type: 'success', error: response.message })
+          history('/profile/products')
+        }
+        else renderToast({ type: 'error', error: response.message })
+      } catch (error) {
+        renderToast({ type: 'error', error: error })
       }
-      else renderToast({ type: 'error', error: response.message })
       setLoadingSave(false)
     }
   }
