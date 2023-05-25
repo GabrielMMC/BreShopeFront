@@ -18,6 +18,8 @@ const Order = () => {
   const [search, setSearch] = React.useState('')
   const [dateOf, setDateOf] = React.useState('')
   const [dateFor, setDateFor] = React.useState('')
+  const [searchType, setSearchType] = React.useState('')
+  const [searchResult, setSearchResult] = React.useState('')
 
   const [allow, setAllow] = React.useState(true)
   const [loading, setLoading] = React.useState(true)
@@ -41,16 +43,16 @@ const Order = () => {
       const status = getStatus()
       const response = await GET_FETCH({
         url: `orders?page=${pagination.pageNumber + 1}&status=${status ? status : ''}&dateOf=${dateOf ? dateOf : ''}
-        &dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
+        &dateFor=${dateFor ? dateFor : ''}&search=${searchType === 'number' ? searchResult.replace(/\D/g, "") : searchResult}`, token
       })
+      // console.log('resp', response)
 
-      console.log('resp', response)
       setOrders(response.orders); setLoading(false)
       if (!pagination.totalItems) setPagination({ ...pagination, totalItems: response.pagination.total })
     }
 
     if (allow) getData()
-  }, [pagination.pageNumber, search, allow])
+  }, [pagination.pageNumber, searchResult, allow])
 
   // -----------------------------------------------------------------
   //******************************************************************
@@ -85,16 +87,16 @@ const Order = () => {
   const handleStatus = (status) => {
     switch (status) {
       case "pending":
-        return { style: { backgroundColor: "#FFFF66" }, status: 'PENDENTE' }
+        return { style: { backgroundColor: "#fff0be", color: '#7f742c' }, status: 'Pendente' }
 
       case "paid":
-        return { style: { backgroundColor: "#8AFF8A" }, status: 'PAGO' };
+        return { style: { backgroundColor: "#c7e7c8", color: '#3e6243' }, status: 'Pago' };
 
       case "failed":
-        return { style: { backgroundColor: "#FF8A8A" }, status: 'FALHA' };
+        return { style: { backgroundColor: "#ffc6cd", color: '#ac3b45' }, status: 'Falha' };
 
       case "canceled":
-        return { style: { backgroundColor: "#FF8A8A" }, status: 'CANCELADO' };
+        return { style: { backgroundColor: "#ffc6cd", color: '#ac3b45' }, status: 'Cancelado' };
 
       default:
         return null;
@@ -110,10 +112,28 @@ const Order = () => {
 
   //Timeout function to control each user polling interval, each time a new value is entered in the input, the count is reset, so
   // there has to be a pause to reset the pagination and set a new search value
-  let timer
+  const timerRef = React.useRef(null)
+
   const handleSearch = (value) => {
-    clearTimeout(timer)
-    timer = setTimeout(() => { setSearch(value); setAllow(true); setPagination({ ...pagination, pageNumber: 0 }) }, 750)
+    setSearch(value)
+    clearTimeout(timerRef.current)
+
+    timerRef.current = setTimeout(() => {
+      setSearchResult(value)
+      setAllow(true)
+      setPagination({ ...pagination, pageNumber: 0 })
+    }, 750)
+  };
+
+  const handleKeyDown = (e) => {
+    const key = e.key
+
+    if (/^[a-zA-Z0-9]$/.test(key)) {
+      if ((isNaN(key) && searchType === 'number') || (!isNaN(key) && searchType === 'string')) {
+        setSearch('')
+      }
+      setSearchType((!isNaN(key)) ? 'number' : 'string')
+    }
   }
 
   return (
@@ -132,8 +152,9 @@ const Order = () => {
 
         </div>
 
-        <div class="input-group-with-icon">
-          <input class="form-control" type="text" placeholder="Buscar..." onChange={({ target }) => handleSearch(target.value)} required />
+        <div className="input-group-with-icon">
+          <input className='form-control' placeholder='Buscar por nome ou preço...' id='product' type='text' value={searchType === 'number' ? moneyMask(search) : search} onChange={({ target }) => handleSearch(target.value)} onKeyDown={handleKeyDown} />
+          {/* <label htmlFor='product'>Buscar por nome ou preço...</label> */}
           <MdSearch className='search-icon' size={25} />
         </div>
       </div>
@@ -141,7 +162,7 @@ const Order = () => {
       {!loading ?
         <table className='table table-striped table-hover text-center'>
           <thead>
-            <tr className='small' style={{ fontWeight: 500 }}>
+            <tr className='small' style={{ fontWeight: 700 }}>
               <td>PRODUTOS</td>
               <td>STATUS</td>
               <td>TOTAL</td>
@@ -155,8 +176,8 @@ const Order = () => {
               const { style, status } = handleStatus(item.status)
               return (
                 <tr key={index} style={{ whiteSpace: 'nowrap' }}>
-                  <td><Images thumb={item.images[0]} images={item.images} /></td>
-                  <td><span className='row m-auto status' style={style}>{status}</span></td>
+                  <td><Images thumb={false} images={item.images} /></td>
+                  <td><p className='status m-auto' style={style}>{status}</p></td>
                   <td>{moneyMask(item.amount)}</td>
                   <td>{dateMask(item.created_at)}</td>
                   <td><MoreInfo id={item.id} token={token} /></td>

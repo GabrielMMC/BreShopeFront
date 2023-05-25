@@ -50,6 +50,11 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
     amount: { value: '', error: false, mask: '' },
   }]
 
+  React.useEffect(() => {
+    setCard({ ...cardPreset })
+    setInterest(getInterest("1", total))
+  }, [])
+
   return (
     <>
       <form className="payment-methods">
@@ -58,8 +63,10 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
           <div className="d-flex payment-icons">
             <img src={pix} alt={'pix'} className="img-fluid ms-1" htmlFor={'pix'} />
           </div>
-          <label htmlFor={'pix'}>Pix</label>
-          <input className="ms-2" id={'pix'} type="radio" name="defaultRadio" checked={method === 'pix'} onChange={() => ''} />
+          <div className="d-flex justify-content-center">
+            <input className="form-check-input" id={'pix'} type="radio" name="defaultRadio" checked={method === 'pix'} onChange={() => ''} />
+            <label className='ms-1 pointer' htmlFor={'pix'}>Pix</label>
+          </div>
         </div>
 
         {/* -------------------------Debit-Radio------------------------- */}
@@ -67,8 +74,10 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
           <div className="d-flex payment-icons">
             <img src={debit_card} alt={'debit_card'} className="img-fluid ms-1" htmlFor={'debit_card'} />
           </div>
-          <label htmlFor={'debit_card'}>Débito</label>
-          <input className="ms-2" id={'debit_card'} type="radio" name="defaultRadio" checked={method === 'debit_card'} onChange={() => ''} />
+          <div className="d-flex justify-content-center">
+            <input className="form-check-input" id={'debit_card'} type="radio" name="defaultRadio" checked={method === 'debit_card'} onChange={() => ''} />
+            <label className='ms-1 pointer' htmlFor={'debit_card'}>Débito</label>
+          </div>
         </div>
 
         {/* -------------------------Boleto-Radio------------------------- */}
@@ -76,8 +85,10 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
           <div className="d-flex payment-icons">
             <img src={boleto} alt={'boleto'} className="img-fluid ms-1" htmlFor={'boleto'} />
           </div>
-          <label htmlFor={'boleto'}>Boleto</label>
-          <input className="ms-2" id={'boleto'} type="radio" name="defaultRadio" checked={method === 'boleto'} onChange={() => ''} />
+          <div className="d-flex justify-content-center">
+            <input className="form-check-input" id={'boleto'} type="radio" name="defaultRadio" checked={method === 'boleto'} onChange={() => ''} />
+            <label className='ms-1 pointer' htmlFor={'boleto'}>Boleto</label>
+          </div>
         </div>
 
         {/* -------------------------Credit-Radio------------------------- */}
@@ -85,8 +96,10 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
           <div className="d-flex payment-icons">
             <img src={credit_card} alt={'credit_card'} className="img-fluid ms-1" htmlFor={'credit_card'} />
           </div>
-          <label htmlFor={'credit_card'}>Crédito</label>
-          <input className="ms-2" id={'credit_card'} type="radio" name="defaultRadio" checked={method === 'credit_card'} onChange={() => ''} />
+          <div className="d-flex justify-content-center">
+            <input className="form-check-input" id={'credit_card'} type="radio" name="defaultRadio" checked={method === 'credit_card'} onChange={() => ''} />
+            <label className='ms-1 pointer' htmlFor={'credit_card'}>Crédito</label>
+          </div>
         </div>
 
         {/* -------------------------Multi-Payment-Radio------------------------- */}
@@ -100,8 +113,10 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
               <img src={mastercard} alt={'multi_payment'} className="img-fluid ms-1" htmlFor={'multi_payment'} />
             </div>
           </div>
-          <label htmlFor={'multi_payment'}>Multi Pagamento</label>
-          <input className="ms-2" id={'multi_payment'} type="radio" name="defaultRadio" checked={method === 'multi_payment'} onChange={() => ''} />
+          <div className="d-flex justify-content-center">
+            <input className="form-check-input" id={'multi_payment'} type="radio" name="defaultRadio" checked={method === 'multi_payment'} onChange={() => ''} />
+            <label className='ms-1 pointer' htmlFor={'multi_payment'}>Multi Pagamento</label>
+          </div>
         </div>
       </form>
 

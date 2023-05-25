@@ -1,11 +1,12 @@
 import React from 'react'
 import CardsModal from './CardsModal'
+import { Skeleton } from '@mui/material'
+import { URL } from '../../../variables'
 import setError from '../../Utilities/Error'
 import cpfMask from '../../Utilities/masks/cpf'
-import { STORAGE_URL } from '../../../variables'
 import cardMask from '../../Utilities/masks/card'
-import Installments, { getInterest } from '../../Utilities/Installments'
 import { moneyMask } from '../../Utilities/masks/currency'
+import Installments, { getInterest } from '../../Utilities/Installments'
 
 //Props coming from the Methods screen
 const CardPayment = ({ method, card, setCard, total, setInterest }) => {
@@ -42,95 +43,113 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
             <form className='anime-left mt-3'>
               <div className="row align-items-end">
                 {/* --------------------------Holder-Name-------------------------- */}
+
                 <div className="col-sm-6 my-2">
-                  <div className="form-floating">
-                    <input className={`form-control ${card.holder_name.error && 'is-invalid'}`} id="name" type="text" value={card.holder_name.value}
-                      onChange={({ target }) => setCard({ ...card, holder_name: { ...card.holder_name, value: target.value, error: false } })}
-                      onBlur={() => setError('holder_name', card, setCard)} required />
-                    <label htmlFor="name">Nome do Títular*</label>
-                  </div>
+                  {total ?
+                    <div className="form-floating">
+                      <input className={`form-control ${card.holder_name.error && 'is-invalid'}`} id="name" type="text" value={card.holder_name.value}
+                        onChange={({ target }) => setCard({ ...card, holder_name: { ...card.holder_name, value: target.value, error: false } })}
+                        onBlur={() => setError('holder_name', card, setCard)} required />
+                      <label htmlFor="name">Nome do Títular*</label>
+                    </div>
+                    : <Skeleton className='rounded' variant="rectangular" height={58} />}
                 </div>
                 {/* --------------------------Number-------------------------- */}
                 <div className="col-sm-6 my-2">
-                  <div className='input-group'>
-                    <div className="form-floating">
-                      <input className={`form-control ${card.number.error && 'is-invalid'}`} id="card" type="text" value={card.number.mask}
-                        onChange={({ target }) => {
-                          const { brand, mask, length, cvv, value } = cardMask(target.value)
-                          setCard({ ...card, number: { ...card.number, value, mask, length, error: false }, brand: { ...card.brand, value: brand }, cvv: { ...card.cvv, length: cvv, value: '' } })
-                        }}
-                        onBlur={() => setError('number', card, setCard)} required />
-                      <label htmlFor="card">Cartão*</label>
+                  {total ?
+                    <div className='input-group'>
+                      <div className="form-floating">
+                        <input className={`form-control ${card.number.error && 'is-invalid'}`} id="card" type="text" value={card.number.mask}
+                          onChange={({ target }) => {
+                            const { brand, mask, length, cvv, value } = cardMask(target.value)
+                            setCard({ ...card, number: { ...card.number, value, mask, length, error: false }, brand: { ...card.brand, value: brand }, cvv: { ...card.cvv, length: cvv, value: '' } })
+                          }}
+                          onBlur={() => setError('number', card, setCard)} required />
+                        <label htmlFor="card">Cartão*</label>
+                      </div>
+                      <div className='brand'><img src={`${URL}/brands/${card.brand.value ? card.brand.value : 'nocard'}.png`} alt='brand'></img></div>
                     </div>
-                    <div className='brand'><img src={`${URL}brands/${card.brand.value ? card.brand.value : 'nocard'}.png`} alt='brand'></img></div>
-                  </div>
+                    : <Skeleton className='rounded' variant="rectangular" height={58} />}
                 </div>
               </div>
               {/* --------------------------Holder-Document-------------------------- */}
               <div className="row mt-4">
                 <div className={` ${method === 'debit_card' ? 'col-sm-12 my-2' : 'col-sm-8 my-2'}`}>
-                  <div className="form-floating">
-                    <input className={`form-control ${card.holder_document.error && 'is-invalid'}`} id="document" type="text" value={card.holder_document.mask}
-                      onChange={({ target }) => setCard({ ...card, holder_document: { ...card.holder_document, value: cpfMask(target.value).value, mask: cpfMask(target.value).mask, error: false } })}
-                      onBlur={() => setError('holder_document', card, setCard)} required />
-                    <label htmlFor="document">CPF do Títular*</label>
-                  </div>
+                  {total ?
+                    <div className="form-floating">
+                      <input className={`form-control ${card.holder_document.error && 'is-invalid'}`} id="document" type="text" value={card.holder_document.mask}
+                        onChange={({ target }) => setCard({ ...card, holder_document: { ...card.holder_document, value: cpfMask(target.value).value, mask: cpfMask(target.value).mask, error: false } })}
+                        onBlur={() => setError('holder_document', card, setCard)} required />
+                      <label htmlFor="document">CPF do Títular*</label>
+                    </div>
+                    : <Skeleton className='rounded' variant="rectangular" height={58} />}
                 </div>
                 {/* --------------------------Installments-------------------------- */}
-                {card.installments && method === 'credit_card' &&
+                {method === 'credit_card' &&
                   <div className="col-sm-4 my-2">
-                    <div className="form-floating">
-                      <select className="form-control text-center" id="name" type="text" value={card.installments.value}
-                        onChange={({ target }) => {
-                          setCard({ ...card, installments: { ...card.installments, value: target.value, error: false } })
-                          setInterest(getInterest(target.value, total))
-                        }}
-                        onBlur={() => setError('installments', card, setCard)} required>
-                        {installments.map(item => (
-                          <option key={item.convert} value={item.value}>
-                            {item.value + 'X - '}{moneyMask(item.convert)}
-                          </option>
-                        ))}
-                      </select>
-                      <label htmlFor="name">Valor da Parcela*</label>
-                    </div>
+                    {total && installments ?
+                      <div className="form-floating">
+                        <select className="form-control" id="name" type="text" value={card.installments?.value}
+                          onChange={({ target }) => {
+                            setCard({ ...card, installments: { value: target.value, error: false } })
+                            setInterest(getInterest(target.value, total))
+                          }}
+                          onBlur={() => setError('installments', card, setCard)} required>
+                          {installments.map(item => {
+                            { console.log('item', item) }
+                            return (
+                              <option key={item.convert} value={item.value}>
+                                {item.value + 'X - '}{moneyMask(item.convert)}
+                              </option>
+                            )
+                          })}
+                        </select>
+                        <label htmlFor="name">Valor da Parcela*</label>
+                      </div>
+                      : <Skeleton className='rounded' variant="rectangular" height={58} />}
                   </div>}
               </div>
               {/* --------------------------Month-------------------------- */}
               <div className="row mt-4">
                 <div className="col-sm-3 my-2">
-                  <div className="form-floating">
-                    <select className={`form-control ${card.exp_month.error && 'is-invalid'}`} id="month" type="text" value={card.exp_month.value}
-                      onChange={({ target }) => setCard({ ...card, exp_month: { ...card.exp_month, value: target.value, error: false } })}
-                      onBlur={() => setError('exp_month', card, setCard)} required>
-                      {fillMonth.map(item => (
-                        <option key={item} value={item}>{item}</option>
-                      ))}
-                    </select>
-                    <label htmlFor="month">Mês*</label>
-                  </div>
+                  {total ?
+                    <div className="form-floating">
+                      <select className={`form-control ${card.exp_month.error && 'is-invalid'}`} id="month" type="text" value={card.exp_month.value}
+                        onChange={({ target }) => setCard({ ...card, exp_month: { ...card.exp_month, value: target.value, error: false } })}
+                        onBlur={() => setError('exp_month', card, setCard)} required>
+                        {fillMonth.map(item => (
+                          <option key={item} value={item}>{item}</option>
+                        ))}
+                      </select>
+                      <label htmlFor="month">Mês*</label>
+                    </div>
+                    : <Skeleton className='rounded' variant="rectangular" height={58} />}
                 </div>
                 {/* --------------------------Year-------------------------- */}
                 <div className="col-sm-6 my-2">
-                  <div className="form-floating">
-                    <select className={`form-control ${card.exp_year.error && 'is-invalid'}`} id="year" type="text" value={card.exp_year.value}
-                      onChange={({ target }) => setCard({ ...card, exp_year: { ...card.exp_year, value: target.value, error: false } })}
-                      onBlur={() => setError('exp_year', card, setCard)} required>
-                      {fillYear.map(item => (
-                        <option key={item} value={item}>{item}</option>
-                      ))}
-                    </select>
-                    <label htmlFor="year">Ano*</label>
-                  </div>
+                  {total ?
+                    <div className="form-floating">
+                      <select className={`form-control ${card.exp_year.error && 'is-invalid'}`} id="year" type="text" value={card.exp_year.value}
+                        onChange={({ target }) => setCard({ ...card, exp_year: { ...card.exp_year, value: target.value, error: false } })}
+                        onBlur={() => setError('exp_year', card, setCard)} required>
+                        {fillYear.map(item => (
+                          <option key={item} value={item}>{item}</option>
+                        ))}
+                      </select>
+                      <label htmlFor="year">Ano*</label>
+                    </div>
+                    : <Skeleton className='rounded' variant="rectangular" height={58} />}
                 </div>
                 {/* --------------------------CVV-------------------------- */}
                 <div className="col-sm-3 my-2">
-                  <div className="form-floating">
-                    <input className={`form-control ${card.cvv.error && 'is-invalid'}`} id="cvv" type="number" value={card.cvv.value}
-                      onChange={({ target }) => setCard({ ...card, cvv: { ...card.cvv, value: Array.from(target.value).length <= card.cvv.length ? target.value : card.cvv.value, error: false } })}
-                      onBlur={() => setError('cvv', card, setCard)} required />
-                    <label htmlFor="cvv">CVV*</label>
-                  </div>
+                  {total ?
+                    <div className="form-floating">
+                      <input className={`form-control ${card.cvv.error && 'is-invalid'}`} id="cvv" type="number" value={card.cvv.value}
+                        onChange={({ target }) => setCard({ ...card, cvv: { ...card.cvv, value: Array.from(target.value).length <= card.cvv.length ? target.value : card.cvv.value, error: false } })}
+                        onBlur={() => setError('cvv', card, setCard)} required />
+                      <label htmlFor="cvv">CVV*</label>
+                    </div>
+                    : <Skeleton className='rounded' variant="rectangular" height={58} />}
                 </div>
               </div>
             </form>}
@@ -138,7 +157,7 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
           {method === 'credit_card' && card.id &&
             <div className="col-sm-12 my-2 mb-4">
               <div className="form-floating">
-                <select className={`form-control ${card.installments.error && 'is-invalid'}`} id="installments" type="text" value={card.installments.value}
+                <select className={`form-control ${card.installments?.error && 'is-invalid'}`} id="installments" type="text" value={card.installments?.value}
                   onChange={({ target }) => {
                     setCard({ ...card, installments: { ...card.installments, value: target.value, error: false } })
                     setInterest(getInterest(target.value, total))

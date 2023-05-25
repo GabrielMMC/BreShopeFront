@@ -30,7 +30,7 @@ const PaymentScreen = () => {
   //Each state will be filled in its section
   const [user, setUser] = React.useState('')
   const [card, setCard] = React.useState('')
-  const [method, setMethod] = React.useState('')
+  const [method, setMethod] = React.useState('credit_card')
   const [address, setAddress] = React.useState('')
   const [charge, setCharge] = React.useState('')
 
@@ -39,12 +39,15 @@ const PaymentScreen = () => {
 
   const history = useNavigate()
   const dispatch = useDispatch()
+  const contentRef = React.useRef()
   const token = useSelector(state => state.AppReducer.token)
   const wishlistItems = useSelector(state => state.AppReducer.wishlist_items)
   // -----------------------------------------------------------------
   //******************************************************************
   // -------------------------Getting-data----------------------------
   React.useEffect(() => {
+    contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
     if (cartItems.length > 0) {
       let finalPrice = ''
       //Object to filter and group sales products
@@ -309,7 +312,7 @@ const PaymentScreen = () => {
 
   return (
     <Container>
-      <div className="box">
+      <div className="box" ref={contentRef}>
         <div className="row">
 
           <div className="col-lg-9 col-12 p-4 divider">
@@ -321,14 +324,14 @@ const PaymentScreen = () => {
               <div>
                 <h2 className="accordion-header" id="headingOne">
                   <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                    <span>Endereço de entrega</span>
                     {verifyData(address, false)
-                      ? <MdCheck size={20} color='#4BB543' />
-                      : <MdClose size={20} color='#FF0000' />}
-                    {errors.address && <span className='small ms-2' style={{ color: '#FF0000' }}>Verifique todos os campos!</span>}
+                      ? <span className='status-payment bg-success' />
+                      : <span className='status-payment bg-error' />}
+                    <span>Endereço de entrega</span>
+                    {/* {errors.address && <span className='small ms-2' style={{ color: '#DC3545' }}>Verifique todos os campos!</span>} */}
                   </button>
                 </h2>
-                <div id="collapseOne" className='accordion-collapse collapse' aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div id="collapseOne" className='accordion-collapse collapsing' aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                   <div className="accordion-body">
                     <Addresses address={address} setAddress={setAddress} />
                   </div>
@@ -339,20 +342,20 @@ const PaymentScreen = () => {
               {/* --------------------------Payment-Section-------------------------- */}
               <div>
                 <h2 className="accordion-header" id="headingTwo">
-                  <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    <span>Formas de pagamento</span>
+                  <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                     {(method === 'credit_card' || method === 'debit_card' || method === 'multi_payment') && (verifyData(card, false)
-                      ? <MdCheck size={20} color='#4BB543' />
-                      : <MdClose size={20} color='#FF0000' />
+                      ? <span className='status-payment bg-success' />
+                      : <span className='status-payment bg-error' />
                     )}
                     {(method !== 'credit_card' && method !== 'debit_card' && method !== 'multi_payment') && (method !== ''
-                      ? <MdCheck size={20} color='#4BB543' />
-                      : <MdClose size={20} color='#FF0000' />
+                      ? <span className='status-payment bg-success' />
+                      : <span className='status-payment bg-error' />
                     )}
-                    {errors.payment && <span className='small ms-2' style={{ color: '#FF0000' }}>Verifique todos os campos!</span>}
+                    <span>Formas de pagamento</span>
+                    {/* {errors.payment && <span className='small ms-2' style={{ color: '#DC3545' }}>Verifique todos os campos!</span>} */}
                   </button>
                 </h2>
-                <div id="collapseTwo" className='accordion-collapse collapsing' aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div id="collapseTwo" className='accordion-collapse collapse show' aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                   <div className="accordion-body">
                     <Methods card={card} setCard={setCard} method={method} setMethod={setMethod} total={total} pendent={pendent} setPendent={setPendent} setInterest={setInterest} />
                   </div>
@@ -363,15 +366,15 @@ const PaymentScreen = () => {
               {/* --------------------------Group-Section-------------------------- */}
               <div>
                 <h2 className="accordion-header" id="headingThree">
-                  <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                    <span>Dados Gerais</span>
+                  <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                     {verifyData(user, false)
-                      ? <MdCheck size={20} color='#4BB543' />
-                      : <MdClose size={20} color='#FF0000' />}
-                    {errors.user && <span className='small ms-2' style={{ color: '#FF0000' }}>Verifique todos os campos!</span>}
+                      ? <span className='status-payment bg-success' />
+                      : <span className='status-payment bg-error' />}
+                    <span>Dados Gerais</span>
+                    {/* {errors.user && <span className='small ms-2' style={{ color: '#DC3545' }}>Verifique todos os campos!</span>} */}
                   </button>
                 </h2>
-                <div id="collapseThree" className='accordion-collapse collapse show' aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div id="collapseThree" className='accordion-collapse collapsing' aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                   <div className="accordion-body">
                     <UserData user={user} setUser={setUser} setCart={setCartItems} />
                   </div>
@@ -434,11 +437,11 @@ const PaymentScreen = () => {
             </div>
 
             {/* --------------------------Shipping-Section-------------------------- */}
-            <div className='m-1 row'>
+            <div className='row'>
               {!loadingShipping ?
                 <>
                   <div className="row">
-                    <p>Endereço de entrega:</p>
+                    <p className='bolder'>Endereço de entrega:</p>
                     <p className='small'>{getAddress() ?? 'Sem endereço de entrega'}</p>
                   </div>
                   <div className="row">
@@ -453,30 +456,30 @@ const PaymentScreen = () => {
                   <Skeleton className='rounded col-6 mt-2' variant="rectangular" height={20} />
                 </div>}
 
-              {/* --------------------------Interest-Section-------------------------- */}
-              {card && Array.isArray(card) &&
-                <div className='row my-3'>
-                  <p>Créditos: </p>
-                  {card.map((item, index) => (
-                    <p key={index}>{moneyMask(item.amount.value)} + {moneyMask(item.installments.interest)}</p>))}
-                  <p>Em pendente: {moneyMask(total - (Number(card[0].amount.value) + Number(card[1].amount.value)))}</p>
-                </div>
-              }
-              {card && !Array.isArray(card) && <div className="row my-2">
-                <p>Créditos: </p>
-                <p>{moneyMask(total)} + {moneyMask(interest)}</p>
-              </div>
-              }
-
               {/* --------------------------Total-Section-------------------------- */}
               {!loadingShipping ?
                 <>
-                  <div className="my-3">
-                    <p>Produtos + frete: </p>
+                  <div className="mt-3">
+                    <p className='bolder'>Produtos + frete: </p>
                     <p>{moneyMask(total)}</p>
                   </div>
 
-                  <div className="my-2 lead" style={{ fontWeight: 'bold' }}>
+                  {/* --------------------------Interest-Section-------------------------- */}
+                  {card && Array.isArray(card) &&
+                    <div className='row mt-3'>
+                      <p className='bolder'>Créditos: </p>
+                      {card.map((item, index) => (
+                        <p key={index}>{moneyMask(item.amount.value)} + {moneyMask(item.installments.interest)}</p>))}
+                      <p>Em pendente: {moneyMask(total - (Number(card[0].amount.value) + Number(card[1].amount.value)))}</p>
+                    </div>
+                  }
+                  {card && !Array.isArray(card) && <div className="row my-2">
+                    <p className='bolder'>Créditos: </p>
+                    <p>{moneyMask(total)} + {moneyMask(interest)}</p>
+                  </div>
+                  }
+
+                  <div className="my-3 lead" style={{ fontWeight: 'bold' }}>
                     {method !== 'credit_card' && method !== 'multi_payment'
                       ? <p style={{ fontSize: 24 }}>Total: {moneyMask(total)}</p>
                       : <p style={{ fontSize: 24 }}>Total: {moneyMask((Array.isArray(card) ? card[0].installments.interest + card[1].installments.interest + total : total + interest))}</p>
@@ -492,7 +495,7 @@ const PaymentScreen = () => {
               <hr />
 
               {/* --------------------------Button-Section-------------------------- */}
-              <div className='d-flex justify-content-end'>
+              <div className='d-flex justify-content-end mt-3'>
                 <LoadingButton variant='contained' loading={loadingSave} onClick={handleSave} loadingPosition="end" endIcon={<MdCheck />}>Finalizar</LoadingButton>
               </div>
             </div>

@@ -16,6 +16,27 @@ p{
   margin: 0;
 }
 
+.carousel{
+  text-align: center;
+}
+
+.carousel .thumb{
+  width: 10%;
+  height: 100px;
+  background-color: #E8E8E8;
+  border: none;
+  box-shadow: none;
+  border-radius: 10%;
+}
+
+.carousel .thumb.selected{
+  border: solid 2px #FFA235 !important;
+}
+
+.carousel .thumb:hover{
+  border: solid 2px #FFA235 !important;
+}
+
 .min-height{
   min-height: calc(100vh - 400px);
 }
@@ -40,11 +61,44 @@ p{
 }
 
 .error{
-  color: #DC3545 !important;
+  color: #ac3b45 !important;
+  background-color: #ffc6cd;
+  font-weight: 700;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .success{
-  color: #008000
+  color: #3e6243;
+  background-color: #c7e7c8;
+  font-weight: 700;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.status-payment{
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  outline: none !important;
+  margin-right: 10px;
+  box-shadow: none;
+}
+
+.status{
+  font-weight: 700;
+  box-shadow: none;
+  max-width: 150px !important;
+}
+
+.bg-success{
+  background-color: #4BB543;
+  box-shadow: #4BB543 0 0 2px 1px;
+}
+
+.bg-error {
+  background-color: #DC3545;
+  box-shadow: #DC3545 0 0 2px 1px;
 }
 
 .secondary{
@@ -226,7 +280,7 @@ p{
 }
 
 .bolder{
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .slide-in-right {
@@ -472,6 +526,17 @@ p{
 }
 
 .form-check-input[type=checkbox]:focus {
+  border-color: #693B9F !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.form-check-input[type=radio]:checked {
+  background-color: #693B9F !important;
+  border-color: #693B9F !important;
+}
+
+.form-check-input[type=radio]:focus {
   border-color: #693B9F !important;
   outline: 0 !important;
   box-shadow: none !important;

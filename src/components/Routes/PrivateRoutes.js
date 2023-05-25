@@ -43,7 +43,7 @@ const PrivateRoutes = () => {
           <Route path={"sale/add"} element={<AddSale />} />
           <Route path={"sale/edit/:id"} element={<EditSale />} />
           <Route path={"withdrawals"} element={<Withdrawal />} />
-          <Route path={"recipient-orders"} element={<RecipientOrders />} />
+          {/* <Route path={"recipient-orders"} element={<RecipientOrders />} /> */}
         </Route> :
         <Route path={"/*"} element={<Login />} />}
     </Routes>

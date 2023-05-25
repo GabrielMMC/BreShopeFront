@@ -8,10 +8,11 @@ import MoreInfo from '../../../Private/Dashboard/Order/MoreInfo'
 import Filter from '../../../Utilities/Filter'
 import dateMask from '../../../Utilities/masks/date'
 import { moneyMask } from '../../../Utilities/masks/currency'
+import Images from '../Product/Images'
 
 const RecipientOrders = () => {
   const [year, setYear] = React.useState('2023')
-  const [orders, setOrders] = React.useState('')
+  const [orders, setOrders] = React.useState([])
   const [search, setSearch] = React.useState('')
   const [dateOf, setDateOf] = React.useState('')
   const [dateFor, setDateFor] = React.useState('')
@@ -163,25 +164,26 @@ const RecipientOrders = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders && orders.map(item => {
+                {orders.length > 0 ? orders.map(item => {
                   const { style, status } = handleStatus(item.status)
                   return (
                     <tr key={item.id}>
-                      <td>{item.products.map(item2 => (<span className='row m-auto'>{item2?.product?.name}</span>))}</td>
+                      {/* <td>{item.products.map(item2 => (<span className='row m-auto'>{item2?.product?.name}</span>))}</td> */}
+                      <td><Images thumb={item.images[0]} images={item.images} /></td>
                       <td><span className='row m-auto status' style={style}>{status}</span></td>
                       <td>{moneyMask(item.amount)}</td>
                       <td>{dateMask(item.created_at)}</td>
                       <td><MoreInfo id={item.id} token={token} /></td>
                     </tr>
                   )
-                })}
+                }) : <tr><td colSpan={5} className='text-center'>Sem dados encontrados!</td></tr>}
               </tbody>
             </table>
             : <div className='d-flex justify-content-center p-5'><CircularProgress /></div>
           }
 
 
-          {pagination.totalItems &&
+          {orders.length > 0 && pagination.totalItems &&
             <div className='d-flex justify-content-end'>
               <Pagination color='primary' shape="rounded" count={Math.ceil(pagination.totalItems / pagination.perPage)}
                 page={pagination.pageNumber + 1} onChange={(e, page) => {

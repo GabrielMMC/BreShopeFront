@@ -18,14 +18,15 @@ import { useSelector } from "react-redux"
 import { BiCommentCheck, BiCommentX, BiImageAdd } from 'react-icons/bi'
 import { renderToast } from "../../../Utilities/Alerts"
 import ImagesModal from "../../../Utilities/ImagesModal"
+import PixModal from "./PixModal"
 
 // -------------------------------------------------------------------
 //********************************************************************
 // -------------------------Styles------------------------------------
 const style = {
   position: "absolute",
-  left: "50%",
-  width: "50%",
+  right: 0,
+  width: '50%',
   minHeight: "100%",
   bgcolor: "background.paper",
   boxShadow: 24,
@@ -47,6 +48,9 @@ export default function MoreInfo(props) {
   const [delivered, setDelivered] = React.useState(false);
   const [loadingSave, setLoadingSave] = React.useState(false);
   const [loadingRate, setLoadingRate] = React.useState(false);
+  const [isTimeout, setIsTimeout] = React.useState(false);
+  const [remainingSeconds, setRemainingSeconds] = React.useState(false);
+  const [test, setTest] = React.useState('2023-05-19T17:00:00.000000Z');
 
   const token = useSelector(state => state.AppReducer.token)
 
@@ -56,6 +60,25 @@ export default function MoreInfo(props) {
   React.useEffect(() => {
     if (open) getData();
   }, [open])
+
+  React.useEffect(() => {
+    // console.log('renderizou')
+    if (open) {
+      if (!remainingSeconds && order?.method === 'pix') {
+        const { seconds, timeout } = handleTimeoutPayment(order.created_at)
+        setRemainingSeconds(seconds)
+        setIsTimeout(timeout)
+      }
+      // console.log('uai', timeout, seconds)
+      if (!isTimeout && order?.method === 'pix' && remainingSeconds) {
+        setTimeout(() => {
+          if (remainingSeconds - 1 <= 0) setIsTimeout(true)
+          else setRemainingSeconds(remainingSeconds - 1)
+          console.log('sec adjust', remainingSeconds - 1)
+        }, 1000)
+      }
+    }
+  }, [remainingSeconds, order])
 
 
   // -----------------------------------------------------------------
@@ -85,16 +108,16 @@ export default function MoreInfo(props) {
   const handleStatus = (status) => {
     switch (status) {
       case "pending":
-        return { style: { backgroundColor: "#FFFF66" }, status: 'PENDENTE' }
+        return { style: { backgroundColor: "#fff0be", color: '#7f742c', fontWeight: 700 }, status: 'Pendente' }
 
       case "paid":
-        return { style: { backgroundColor: "#8AFF8A" }, status: 'PAGO' };
+        return { style: { backgroundColor: "#c7e7c8", color: '#3e6243', fontWeight: 700 }, status: 'Pago' };
 
       case "failed":
-        return { style: { backgroundColor: "#FF8A8A" }, status: 'FALHA' };
+        return { style: { backgroundColor: "#ffc6cd", color: '#ac3b45', fontWeight: 700 }, status: 'Falha' };
 
       case "canceled":
-        return { style: { backgroundColor: "#FF8A8A" }, status: 'CANCELADO' };
+        return { style: { backgroundColor: "#ffc6cd", color: '#ac3b45', fontWeight: 700 }, status: 'Cancelado' };
 
       default:
         return null;
@@ -217,11 +240,30 @@ export default function MoreInfo(props) {
     })
   }
 
+  const handleTimeoutPayment = (createdAt) => {
+    // 2023-05-18T15:38:00.000000Z
+    console.log('created at', createdAt)
+    createdAt = new Date(createdAt); // Converte a string para um objeto Date
+    let now = new Date(); // Obtém a data e hora atual
+    console.log('created at', createdAt)
+
+    let milisecondsDifference = now - createdAt; // Calcula a diferença em milissegundos
+    let minutesDifference = milisecondsDifference / (1000 * 60); // Converte para minutos
+
+    let timeout = minutesDifference > 5; // Verifica se mais de 5 minutos se passaram
+    let seconds = Math.max(0, Math.floor((5 - minutesDifference) * 60)); // Calcula os segundos restantes
+
+    return {
+      timeout: timeout,
+      seconds: seconds
+    };
+  };
+
 
   return (
     <div>
-      <IconButton color='success' onClick={handleOpen}>
-        <VisibilityIcon size={17} />
+      <IconButton color='inherit' onClick={handleOpen}>
+        <VisibilityIcon color='gray' size={17} />
       </IconButton>
 
       <Modal
@@ -252,49 +294,87 @@ export default function MoreInfo(props) {
             <hr />
             {order ?
               <div className="row">
-                {order.charges.map((item, index) => {
-                  const { style, status } = handleStatus(item.status)
-                  return (
-                    // <div key={index} className="row my-5 rounded" style={{ backgroundColor: "#DCDCDC" }}>
-                    <div key={index} className='col-12 py-3 my-3 m-auto rounded bg-gray' style={{ whiteSpace: 'nowrap' }}>
-                      <div className="d-flex">
-                        <p>Pago em: </p>
-                        <p className="ms-2">{item.paid_at ? dateMask(item.paid_at) : '- / - / -'}</p>
+                <span style={handleStatus(order.status).style} className="mb-3 text-center col-12 p-2 rounded">{handleStatus(order.status).status}</span>
+                {order.charges.length > 0 ?
+                  <>
+                    {order.charges.map(item => {
+                      const { style, status } = handleStatus(item.status)
+                      return (
+                        <div className="col-12 mb-3 rounded bg-gray">
+                          <div className={`col-12 py-3 rounded mt-3 bg-gray`} style={{ whiteSpace: 'nowrap' }}>
+                            <div className="d-flex align-items-center">
+                              <span>Pago em: </span>
+                              <span className="ms-2">{item.paid_at ? dateMask(item.paid_at) : '- / - / -'}</span>
+                            </div>
+
+                            <div className="d-flex mt-3 align-items-center">
+                              <LocalAtmIcon size={20} />
+                              <span className="ms-1">{moneyMask(item.amount)}</span>
+                            </div>
+
+                            <div className="d-flex mt-2 align-items-center">
+                              <CreditCardIcon size={20} />
+                              <span className="ms-1">Cartão de Crédito</span>
+                              <div className="d-flex ms-2">{item.installments}X</div>
+                            </div>
+
+                            <span style={style} className="text-center row px-3 mt-2">{status}</span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </>
+                  :
+                  <div className="col-12 mb-3 rounded bg-gray">
+                    <div className={`col-12 py-3 rounded mt-2 bg-gray`} style={{ whiteSpace: 'nowrap' }}>
+                      <div className="d-flex align-items-center">
+                        <p className="bolder">Pago em: </p>
+                        <p className="ms-2">{order.paid_at ? dateMask(order.paid_at) : '- / - / -'}</p>
                       </div>
 
-                      <div className="d-flex">
+                      <div className="d-flex mt-3 align-items-center">
                         <LocalAtmIcon size={20} />
-                        <p className="ms-1">{moneyMask(item.amount)}</p>
+                        <p className="ms-1">{moneyMask(order.amount)}</p>
                       </div>
 
-                      <div className="d-flex mt-2">
+                      <div className="d-flex mt-2 align-items-center">
                         <CreditCardIcon size={20} />
                         <p className="ms-1">
-                          {handleMethod(item.payment_method)}
+                          {handleMethod(order.method)}
                         </p>
-                        {item.last_transaction.installments &&
-                          <div className="d-flex ms-2">{item.last_transaction.installments}X</div>
+
+                        {order.method === 'pix' &&
+                          <div className="ms-1">
+                            {!isTimeout && order.status === 'pending'
+                              ? <span className="align-items-center d-flex"> - em aberto <PixModal style={style} img={order.file} createdAt={order.created_at} totalTime={remainingSeconds} handleTimeoutPayment={handleTimeoutPayment} /></span>
+                              : ' - pedido vencido'}
+                          </div>
+                        }
+                        {order.installments &&
+                          <div className="d-flex ms-2">{order.installments}X</div>
                         }
                       </div>
-
-                      <span style={style} className="m-1 text-center row status small">{status}</span>
                     </div>
-                  )
-                })}
-
+                  </div>}
                 {order.products.map((item, index) => (
-                  <div className="col-12 mt-3 bg-gray py-3 m-auto rounded" key={index}>
-                    <p className="lead">{characterLimitMask(item.product?.name, 40)}</p>
-                    <div className="d-flex">
+                  <div className="col-12 mb-3 bg-gray py-3 m-auto rounded" key={index}>
+                    <p className="bolder" style={{ fontSize: 20 }}>{characterLimitMask(item.product?.name, 40)}</p>
+                    <div className="d-flex flex-wrap my-2">
+                      <img style={{ width: 175, height: 200, borderRadius: '.4rem', marginRight: 15 }} src={`${STORAGE_URL + item.product.thumb}`} />
                       {item.images.map(img => (
-                        <div key={img?.file} style={{ width: 100, height: 100, marginRight: '1rem' }}>
-                          <img className='w-100 h-100 rounded' src={`${STORAGE_URL + img?.file}`} />
+                        <div key={img?.file}>
+                          <img style={{ width: 175, height: 200, borderRadius: '.4rem', marginRight: 15 }} src={`${STORAGE_URL + img?.file}`} />
                         </div>
                       ))}
                     </div>
-                    <p className="small mt-1">{characterLimitMask(item.product?.description, 180)}</p>
-                    <div className="d-flex align-items-center my-2">
-                      <span className="bold">{moneyMask(10000)}</span>
+                    <p className="bolder">Descrição: </p>
+                    <p>{characterLimitMask(item.product?.description, 180)}</p>
+                    <div className="mt-2">
+                      <p className="bolder">Preço: </p>
+                      <p>{moneyMask(item?.amount)} x {item?.quantity}Un</p>
+                    </div>
+
+                    <div className="d-flex mt-2">
                       <div className="ms-auto">
                         {item.delivered
                           ? <Button variant='contained' size='small' endIcon={<MdOutlineDone />} disabled>Produto recebido</Button>
@@ -304,7 +384,6 @@ export default function MoreInfo(props) {
                           </Button>}
                       </div>
                     </div>
-                    <span className="text-center row" style={{ backgroundColor: '#FFF', height: '.1rem' }} />
 
                     {!item.delivered && delivered.map(item2 => {
                       if (item.product.id === item2.id && item2.delivered)

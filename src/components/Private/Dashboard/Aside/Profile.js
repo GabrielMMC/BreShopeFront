@@ -61,10 +61,10 @@ const Profile = () => {
                       <FaRegMoneyBillAlt />
                       <p className='small' style={{ color: 'black' }}>Meus saques</p>
                     </li>
-                    <li className='hvr-grow pointer' onClick={() => history('/profile/recipient-orders')}>
+                    {/* <li className='hvr-grow pointer' onClick={() => history('/profile/recipient-orders')}>
                       <AiOutlineLineChart />
                       <p className='small' style={{ color: 'black' }}>Meus pedidos</p>
-                    </li>
+                    </li> */}
                   </>}
               </ul>
             </nav>

@@ -7,22 +7,24 @@ import Backdrop from '@mui/material/Backdrop'
 import { GET_FETCH, STORAGE_URL, URL } from '../../../variables'
 import CircularProgress from '@mui/material/CircularProgress'
 
-// --------------------------------------------------------------------
-//*********************************************************************
-// -------------------------Styles-------------------------------------
+// -------------------------------------------------------------------
+//********************************************************************
+// -------------------------Styles------------------------------------
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 550,
-  bgcolor: 'background.paper',
+  position: "absolute",
+  left: 0,
+  width: 500,
+  minHeight: "100%",
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
-  borderRadius: '.4rem',
-  overflowY: 'auto',
-};
 
+  '@media(max-width: 1000px)': {
+    width: '90%',
+    transform: 'initial',
+    left: '5%',
+  },
+};
 //Props coming from the CardPayment and MultiPayment screens
 export default function CardsModal({ card, setCard, indexCard }) {
   // -------------------------------------------------------------------

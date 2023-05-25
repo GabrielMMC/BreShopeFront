@@ -2,17 +2,17 @@ import React from 'react'
 import CardsModal from './CardsModal'
 import setError from '../../Utilities/Error'
 import cpfMask from '../../Utilities/masks/cpf'
-import { STORAGE_URL, URL } from '../../../variables'
+import { URL } from '../../../variables'
 import cardMask from '../../Utilities/masks/card'
 import { moneyMask } from '../../Utilities/masks/currency'
 import Installments, { getInterest } from '../../Utilities/Installments'
 
-//Props coming from the Methods screen
+///Props coming from the Methods screen
 const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => {
   // -------------------------------------------------------------------
   //********************************************************************
   // -------------------------States------------------------------------
-  const [indexCard, setIndexCard] = React.useState(0)
+  let [indexCard, setIndexCard] = React.useState(0)
 
   const fillMonth = ['01', '02', '03', '04', '05', '06', '07', '09', '10', '11', '12']
   const fillYear = ['2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033']
@@ -36,7 +36,10 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
     newCard[indexCard][item].value = value
 
     //if there are mask props, the value will be formatted according to the mask
-    if (mask) newCard[indexCard][item].mask = mask(value).mask ? mask(value).mask : mask(value)
+    if (mask) {
+      newCard[indexCard][item].mask = mask(value).mask
+      newCard[indexCard][item].value = mask(value).value
+    }
 
     //If item props is equal to 'installments', the interest value will be changed with getInterest function
     if (item === 'installments') newCard[indexCard][item].interest = getInterest(value, newCard[indexCard].amount.value)
@@ -45,12 +48,13 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
   }
 
   //Function to change amount value
-  const handleAmountChange = (value) => {
+  const handleAmountChange = (value, index) => {
     let pendentTotal = 0
     let newCard = [...card]
     let newPendent = [...pendent]
-    value = value.replace(/\D/g, '')
+    value = typeof value === 'string' ? value.replace(/\D/g, '') : value
 
+    if (index) indexCard = index
     //Assigning the total value on pendentTotal variable
     if (indexCard === 0) pendentTotal = newPendent[1].total
     else pendentTotal = newPendent[0].total
@@ -64,8 +68,9 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
       newCard[indexCard].amount.mask = moneyMask(value)
 
       //Changing installments values
+      console.log('value', value, typeof Number(value))
       newCard[indexCard].installments.value = 1
-      newCard[indexCard].installments.total = Installments(value)
+      newCard[indexCard].installments.total = Number(value) > 100 ? Installments(value) : []
       newCard[indexCard].installments.interest = getInterest("1", value)
 
       //Updating pendent values
@@ -97,13 +102,19 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
           <div className="col-md-6 d-flex">
             <div className="ms-auto d-flex" style={{ whiteSpace: 'nowrap' }}>
               <div className="form-check ms-2">
+                <input className="form-check-input" id='cardOne' type="radio" name="multiPaymentRadio" onClick={() => {
+                  if (card[1].amount.value && !card[0].amount.value) handleAmountChange(total - Number(card[1].amount.value), 0)
+                  setIndexCard(0)
+                }} defaultChecked />
                 <label className='pointer' htmlFor='cardOne'>Primeiro cartão</label>
-                <input className="ms-2" id='cardOne' type="radio" name="multiPaymentRadio" onClick={() => setIndexCard(0)} defaultChecked />
               </div>
 
-              <div className="form-check ms-2">
+              <div className="form-check ms-4">
+                <input className="form-check-input" id='cardTwo' type="radio" name="multiPaymentRadio" onClick={() => {
+                  if (card[0].amount.value && !card[1].amount.value) handleAmountChange(total - Number(card[0].amount.value), 1)
+                  setIndexCard(1)
+                }} />
                 <label className='pointer' htmlFor='cardTwo'>Segundo cartão</label>
-                <input className="ms-2" id='cardTwo' type="radio" name="multiPaymentRadio" onClick={() => setIndexCard(1)} />
               </div>
             </div>
           </div>
@@ -147,7 +158,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                         onBlur={() => setError('number', card, setCard, indexCard)} required />
                       <label htmlFor="card">Cartão*</label>
                     </div>
-                    <div className='brand'><img src={`${URL}brands/${card[indexCard].brand.value ? card[indexCard].brand.value : 'nocard'}.png`} alt='brand'></img></div>
+                    <div className='brand'><img src={`${URL}/brands/${card[indexCard].brand.value ? card[indexCard].brand.value : 'nocard'}.png`} alt='brand'></img></div>
                   </div>
                 </div>
               </div>
@@ -212,7 +223,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                       onChange={({ target }) => handleAmountChange(target.value)}
                       onBlur={() => setError('amount', card, setCard, indexCard)} required />
                     <label htmlFor="amount">Valor do cartão*</label>
-                    {card[indexCard].amount.message && <p className='small' style={{ color: '#FF0000' }}>{card[indexCard].amount.message}</p>}
+                    {card[indexCard].amount.message && <p className='small' style={{ color: '#DC3545' }}>{card[indexCard].amount.message}</p>}
                   </div>
                 </div>
                 {/* --------------------------Installments-------------------------- */}

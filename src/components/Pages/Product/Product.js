@@ -213,7 +213,7 @@ const Product = () => {
             <div className="row my-5">
               <div className="d-flex justify-content-center">
                 <div className="d-flex align-items-center">
-                  <img className='m-auto rounded-50' style={{ width: 75, height: 75 }} src={`${URL}storage/${breshop.file ? breshop.file : 'photos/no_user.png'}`} alt="subject" />
+                  <img className='m-auto rounded-50' style={{ width: 75, height: 75, borderRadius: '50%' }} src={`${URL}storage/${breshop.file ? breshop.file : 'photos/no_user.png'}`} alt="subject" />
                   <div className="d-flex flex-column ms-3">
                     <p>{breshop.name}</p>
                     <Rating name="read-only" value={breshop.average_rating} precision={0.1} readOnly />

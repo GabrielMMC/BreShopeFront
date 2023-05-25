@@ -21,7 +21,11 @@ function ListProducts() {
     totalItems: '', pageNumber: 0, perPage: 10
   })
 
-  const tableRef = React.useRef()
+  const [options, setOptions] = React.useState({
+    saled: { value: false, label: 'Vendido', checked: false },
+    stock: { value: false, label: 'Em estoque', checked: false },
+  })
+
   const history = useNavigate()
   const token = useSelector(state => state.AppReducer.token)
 
@@ -37,8 +41,9 @@ function ListProducts() {
 
   const getData = async () => {
     setLoading(true)
+    const status = getStatus()
     const response = await GET_FETCH({
-      url: `products?page=${pagination.pageNumber + 1}&dateOf=${dateOf ? dateOf : ''}&dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
+      url: `products?page=${pagination.pageNumber + 1}&status=${status ? status : ''}&dateOf=${dateOf ? dateOf : ''}&dateFor=${dateFor ? dateFor : ''}&search=${search}`, token
     })
     // console.log('resp', response)
 
@@ -62,16 +67,23 @@ function ListProducts() {
     else renderToast({ type: 'error', error: 'Falha ao deletar produto, tente novamente mais tarde!' })
   }
 
+  //Replacing the true value of each key of the options object by its own name, so that they can be used in the Pagar.me request
+  const getStatus = () => {
+    let status = ''
+    Object.keys({ ...options }).forEach(item => { if (options[item].value) status = item })
+    return status
+  }
+
   return (
     <div className='anime-left'>
       <div className="row mb-5">
         <div className='col-sm-6'>
           <div className="d-flex align-items-center">
             <h6 className="dash-title">Produtos</h6>
-            <Filter setAllow={setAllow} pagination={pagination} setPagination={setPagination} setSearch={setSearch}
-              setDateFor={setDateFor} setDateOf={setDateOf} dateFor={dateFor} dateOf={dateOf} />
+            <Filter setDateOf={setDateOf} setDateFor={setDateFor} dateOf={dateOf} dateFor={dateFor} options={options} setOptions={setOptions}
+              setAllow={setAllow} setPagination={setPagination} setSearch={setSearch} />
           </div>
-          <p className='small mb-4'>Encontre todos seu produtos cadastrados!</p>
+          <p className='small mb-4'>Encontre todos seus produtos cadastrados!</p>
 
           <div className="input-group-with-icon">
             <input className="form-control" type="text" placeholder="Buscar..." onChange={({ target }) => handleSearch(target.value)} required />
@@ -120,7 +132,7 @@ function ListProducts() {
                   <td style={{ whiteSpace: 'nowrap' }}>{item.sold ? <span className='success bold'>Vendido</span> : <span className='error bold'>Em estoque</span>}</td>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     {item.sold ?
-                      <IconButton color='success' onClick={() => history(`/profile/recipient-orders`)}><VisibilityIcon /></IconButton>
+                      <IconButton disabled color='success' onClick={() => history(`/profile/recipient-orders`)}><VisibilityIcon /></IconButton>
                       :
                       <>
                         <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>

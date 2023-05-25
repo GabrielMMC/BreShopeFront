@@ -12,7 +12,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@trendyol-js/react-carousel": "^3.0.0",
-    "apexcharts": "^3.37.2",
+    "apexcharts": "^3.40.0",
     "bootstrap": "^5.2.2",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
