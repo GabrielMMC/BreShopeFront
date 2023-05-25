@@ -61,6 +61,10 @@ p{
 }
 
 .error{
+  color: #DC3545 !important;
+}
+
+.error-status{
   color: #ac3b45 !important;
   background-color: #ffc6cd;
   font-weight: 700;

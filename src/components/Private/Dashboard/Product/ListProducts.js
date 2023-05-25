@@ -136,7 +136,7 @@ function ListProducts() {
                       :
                       <>
                         <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>
-                        <IconButton color='error' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>
+                        <IconButton color='error-status' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>
                       </>
                     }
                   </td>
