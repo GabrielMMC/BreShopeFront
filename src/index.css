@@ -30,11 +30,11 @@ p{
 }
 
 .carousel .thumb.selected{
-  border: solid 2px #FFA235 !important;
+  border: solid 2px #F5C469 !important;
 }
 
 .carousel .thumb:hover{
-  border: solid 2px #FFA235 !important;
+  border: solid 2px #F5C469 !important;
 }
 
 .min-height{

@@ -15,6 +15,7 @@ import { CircularProgress, Rating, Pagination, Typography } from '@mui/material'
 import { renderToast } from '../../Utilities/Alerts'
 import { handleAddWishlist, handleDeleteWishlist } from '../../Utilities/Functions'
 import ImagesModal from '../../Utilities/ImagesModal'
+import noUser from '../../../assets/no_user.png'
 
 const Product = () => {
   const [isCalled, setIsCalled] = React.useState(false);
@@ -286,7 +287,7 @@ const Product = () => {
                       <div className="d-flex justify-content-start">
                         <div>
                           <img className='m-auto rounded-50' style={{ width: 75, height: 75 }}
-                            src={`${URL}storage/${item.user.file ? item.user.file : 'no_user.png'}`} alt="subject" />
+                            src={item.user.file ? `${URL}storage/${item.user.file}` : noUser} alt="subject" />
                         </div>
                         <div className='ms-2'>
                           <Typography className='ms-1' color="text.secondary">{item.user.name}</Typography>
