@@ -129,14 +129,14 @@ function ListProducts() {
                   <td><input className="form-check-input" type="checkbox" checked={Boolean(item.damage)} readOnly /></td>
                   <td style={{ whiteSpace: 'nowrap' }}>{moneyMask(item.price)}</td>
                   <td style={{ whiteSpace: 'nowrap' }}><span className='bold'>{item.size}</span></td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{item.sold ? <span className='success bold'>Vendido</span> : <span className='error bold'>Em estoque</span>}</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{item.sold ? <span className='success bold'>Vendido</span> : <span className='error-status bold'>Em estoque</span>}</td>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     {item.sold ?
                       <IconButton disabled color='success' onClick={() => history(`/profile/recipient-orders`)}><VisibilityIcon /></IconButton>
                       :
                       <>
                         <IconButton color='secondary' onClick={() => history(`/profile/product/edit/${item.id}`)}><MdEdit /></IconButton>
-                        <IconButton color='error-status' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>
+                        <IconButton color='error' onClick={() => renderAlert({ id: item.id, item: 'produto', article: 'o', deleteFunction: handleDelete })}><MdDelete /></IconButton>
                       </>
                     }
                   </td>

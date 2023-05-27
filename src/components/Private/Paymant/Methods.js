@@ -3,7 +3,7 @@ import CardPayment from './CardPayment'
 import MultiPayment from './MultiPayment'
 import visa from '../../../assets/visa.png'
 import pix from '../../../assets/qr-code.png'
-import boleto from '../../../assets/boleto.png'
+import barcode from '../../../assets/barcode.png'
 import mastercard from '../../../assets/master.png'
 import credit_card from '../../../assets/discover.png'
 import debit_card from '../../../assets/debit_card.png'
@@ -81,13 +81,15 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
         </div>
 
         {/* -------------------------Boleto-Radio------------------------- */}
-        <div className="form-check pointer my-2" onClick={() => { setMethod('boleto'); setCard(''); setInterest(getInterest("1", total)) }}>
-          <div className="d-flex payment-icons">
-            <img src={boleto} alt={'boleto'} className="img-fluid ms-1" htmlFor={'boleto'} />
-          </div>
-          <div className="d-flex justify-content-center">
-            <input className="form-check-input" id={'boleto'} type="radio" name="defaultRadio" checked={method === 'boleto'} onChange={() => ''} />
-            <label className='ms-1 pointer' htmlFor={'boleto'}>Boleto</label>
+        <div className="form-check pointer my-2 d-flex align-items-end" onClick={() => { setMethod('boleto'); setCard(''); setInterest(getInterest("1", total)) }}>
+          <div>
+            <div className="d-flex">
+              <img src={barcode} alt={'boleto'} className=" ms-1" htmlFor={'boleto'} style={{ height: 40, width: 65 }} />
+            </div>
+            <div className="d-flex justify-content-center">
+              <input className="form-check-input" id={'boleto'} type="radio" name="defaultRadio" checked={method === 'boleto'} onChange={() => ''} />
+              <label className='ms-1 pointer' htmlFor={'boleto'}>Boleto</label>
+            </div>
           </div>
         </div>
 

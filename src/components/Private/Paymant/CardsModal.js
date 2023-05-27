@@ -101,7 +101,7 @@ export default function CardsModal({ card, setCard, indexCard }) {
                           <img className='img-fluid' src={`${URL}/brands/${item.brand.toLowerCase()}.png`} alt='brand' />
                         </div>
                         <div className="ms-auto">
-                          <input type='radio' name='card' checked={isChecked(item)} onChange={() => ''} />
+                          <input className='form-check-input' type='radio' name='card' checked={isChecked(item)} onChange={() => ''} />
                         </div>
                       </div>
 
@@ -120,7 +120,7 @@ export default function CardsModal({ card, setCard, indexCard }) {
                   )
                   : <p>Sem cartões cadastrados</p>}
               </>
-              : <div className="d-flex justify-content-center p-5"><CircularProgress /></div>}
+              : <div className="d-flex vh-100 align-items-center justify-content-center p-5" style={{ marginTop: -32 }}><CircularProgress /></div>}
           </Box>
         </Fade>
       </Modal>
