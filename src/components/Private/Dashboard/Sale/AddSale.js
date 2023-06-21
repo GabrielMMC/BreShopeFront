@@ -114,9 +114,9 @@ const AddSale = ({ edit }) => {
       {!loading ?
         <form className="anime-left" onSubmit={(e) => { e.preventDefault(); handleSave() }}>
           <h6 className="dash-title">Adicionar promoção</h6>
-          <div className="row my-3">
+          <div className="row">
             {/* -------------------------Start_date------------------------- */}
-            <div className="col-sm-6">
+            <div className="col-sm-6 my-2 p-0 px-sm-2">
               <div className="form-floating">
                 <input className={`form-control ${errors?.start_date && 'is-invalid'}`} value={form.start_date} onChange={(e) => {
                   handleChange(e)
@@ -128,7 +128,7 @@ const AddSale = ({ edit }) => {
               </div>
             </div>
             {/* -------------------------End-date------------------------- */}
-            <div className="col-sm-6">
+            <div className="col-sm-6 my-2 p-0 px-sm-2">
               <div className="form-floating">
                 <input className={`form-control ${errors?.end_date && 'is-invalid'}`} value={form.end_date} onChange={handleChange} onBlur={handleBlur} type='date' id='end_date' name='end_date' min={form.start_date || getDate('yyyy-mm-dd')} />
                 <label htmlFor='end_date'>Termina em*</label>
@@ -137,9 +137,9 @@ const AddSale = ({ edit }) => {
             </div>
           </div>
 
-          <div className="row my-3">
+          <div className="row">
             {/* -------------------------Discount------------------------- */}
-            <div className="col-sm-4">
+            <div className="col-sm-4 my-2 p-0 px-sm-2">
               <div className="input-group">
                 <div className="form-floating">
                   <input className={`form-control ${errors?.discount && 'is-invalid'}`} value={numberMask(form.discount)} onChange={(e) => {
@@ -152,7 +152,7 @@ const AddSale = ({ edit }) => {
               <span className='small error'>{errors?.discount}</span>
             </div>
             {/* -------------------------Products------------------------- */}
-            <div className="col-sm-8">
+            <div className="col-sm-8 my-2 p-0 px-sm-2">
               <div className="form-floating">
                 <select className={`form-control ${errors?.products && 'is-invalid'}`} onChange={({ target }) => handleSelectProduct(target.value)} id='products' name='products' maxLength={2}>
                   <option value="">Selecione um produto</option>

@@ -125,7 +125,7 @@ const UserData = () => {
           <h6 className="dash-title">Resumo da conta</h6>
           <div className="row align-items-end">
             {/* -------------------------Name------------------------- */}
-            <div className='col-md-4 my-2'>
+            <div className='col-md-4 my-2 p-0 px-sm-2'>
               <div className='form-floating'>
                 <input className={`form-control ${errors?.name && 'is-invalid'}`} value={form.name} onChange={handleChange} onBlur={handleBlur} id='name' name='name' />
                 <label htmlFor='name'>Nome*</label>
@@ -133,7 +133,7 @@ const UserData = () => {
               </div>
             </div>
             {/* -------------------------Email------------------------- */}
-            <div className='col-md-4 my-2'>
+            <div className='col-md-4 my-2 p-0 px-sm-2'>
               <div className="form-floating">
                 <input className={`form-control ${errors?.email && 'is-invalid'}`} value={form.email} onChange={handleChange} onBlur={handleBlur} id='email' name='email' disabled />
                 <label htmlFor='email'>Email*</label>
@@ -141,7 +141,7 @@ const UserData = () => {
               </div>
             </div>
             {/* -------------------------Image------------------------- */}
-            <div className='col-md-4 my-2'>
+            <div className='col-md-4 my-2 p-0 px-sm-2'>
               <div style={{ width: 100, height: 100, margin: 'auto' }}>
                 <Button className='file-button' component="label">
                   {form.file?.url
@@ -154,7 +154,7 @@ const UserData = () => {
           </div>
 
           {/* -------------------------Document------------------------- */}
-          <div className='col-md-12 my-2 mt-4'>
+          <div className='col-md-12 my-2 p-0 px-sm-2'>
             <div className='form-floating'>
               <input className={`form-control ${errors?.document && 'is-invalid'}`} value={cpfMask(form.document).mask} onChange={handleChange} onBlur={handleBlur} id='document' name='document' maxLength={11} />
               <label htmlFor='document'>CPF*</label>
@@ -164,8 +164,8 @@ const UserData = () => {
           </div>
 
           {/* -------------------------Birthdate------------------------- */}
-          <div className="row my-4">
-            <div className='col-md-4 my-2'>
+          <div className="row">
+            <div className='col-md-4 my-2 p-0 px-sm-2'>
               <div className='form-floating'>
                 <input className={`form-control ${errors?.birthdate && 'is-invalid'}`} value={form.birthdate} onChange={handleDateChange} onBlur={handleBlur} id='birthdate' name='birthdate' type='date' />
                 <label htmlFor='birthdate'>Nascimento*</label>
@@ -174,7 +174,7 @@ const UserData = () => {
             </div>
 
             {/* -------------------------Gender------------------------- */}
-            <div className='col-md-4 my-2'>
+            <div className='col-md-4 my-2 p-0 px-sm-2'>
               <div className='form-floating'>
                 <select className={`form-control ${errors?.gender_id && 'is-invalid'}`} value={form.gender_id ?? ''} onChange={handleGenderChange} onBlur={handleBlur} id='gender_id' name='gender_id'>
                   {!form.gender_id && <option value=''>Escolha um gênero</option>}
@@ -188,7 +188,7 @@ const UserData = () => {
             </div>
 
             {/* -------------------------Phone------------------------- */}
-            <div className='col-md-4 my-2'>
+            <div className='col-md-4 my-2 p-0 px-sm-2'>
               <div className='form-floating'>
                 <input className={`form-control ${errors?.phone && 'is-invalid'}`} value={form.phone ? phoneMask(form.phone).mask : ''} onChange={handleChange} onBlur={handleBlur} id='phone' name='phone' maxLength={11} />
                 <label htmlFor='number'>Telefone*</label>

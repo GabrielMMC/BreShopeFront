@@ -14,12 +14,12 @@ const BreshopCard = ({ shop }) => {
   else { name = name.toString().replace(/,/g, ''); tooltip = false }
 
   return (
-    <div className="d-flex" style={{ maxWidth: 450 }} onClick={() => history(`/breshop/${shop.id}`)}>
+    <div className="d-flex flex-wrap justify-content-center" style={{ maxWidth: 450 }} onClick={() => history(`/breshop/${shop.id}`)}>
       <div className="d-flex" style={{ height: 125, minWidth: 125, maxWidth: 125 }}>
         <img style={{ height: '100%', width: '100%', objectFit: 'cover', borderRadius: '50%' }} src={shopImageUrl} alt="shop" />
       </div>
       <div className="row mx-3">
-        <div className="d-flex">
+        <div className="d-flex justify-content-center">
           {tooltip ?
             <Tooltip placement='top' arrow title={shop.name}><p className='product-subtitle me-2'>{name}</p></Tooltip> : <p className='product-subtitle me-2'>{name}</p>
           }

@@ -139,14 +139,14 @@ const Home = () => {
   return (
     <>
       <Navbar />
-      <div style={{ background: 'linear-gradient(to bottom, #693B9F, #8C4EBE, #A57BD5)', minHeight: '40vh' }}>
+      <div className="d-none d-lg-flex" style={{ background: 'linear-gradient(to bottom, #693B9F, #8C4EBE, #A57BD5)', minHeight: '40vh' }}>
         <div className="row w-principal p-5 m-auto">
-          <div className='col-4' style={{ borderRadius: '56% 44% 66% 40% / 30% 33% 67% 70%', backgroundColor: '#FFF', height: 400 }}>
+          <div className='col-sm-4' style={{ borderRadius: '56% 44% 66% 40% / 30% 33% 67% 70%', backgroundColor: '#FFF', height: 400 }}>
             <img src={art} alt="woman-art" className='h-100 d-flex justify-content-center m-auto' />
           </div>
-          <div className="col-8 text-center m-auto">
-            <p className='main-title text-white'>Conheça a nossa plataforma e comece a garimpar!</p>
-            <p className='subtitle text-white'>A plataforma atualmente se encontra em ambiente de testes</p>
+          <div className="col-sm-8 text-center m-auto">
+            <h1 className='main-title text-white'>Conheça a nossa plataforma e comece a garimpar!</h1>
+            <h2 className='subtitle text-white'>A plataforma atualmente se encontra em ambiente de testes</h2>
             <p className='small text-white'>Agradeço se reportar os bugs encontrados</p>
           </div>
         </div>
@@ -193,7 +193,7 @@ const Home = () => {
 
         <div className="my-5 py-5">
           <h1 className="title ms-3">Estilos mais procurados</h1>
-          <div className="row justify-content-center">
+          <div className="d-flex justify-content-center flex-wrap">
             <CategoryCard title='Casual' icon={FaTshirt} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
             <CategoryCard title='Luxuoso' icon={GiDress} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
             <CategoryCard title='Urbano' icon={IoIosGlasses} styles={styles} selectedStyles={selectedStyles} setSelectedStyles={setSelectedStyles} />
@@ -204,7 +204,7 @@ const Home = () => {
 
         <div className="my-5 py-5" ref={saleRef}>
           <h1 className="title ms-3">Promoções disponíveis</h1>
-          <div className="row">
+          <div className="d-flex">
             <div className="col-12">
               {!saleLoading ?
                 <>

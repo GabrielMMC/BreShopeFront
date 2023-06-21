@@ -124,52 +124,52 @@ const Payment = () => {
     // -------------------------Cards-Content-------------------------
     <div className='anime-left'>
       <h1 className="dash-title">Cartões</h1>
-      {!loading ? <div className="d-flex flex-wrap">
-        {console.log('cards', cards)}
-        {cards.length > 0
-          ? cards.map((item, index) => (
-            <div key={index} className="row payment-card mb-5 m-auto">
-              <div className="col-md-12 my-2 mt-4 bg-dark" style={{ height: '2rem' }}></div>
+      {!loading ?
+        <div className="d-flex justify-content-around flex-wrap">
+          {cards.length > 0
+            ? cards.map((item, index) => (
+              <div key={index} className="row payment-card mb-3">
+                <div className="col-md-12 my-2 mt-4 bg-dark" style={{ height: '2rem' }}></div>
 
-              <div className="d-flex">
-                <div style={{ width: '75px', marginTop: 5 }}>
-                  <img className='img-fluid' src={`${URL}brands/${item.brand.toLowerCase()}.png`} alt='brand' />
+                <div className="d-flex">
+                  <div style={{ width: '75px', marginTop: 5 }}>
+                    <img className='img-fluid' src={`${URL}brands/${item.brand.toLowerCase()}.png`} alt='brand' />
+                  </div>
+                  <div className="ms-auto">
+                    <IconButton aria-label="Delete" onClick={() =>
+                      renderAlert({ id: item.id, item: 'cartão', article: 'o', deleteFunction: handleDelete })}><CloseIcon />
+                    </IconButton>
+                  </div>
                 </div>
-                <div className="ms-auto">
-                  <IconButton aria-label="Delete" onClick={() =>
-                    renderAlert({ id: item.id, item: 'cartão', article: 'o', deleteFunction: handleDelete })}><CloseIcon />
-                  </IconButton>
-                </div>
-              </div>
 
-              <div className="col-md-12 my-2">
-                <p>{item.holder_name}</p>
-                <p>**** **** **** {item.last_four_digits}</p>
-                <div className="d-flex" style={{ fontSize: '.8rem' }}>
-                  <div className='d-flex'>
-                    <p className='me-2'>Validade</p>
-                    <p>{item.exp_month}/{item.exp_year}</p>
+                <div className="col-md-12 my-2">
+                  <p>{item.holder_name}</p>
+                  <p>**** **** **** {item.last_four_digits}</p>
+                  <div className="d-flex" style={{ fontSize: '.8rem' }}>
+                    <div className='d-flex'>
+                      <p className='me-2'>Validade</p>
+                      <p>{item.exp_month}/{item.exp_year}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))
-          : <p>Sem cartões cadastrados</p>}
-      </div> : <div className="d-flex justify-content-center p-5"><CircularProgress /></div>}
+            ))
+            : <p>Sem cartões cadastrados</p>}
+        </div> : <div className="d-flex justify-content-center p-5"><CircularProgress /></div>}
 
       {/* -------------------------Card-fields-section------------------------- */}
       <div className="row my-5">
         <div className="d-flex align-items-center">
-          <h6 className="dash-title">Adicionar cartão</h6>
+          <h1 className="dash-title">Adicionar cartão</h1>
           <button aria-label="Add" onClick={handleAdd} className='rounded-button hvr-grow ms-2 d-flex align-items-center justify-content-center'>
             {add ? <DeleteIcon size={15} /> : <AddIcon size={20} />}
           </button>
         </div>
         {// -------------------------Name----------------------------------
           add &&
-          <form className='anime-left mt-3' onSubmit={(e) => { e.preventDefault(); handleSave(e) }}>
+          <form className='anime-left p-0 mt-3' onSubmit={(e) => { e.preventDefault(); handleSave(e) }}>
             <div className="row align-items-end">
-              <div className="col-md-6 my-2">
+              <div className="col-md-6 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <input className={`form-control ${errors?.holder_name && 'is-invalid'}`} value={form.holder_name} onChange={handleChange} onBlur={handleBlur} id='holder_name' name='holder_name' />
                   <label htmlFor='holder_name'>Nome*</label>
@@ -177,7 +177,7 @@ const Payment = () => {
                 </div>
               </div>
               {/* -------------------------Card-------------------------- */}
-              <div className="col-md-6 my-2">
+              <div className="col-md-6 my-2 p-0 px-sm-2">
                 <div className='input-group'>
                   <div className="form-floating">
                     <input className={`form-control ${errors?.number && 'is-invalid'}`} value={form.number} onChange={handleCardChange} onBlur={handleBlur} id='number' name='number' minLength={cardDetails.length} />
@@ -189,7 +189,7 @@ const Payment = () => {
               </div>
             </div>
             {/* -------------------------Document------------------------ */}
-            <div className='col-md-12 mt-4'>
+            <div className='col-md-12 my-2 p-0 px-sm-2'>
               <div className="form-floating">
                 <input className={`form-control ${errors?.holder_document && 'is-invalid'}`} value={cpfMask(form.holder_document).mask} onChange={handleChange} onBlur={handleBlur} id='holder_document' name='holder_document' maxLength={11} />
                 <label htmlFor='holder_document'>CPF*</label>
@@ -197,8 +197,8 @@ const Payment = () => {
               </div>
             </div>
             {/* -------------------------Month--------------------------- */}
-            <div className="row mt-4">
-              <div className="col-md-3 my-2">
+            <div className="row">
+              <div className="col-md-3 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <select className={`form-control ${errors?.exp_month && 'is-invalid'}`} value={form.exp_month} onChange={handleChange} onBlur={handleBlur} id='exp_month' name='exp_month'>
                     {fillMonth.map(item => (
@@ -210,7 +210,7 @@ const Payment = () => {
                 </div>
               </div>
               {/* -------------------------Year-------------------------- */}
-              <div className="col-md-6 my-2">
+              <div className="col-md-6 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <select className={`form-control ${errors?.exp_year && 'is-invalid'}`} value={form.exp_year} onChange={handleChange} onBlur={handleBlur} id='exp_year' name='exp_year'>
                     {fillYear.map(item => (
@@ -222,7 +222,7 @@ const Payment = () => {
                 </div>
               </div>
               {/* -------------------------CVV--------------------------- */}
-              <div className="col-md-3 my-2">
+              <div className="col-md-3 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <input className={`form-control ${errors?.cvv && 'is-invalid'}`} value={numberMask(form.cvv)} onChange={handleChange} onBlur={handleBlur} id='cvv' name='cvv' maxLength={cardDetails.cvv} />
                   <label htmlFor='cvv'>CVV*</label>

@@ -75,7 +75,7 @@ const Register = () => {
           </div>
         </div>
         <div className="col-md-5 d-flex align-items-center justify-content-center">
-          <form className="anime-left w-100 mx-4" style={{ maxWidth: 600 }}>
+          <form className="anime-left w-100 mx-sm-4" style={{ maxWidth: 600 }} onSubmit={(e) => { e.preventDefault(); handleSave() }}>
 
             <div style={{ marginBottom: loadingSave ? 10 : 14 }}>
               {loadingSave && <LinearProgress />}
@@ -84,17 +84,17 @@ const Register = () => {
 
             <h6 className="dash-title">Crie sua conta!</h6>
             <div className="row mt-3">
-              <div className="input-container">
+              <div className="input-container p-0">
                 <input className={`${errors?.name && 'input-error'}`} type='text' value={form.name} onChange={handleChange} onBlur={handleBlur} id='name' name='name' />
                 <label htmlFor='name'>Nome* <span className='error'>{errors?.name}</span></label>
               </div>
 
-              <div className="input-container">
+              <div className="input-container p-0">
                 <input className={`${errors?.email && 'input-error'}`} type='email' value={form.email} onChange={handleChange} onBlur={handleBlur} id='email' name='email' />
                 <label htmlFor='email'>Email* <span className='error'>{errors?.email}</span></label>
               </div>
 
-              <div className='input-container'>
+              <div className='input-container p-0'>
                 <input className={`${errors?.password && 'input-error'}`} type={showPassword ? 'text' : 'password'} value={form.password} onChange={handleChange} onBlur={handleBlur} id='password' name='password' />
                 <label htmlFor='password'>Senha* <span className='error'>{errors?.password}</span></label>
                 <div className="icon-button">
@@ -104,7 +104,7 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className='input-container'>
+              <div className='input-container p-0'>
                 <input className={`${errors?.confirm_password && 'input-error'}`} type={showConfirmPassword ? 'text' : 'password'} value={form.confirm_password} onChange={handleChange} onBlur={handleBlur} id='confirm_password' name='confirm_password' />
                 <label htmlFor='confirm_password'>Confirme sua senha* <span className='error'>{errors?.confirm_password}</span></label>
                 <div className="icon-button">
@@ -118,7 +118,7 @@ const Register = () => {
             <div className="d-flex mt-4 align-items-center">
               <span>Caso possua uma conta, <a className='link' onClick={() => history('/login')}>faça login</a></span>
               <div className="ms-auto">
-                <Button variant='contained' endIcon={<MdOutlineLogin />} onClick={handleSave}>Salvar</Button>
+                <Button type='submit' variant='contained' endIcon={<MdOutlineLogin />}>Salvar</Button>
               </div>
             </div>
           </form>

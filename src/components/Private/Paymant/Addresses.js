@@ -94,15 +94,15 @@ const Addresses = ({ address, setAddress }) => {
             }
           </div>
           <div className='mt-5'>
-            <div className="d-flex">
-              <p className='ms-1'>Selecione um endereço ou</p><p className='link-p ms-2' onClick={handleOpenInput}>cadastre um agora!</p>
+            <div className="d-flex flex-wrap ms-3">
+              <p>Selecione um endereço ou</p><p className='link-p ms-2' onClick={handleOpenInput}>cadastre um agora!</p>
             </div>
             {/* --------------------------Address-Fields-------------------------- */}
             {!address.id &&
               <form className='anime-left mt-3'>
                 <div className="row align-items-end">
                   {/* --------------------------Zip-Code-------------------------- */}
-                  <div className="col-sm-4 my-2">
+                  <div className="col-sm-4 my-2 p-0 px-sm-2">
                     <div className="form-floating">
                       <input className={`form-control ${address.zip_code.error && 'is-invalid'}`} id="cep" type="text" value={address.zip_code.mask}
                         onChange={({ target }) => handleCEPChange(target.value)} required
@@ -111,7 +111,7 @@ const Addresses = ({ address, setAddress }) => {
                     </div>
                   </div>
                   {/* --------------------------State-------------------------- */}
-                  <div className="col-sm-4 my-2">
+                  <div className="col-sm-4 my-2 p-0 px-sm-2">
                     <div className="form-floating">
                       <input className={`form-control ${address.state.error && 'is-invalid'}`} id="state" type="text" value={address.state.value}
                         onChange={({ target }) => setAddress({ ...address, state: { ...address.state, value: target.value, error: false } })}
@@ -120,7 +120,7 @@ const Addresses = ({ address, setAddress }) => {
                     </div>
                   </div>
                   {/* --------------------------City-------------------------- */}
-                  <div className="col-sm-4 my-2">
+                  <div className="col-sm-4 my-2 p-0 px-sm-2">
                     <div className="form-floating">
                       <input className={`form-control ${address.city.error && 'is-invalid'}`} id="city" type="text" value={address.city.value}
                         onChange={({ target }) => setAddress({ ...address, city: { ...address.city, value: target.value, error: false } })}
@@ -130,8 +130,8 @@ const Addresses = ({ address, setAddress }) => {
                   </div>
                 </div>
                 {/* --------------------------Neighborhood-------------------------- */}
-                <div className="row mt-4">
-                  <div className="col-sm-6 my-2">
+                <div className="row">
+                  <div className="col-sm-6 my-2 p-0 px-sm-2">
                     <div className="form-floating">
                       <input className={`form-control ${address.nbhd.error && 'is-invalid'}`} id="nbhd" type="text" value={address.nbhd.value}
                         onChange={({ target }) => setAddress({ ...address, nbhd: { ...address.nbhd, value: target.value, error: false } })}
@@ -140,7 +140,7 @@ const Addresses = ({ address, setAddress }) => {
                     </div>
                   </div>
                   {/* --------------------------Street-------------------------- */}
-                  <div className="col-sm-4 my-2">
+                  <div className="col-sm-4 my-2 p-0 px-sm-2">
                     <div className="form-floating">
                       <input className={`form-control ${address.street.error && 'is-invalid'}`} id="street" type="text" value={address.street.value}
                         onChange={({ target }) => setAddress({ ...address, street: { ...address.street, value: target.value, error: false } })}
@@ -149,7 +149,7 @@ const Addresses = ({ address, setAddress }) => {
                     </div>
                   </div>
                   {/* --------------------------Number-------------------------- */}
-                  <div className="col-sm-2 my-2">
+                  <div className="col-sm-2 my-2 p-0 px-sm-2">
                     <div className="form-floating">
                       <input className="form-control" id="number" type="number" value={address.number.value}
                         onChange={({ target }) => setAddress({ ...address, number: { ...address.number, value: target.value, error: false } })} />

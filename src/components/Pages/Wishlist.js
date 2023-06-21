@@ -112,7 +112,7 @@ const Wishlist = () => {
                       <>
                         {products?.length !== 0 ?
                           products.map(item => (
-                            <div key={item.id} className="row mb-4 pointer" onClick={() => { dispatch({ type: 'toggle_wishlist', toggled: false }); history(`product/${item.id}`) }}>
+                            <div key={item.id} className="row mb-4 pointer" onClick={() => { dispatch({ type: 'toggle_wishlist', toggled: false }); history(`/product/${item.id}`) }}>
                               <div className="col-sm-4 position-relative">
                                 <button onClick={(e) => { e.stopPropagation(); handleDelete(item.id) }} type='button' className="close-sale" style={{ margin: 0, marginRight: 3, marginTop: -8 }}>
                                   <MdOutlineClose color='#FFF' size={25} />

@@ -30,7 +30,7 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
       {/* --------------------------Choose-Cards-------------------------- */}
       {!Array.isArray(card) && (method === 'debit_card' || method === 'credit_card') && (
         <div className='mt-5'>
-          <div className="d-flex">
+          <div className="d-flex flex-wrap ms-3">
             {method === 'credit_card' &&
               <>
                 <CardsModal card={card} setCard={setCard} /><span className='ms-2'> ou </span>
@@ -44,7 +44,7 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
               <div className="row align-items-end">
                 {/* --------------------------Holder-Name-------------------------- */}
 
-                <div className="col-sm-6 my-2">
+                <div className="col-sm-6 my-2 p-0 px-sm-2">
                   {total ?
                     <div className="form-floating">
                       <input className={`form-control ${card.holder_name.error && 'is-invalid'}`} id="name" type="text" value={card.holder_name.value}
@@ -55,7 +55,7 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
                     : <Skeleton className='rounded' variant="rectangular" height={58} />}
                 </div>
                 {/* --------------------------Number-------------------------- */}
-                <div className="col-sm-6 my-2">
+                <div className="col-sm-6 my-2 p-0 px-sm-2">
                   {total ?
                     <div className='input-group'>
                       <div className="form-floating">
@@ -73,8 +73,8 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
                 </div>
               </div>
               {/* --------------------------Holder-Document-------------------------- */}
-              <div className="row mt-4">
-                <div className={` ${method === 'debit_card' ? 'col-sm-12 my-2' : 'col-sm-8 my-2'}`}>
+              <div className="row">
+                <div className={` ${method === 'debit_card' ? 'col-sm-12 my-2 p-0 px-sm-2' : 'col-sm-8 my-2 p-0 px-sm-2'}`}>
                   {total ?
                     <div className="form-floating">
                       <input className={`form-control ${card.holder_document.error && 'is-invalid'}`} id="document" type="text" value={card.holder_document.mask}
@@ -86,7 +86,7 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
                 </div>
                 {/* --------------------------Installments-------------------------- */}
                 {method === 'credit_card' &&
-                  <div className="col-sm-4 my-2">
+                  <div className="col-sm-4 my-2 p-0 px-sm-2">
                     {total && installments ?
                       <div className="form-floating">
                         <select className="form-control" id="name" type="text" value={card.installments?.value}
@@ -110,8 +110,8 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
                   </div>}
               </div>
               {/* --------------------------Month-------------------------- */}
-              <div className="row mt-4">
-                <div className="col-sm-3 my-2">
+              <div className="row">
+                <div className="col-sm-3 my-2 p-0 px-sm-2">
                   {total ?
                     <div className="form-floating">
                       <select className={`form-control ${card.exp_month.error && 'is-invalid'}`} id="month" type="text" value={card.exp_month.value}
@@ -126,7 +126,7 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
                     : <Skeleton className='rounded' variant="rectangular" height={58} />}
                 </div>
                 {/* --------------------------Year-------------------------- */}
-                <div className="col-sm-6 my-2">
+                <div className="col-sm-6 my-2 p-0 px-sm-2">
                   {total ?
                     <div className="form-floating">
                       <select className={`form-control ${card.exp_year.error && 'is-invalid'}`} id="year" type="text" value={card.exp_year.value}
@@ -141,7 +141,7 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
                     : <Skeleton className='rounded' variant="rectangular" height={58} />}
                 </div>
                 {/* --------------------------CVV-------------------------- */}
-                <div className="col-sm-3 my-2">
+                <div className="col-sm-3 my-2 p-0 px-sm-2">
                   {total ?
                     <div className="form-floating">
                       <input className={`form-control ${card.cvv.error && 'is-invalid'}`} id="cvv" type="number" value={card.cvv.value}
@@ -155,7 +155,7 @@ const CardPayment = ({ method, card, setCard, total, setInterest }) => {
             </form>}
           {/* --------------------------Installments-------------------------- */}
           {method === 'credit_card' && card.id &&
-            <div className="col-sm-12 my-2 mb-4">
+            <div className="col-sm-12 my-2 p-0 px-sm-2 mb-4">
               <div className="form-floating">
                 <select className={`form-control ${card.installments?.error && 'is-invalid'}`} id="installments" type="text" value={card.installments?.value}
                   onChange={({ target }) => {

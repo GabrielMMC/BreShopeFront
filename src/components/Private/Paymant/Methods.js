@@ -60,7 +60,7 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
       <form className="payment-methods">
         {/* -------------------------Pix-Radio------------------------- */}
         <div className="form-check pointer my-2" onClick={() => { setMethod('pix'); setCard(''); setInterest(getInterest("1", total)) }}>
-          <div className="d-flex payment-icons">
+          <div className="d-flex payment-icons m-auto">
             <img src={pix} alt={'pix'} className="img-fluid ms-1" htmlFor={'pix'} />
           </div>
           <div className="d-flex justify-content-center">
@@ -71,7 +71,7 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
 
         {/* -------------------------Debit-Radio------------------------- */}
         <div className="form-check pointer my-2" onClick={() => { setCard(cardPreset); setMethod('debit_card') }}>
-          <div className="d-flex payment-icons">
+          <div className="d-flex payment-icons m-auto">
             <img src={debit_card} alt={'debit_card'} className="img-fluid ms-1" htmlFor={'debit_card'} />
           </div>
           <div className="d-flex justify-content-center">
@@ -80,7 +80,7 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
           </div>
         </div>
 
-        {/* -------------------------Boleto-Radio------------------------- */}
+        {/* -------------------------Boleto-Radio-------------------------
         <div className="form-check pointer my-2 d-flex align-items-end" onClick={() => { setMethod('boleto'); setCard(''); setInterest(getInterest("1", total)) }}>
           <div>
             <div className="d-flex">
@@ -91,11 +91,11 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
               <label className='ms-1 pointer' htmlFor={'boleto'}>Boleto</label>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* -------------------------Credit-Radio------------------------- */}
         <div className="form-check pointer my-2" onClick={() => { setCard({ ...cardPreset, installments: { value: 1, error: false } }); setMethod('credit_card') }}>
-          <div className="d-flex payment-icons">
+          <div className="d-flex payment-icons m-auto">
             <img src={credit_card} alt={'credit_card'} className="img-fluid ms-1" htmlFor={'credit_card'} />
           </div>
           <div className="d-flex justify-content-center">
@@ -106,12 +106,12 @@ const Methods = ({ card, setCard, method, setMethod, total, pendent, setPendent,
 
         {/* -------------------------Multi-Payment-Radio------------------------- */}
         <div className="form-check pointer my-2" onClick={() => { setCard(multiPreset); setMethod('multi_payment') }}>
-          <div className="d-flex">
+          <div className="d-flex justify-content-center">
             <div className="d-flex payment-icons">
               <img src={visa} alt={'multi_payment'} className="img-fluid ms-1" htmlFor={'multi_payment'} />
             </div>
 
-            <div className="d-flex payment-icons">
+            <div className="d-flex payment-icons ms-2">
               <img src={mastercard} alt={'multi_payment'} className="img-fluid ms-1" htmlFor={'multi_payment'} />
             </div>
           </div>

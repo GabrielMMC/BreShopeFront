@@ -315,7 +315,7 @@ const PaymentScreen = () => {
       <div className="box" ref={contentRef}>
         <div className="row">
 
-          <div className="col-lg-9 col-12 p-4 divider">
+          <div className="col-lg-9 col-12 p-sm-4 divider">
             <p className='dash-title'>Dados do pagamento</p>
             <hr />
 
@@ -332,7 +332,7 @@ const PaymentScreen = () => {
                   </button>
                 </h2>
                 <div id="collapseOne" className='accordion-collapse collapsing' aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                  <div className="accordion-body">
+                  <div className="accordion-body p-0">
                     <Addresses address={address} setAddress={setAddress} />
                   </div>
                 </div>
@@ -356,7 +356,7 @@ const PaymentScreen = () => {
                   </button>
                 </h2>
                 <div id="collapseTwo" className='accordion-collapse collapse show' aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                  <div className="accordion-body">
+                  <div className="accordion-body p-0">
                     <Methods card={card} setCard={setCard} method={method} setMethod={setMethod} total={total} pendent={pendent} setPendent={setPendent} setInterest={setInterest} />
                   </div>
                 </div>
@@ -375,7 +375,7 @@ const PaymentScreen = () => {
                   </button>
                 </h2>
                 <div id="collapseThree" className='accordion-collapse collapsing' aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                  <div className="accordion-body">
+                  <div className="accordion-body p-0">
                     <UserData user={user} setUser={setUser} setCart={setCartItems} />
                   </div>
                 </div>
@@ -385,7 +385,7 @@ const PaymentScreen = () => {
           </div>
 
           {/* --------------------------Products-Section-------------------------- */}
-          <div className='d-flex align-content-between flex-wrap col-lg-3 p-4'>
+          <div className='d-flex align-content-between flex-wrap col-lg-3 p-sm-4'>
             <div className='w-100'>
               <p className='bold'>Produtos do carrinho</p>
               <div className="cart-section">
@@ -440,19 +440,19 @@ const PaymentScreen = () => {
             <div className='row'>
               {!loadingShipping ?
                 <>
-                  <div className="row">
+                  <div className="col-12 mt-3 mt-sm-0">
                     <p className='bolder'>Endereço de entrega:</p>
-                    <p className='small'>{getAddress() ?? 'Sem endereço de entrega'}</p>
+                    <p>{getAddress() ?? 'Sem endereço de entrega'}</p>
                   </div>
-                  <div className="row">
+                  <div className="col-12">
                     {shippingsTotal.map(item => (
-                      <p className='small' key={item.id}>{item.description}: {moneyMask(item.amount)}</p>
+                      <p key={item.id}>{item.description}: {moneyMask(item.amount)}</p>
                     ))}
                   </div>
                 </>
                 :
                 <div className="row">
-                  <Skeleton className='rounded' variant="rectangular" />
+                  <Skeleton className='rounded mt-3 mt-sm-0' variant="rectangular" />
                   <Skeleton className='rounded col-6 mt-2' variant="rectangular" height={20} />
                 </div>}
 
@@ -466,14 +466,14 @@ const PaymentScreen = () => {
 
                   {/* --------------------------Interest-Section-------------------------- */}
                   {card && Array.isArray(card) &&
-                    <div className='row mt-3'>
+                    <div className='mt-3'>
                       <p className='bolder'>Créditos: </p>
                       {card.map((item, index) => (
                         <p key={index}>{moneyMask(item.amount.value)} + {moneyMask(item.installments.interest)}</p>))}
                       <p>Em pendente: {moneyMask(total - (Number(card[0].amount.value) + Number(card[1].amount.value)))}</p>
                     </div>
                   }
-                  {card && !Array.isArray(card) && <div className="row my-2">
+                  {card && !Array.isArray(card) && <div className="mt-3">
                     <p className='bolder'>Créditos: </p>
                     <p>{moneyMask(total)} + {moneyMask(interest)}</p>
                   </div>
@@ -486,7 +486,7 @@ const PaymentScreen = () => {
                     }
                   </div>
                 </>
-                : <div className="row my-3">
+                : <div className="my-3">
                   <Skeleton className='rounded' variant="rectangular" />
                   <Skeleton className='rounded col-6 mt-2' variant="rectangular" height={20} />
 
@@ -495,7 +495,7 @@ const PaymentScreen = () => {
               <hr />
 
               {/* --------------------------Button-Section-------------------------- */}
-              <div className='d-flex justify-content-end mt-3'>
+              <div className='d-flex justify-content-end py-3'>
                 <LoadingButton variant='contained' loading={loadingSave} onClick={handleSave} loadingPosition="end" endIcon={<MdCheck />}>Finalizar</LoadingButton>
               </div>
             </div>

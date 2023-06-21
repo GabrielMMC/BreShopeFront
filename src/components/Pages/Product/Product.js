@@ -160,7 +160,7 @@ const Product = () => {
                     <span className='product-title'>{product.name}</span>
 
                     {product?.sale?.discount ?
-                      <div className='d-flex align-items-center'>
+                      <div className='d-flex align-items-center flex-wrap'>
                         <p className='me-2 no-discount'>
                           <del>{moneyMask(product.price)}</del>
                         </p>
@@ -212,21 +212,15 @@ const Product = () => {
             </div>
             <hr />
             <div className="row my-5">
-              <div className="d-flex justify-content-center">
+              <div className="d-flex justify-content-center flex-wrap">
                 <div className="d-flex align-items-center">
                   <img className='m-auto rounded-50' style={{ width: 75, height: 75, borderRadius: '50%' }} src={`${URL}storage/${breshop.file ? breshop.file : 'photos/no_user.png'}`} alt="subject" />
-                  <div className="d-flex flex-column ms-3">
+                  <div className="d-flex flex-column ms-sm-3 align-items-center">
                     <p>{breshop.name}</p>
                     <Rating name="read-only" value={breshop.average_rating} precision={0.1} readOnly />
                   </div>
                 </div>
-                <div>
-                  {/* <div>
-                      <Button variant='outlined' className='mx-2'>Chat</Button>
-                      <Button variant='outlined'>Loja</Button>
-                    </div> */}
-                </div>
-                <div className='ms-5'>
+                <div className='ms-sm-5 mt-3 mt-sm-0'>
                   <p>Avaliações: <span className='bold'>{breshop.total_rating}</span></p>
                   <p>Produtos: <span className="bold">{breshop.products}</span></p>
                   <p>Criada em: <span className="bold">{dateMask(breshop.created_at)}</span></p>
@@ -238,10 +232,9 @@ const Product = () => {
             {/* -------------------------Other-products-section------------------------- */}
             <div className="row my-5">
               <p className='dash-title'>Produtos da loja</p>
-
               {!loading ?
                 <>
-                  <div className="d-flex flex-wrap">
+                  <div className="d-flex flex-wrap justify-content-center">
                     {breshopProducts.length > 0 ?
                       breshopProducts.map(item => (
                         <div key={item.id}>

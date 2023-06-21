@@ -260,6 +260,17 @@ h1 {
   margin-top: -5px;
 }
 
+@media screen and (max-width: 575px){
+  .user-dash{
+    height: calc(100vh - 172px);
+    border-right: none;
+  }
+  
+  .user-dash li{
+    width: 100%;
+  } 
+}
+
 .content-page {
   width: 100%;
   background: #F5F5F5;
@@ -285,7 +296,7 @@ h1 {
 
 .bg-purple {
   color: white;
-  background-color: #693b9f;
+  background-color: #693b9f !important;
 }
 
 .close-sale{
@@ -534,4 +545,16 @@ span {
   margin-top: 10px;
   display: flex;
   align-items: center;
+}
+
+.dash-menu{
+  top: 0;
+  left: 0;
+  z-index: 1;
+  margin-top: 10px !important;
+  pointer-events: none;
+}
+
+.dash-menu *{
+  pointer-events: auto;
 }

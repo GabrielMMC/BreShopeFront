@@ -11,12 +11,12 @@ const ProductImages = (props) => {
   ]);
 
   return (
-    <div className="col-12" style={{ minHeight: 500 }}>
+    <div className="col-12">
       <Carousel infiniteLoop={true}>
         {images.map((item, index) => {
           let newImages = [...images]
           return (
-            <div style={{ width: 500, height: 500 }} key={index}>
+            <div style={{ width: '100%', height: '100%', maxWidth: 500, maxHeight: 500, margin: 'auto' }} key={index}>
               <img onLoad={() => { newImages[index].loaded = true; setImages(newImages) }} className={`${!item.loaded && 'd-none'} rounded w-100 h-100`} src={`${URL}storage/${item.path}`} />
               {!item.loaded && <Skeleton className='position-absolute' variant="rectangular" width={500} height={500} animation='wave' sx={{ borderRadius: '.4rem' }} />}
             </div>

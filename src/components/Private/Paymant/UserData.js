@@ -64,13 +64,13 @@ const UserData = ({ user, setUser, setCart }) => {
   }
   return (
     <>
-      <Typography>Informações sobre o grupo</Typography>
+      <p className='ms-3'>Informações sobre usuário</p>
       {!loadingUser
         ?
         <form>
           <div className="row">
             {/* --------------------------Document-------------------------- */}
-            <div className='col-12 my-2'>
+            <div className='col-12 my-2 p-0 px-sm-2'>
               <div className='form-floating'>
                 <input className={`form-control ${user.document.error && 'is-invalid'}`} id='doc' type='text' value={user.document.mask} disabled={documentDisabled ? true : false}
                   onChange={({ target }) => setUser({ ...user, document: { ...user.document, value: cpfMask(target.value).value, mask: cpfMask(target.value).mask, error: false } })}
@@ -80,8 +80,8 @@ const UserData = ({ user, setUser, setCart }) => {
             </div>
           </div>
           {/* --------------------------Birthdate-------------------------- */}
-          <div className='row mt-4'>
-            <div className='col-sm-4 my-2'>
+          <div className='row'>
+            <div className='col-sm-4 my-2 p-0 px-sm-2'>
               <div className='form-floating'>
                 <input className={`form-control ${user.birth.error && 'is-invalid'}`} id='birth' type='date' value={user.birth.value}
                   onChange={({ target }) => {
@@ -99,7 +99,7 @@ const UserData = ({ user, setUser, setCart }) => {
               </div>
             </div>
             {/* --------------------------Gender-------------------------- */}
-            <div className='col-sm-4 my-2'>
+            <div className='col-sm-4 my-2 p-0 px-sm-2'>
               <div className='form-floating'>
                 <select className={`form-control ${user.gender.error && 'is-invalid'}`} id='gender' type='text' value={genderId}
                   onChange={({ target }) => {
@@ -116,7 +116,7 @@ const UserData = ({ user, setUser, setCart }) => {
               </div>
             </div>
             {/* --------------------------Phone-------------------------- */}
-            <div className='col-sm-4 my-2'>
+            <div className='col-sm-4 my-2 p-0 px-sm-2'>
               <div className='form-floating'>
                 <input className={`form-control ${user.phone.error && 'is-invalid'}`} id='number' type='text' value={user.phone.mask}
                   onChange={({ target }) => setUser({ ...user, phone: { ...user.phone, value: phoneMask(target.value).value, mask: phoneMask(target.value).mask, error: false } })}

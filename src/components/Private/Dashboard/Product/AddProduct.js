@@ -44,6 +44,7 @@ const AddProduct = ({ edit, data }) => {
   const [loading, setLoading] = React.useState(true)
   const [loadingSave, setLoadingSave] = React.useState(false)
   const token = useSelector(state => state.AppReducer.token);
+  const fileRef = React.useRef(null)
 
   // -----------------------------------------------------------------
   //******************************************************************
@@ -192,15 +193,15 @@ const AddProduct = ({ edit, data }) => {
 
   return (
     <div className="row anime-left">
-      <form onSubmit={(e) => { e.preventDefault(); handleSave() }}>
+      <form className='p-0' onSubmit={(e) => { e.preventDefault(); handleSave() }}>
         <p className='dash-title'>{edit ? 'Edição de produto' : 'Cadastro de produto'}</p>
 
         {!loading ?
           <>
             {/* -------------------------Thumb-image------------------------- */}
             <div className="row mb-4">
-              <div className="col-xl-6 mt-3">
-                <div className='m-auto' style={{ height: 450, width: 450 }}>
+              <div className="col-xl-6 my-2 p-0 px-sm-2">
+                <div className='d-flex justify-content-center'>
                   <FileDrop onDrop={(files, event) => handleChangeThumb(files[0])}>
                     <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
                       {!form.thumb.url &&
@@ -213,8 +214,9 @@ const AddProduct = ({ edit, data }) => {
                 </div>
               </div>
               {/* -------------------------Other-images------------------------- */}
-              <div className="col-xl-6 mt-3">
-                <div className='m-auto' style={{ height: 450, width: 450 }}>
+              <div className="col-xl-6 my-2 p-0 px-sm-2">
+                <div className='d-flex justify-content-center' ref={fileRef}>
+                  {console.log('jojdhaiusdfafs', fileRef)}
                   <FileDrop onDrop={(files, event) => handleChangeFile(files)}>
                     <Button style={{ color: '#666666', width: '100%', height: '100%', padding: 0 }} component="label">
                       {form.files.length === 0 ?
@@ -222,7 +224,8 @@ const AddProduct = ({ edit, data }) => {
                         :
                         <div className="d-flex flex-wrap h-100 w-100" onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
                           {form.files.map((item, index) => (
-                            <div style={{ width: 223, height: 223 }} key={index}>
+                            <div className='other-images' key={index}>
+                              {/* style={{ maxWidth: fileRef ? ((fileRef.current.offsetWidth - 140) / 2) : 223, maxHeight: fileRef ? ((fileRef.current.offsetHeight - 4) / 2) : 223 }} */}
                               <div className="d-flex h-100">
                                 <img alt='file' src={edit ? (item.url ? item.url : `${URL}storage/${item.file}`) : item.url} className='w-100 h-100' />
                                 <div className="p-absolute">
@@ -257,7 +260,7 @@ const AddProduct = ({ edit, data }) => {
 
             {/* -------------------------Types------------------------- */}
             <div className="row">
-              <div className="col-sm-4">
+              <div className="col-sm-4 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <select id='type' className={`form-control ${form.type.error && 'is-invalid'}`} value={form.type.value}
                     onChange={(e) => setForm({ ...form, type: { ...form.type, value: e.target.value, error: false } })}>
@@ -268,7 +271,7 @@ const AddProduct = ({ edit, data }) => {
                 </div>
               </div>
               {/* -------------------------Styles------------------------- */}
-              <div className="col-sm-4">
+              <div className="col-sm-4 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <select id='style' className={`form-control ${form.styles.error && 'is-invalid'}`} value={form.styles.value}
                     onChange={(e) => handleArrayChange(e.target.value, 'styles')}>
@@ -279,7 +282,7 @@ const AddProduct = ({ edit, data }) => {
                 </div>
               </div>
               {/* -------------------------Materials------------------------- */}
-              <div className="col-sm-4">
+              <div className="col-sm-4 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <select id='material' className={`form-control ${form.materials.error && 'is-invalid'}`} value={form.materials.value}
                     onChange={(e) => handleArrayChange(e.target.value, 'materials')}>
@@ -323,8 +326,8 @@ const AddProduct = ({ edit, data }) => {
                 })}
               </div>}
             {/* -------------------------Name------------------------- */}
-            <div className="row my-3">
-              <div className="col-sm-6">
+            <div className="row">
+              <div className="col-sm-6 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <input className={`form-control ${form.name.error && 'is-invalid'}`} id="name" type="text" value={form.name.value}
                     onChange={({ target }) => setForm({ ...form, name: { ...form.name, value: target.value, error: false } })}
@@ -333,7 +336,7 @@ const AddProduct = ({ edit, data }) => {
                 </div>
               </div>
               {/* -------------------------Price------------------------- */}
-              <div className="col-sm-6">
+              <div className="col-sm-6 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <input className={`form-control ${form.price.error && 'is-invalid'}`} id="price" type="text" value={form.price.mask}
                     onChange={({ target }) => setForm({ ...form, price: { ...form.price, value: target.value.replace(/\D/g, ''), mask: moneyMask(target.value), error: false } })}
@@ -343,8 +346,8 @@ const AddProduct = ({ edit, data }) => {
               </div>
             </div>
             {/* -------------------------Description------------------------- */}
-            <div className="row my-3">
-              <div className="col-12">
+            <div className="row">
+              <div className="col-12 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <textarea className={`form-control ${form.description.error && 'is-invalid'}`} name="text" id="description" rows="10" value={form.description.value}
                     onChange={({ target }) => setForm({ ...form, description: { ...form.description, value: target.value, error: false } })}
@@ -354,7 +357,7 @@ const AddProduct = ({ edit, data }) => {
               </div>
               {/* -------------------------Sizes------------------------- */}
               {Object.keys({ ...size }).map((item, index) => (
-                <div className="col-2 text-center rounded my-3" key={item}>
+                <div className="col-sm-2 col-4 text-center rounded my-3" key={item}>
                   <Button fullWidth color={size[item] ? 'success' : (form.size.error ? 'error' : 'inherit')} sx={{ backgroundColor: '#f1f1f1' }} endIcon={size[item] ? <CheckIcon /> : <CloseIcon />}
                     onClick={() => handleSizeChange(item)}>
                     {item}
@@ -362,7 +365,7 @@ const AddProduct = ({ edit, data }) => {
                 </div>
               ))}
               {/* -------------------------Damage-description-check------------------------- */}
-              <div className="col-12 mt-3">
+              <div className="col-12 my-2 p-0 px-sm-2">
                 <div className="form-check form-switch">
                   <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked={hasDamage} onChange={handleDamageChange} />
                   <label className="form-check-label" htmlFor="flexSwitchCheckDefault">Possui avaria</label>

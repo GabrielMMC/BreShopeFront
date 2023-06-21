@@ -150,7 +150,7 @@ const Address = () => {
           <div className="row">
             {/* Counter of shipping addresses and personal addresses */}
             {addresses.length > 0 ? (addresses.map((item) => (
-              <div key={item.id} className="col-md-12 my-2 d-flex mb-3 p-3 bg-gray rounded">
+              <div key={item.id} className="col-md-12 my-2 p-0 px-sm-2 d-flex mb-3 p-3 bg-gray rounded">
                 <div className="me-3">
                   <p>{item.country} - {item.city} - {item.state}</p>
                   <p>{item.zip_code} - {item.line_1}</p>
@@ -182,7 +182,7 @@ const Address = () => {
         <form className='anime-left' onSubmit={(e) => { e.preventDefault(); handleSave(e) }}>
           <div className="row align-items-end">
             {/* -------------------------Zip-code------------------------- */}
-            <div className="col-md-4 my-2">
+            <div className="col-md-4 my-2 p-0 px-sm-2">
               <div className="form-floating">
                 <input className={`form-control ${errors?.zip_code && 'is-invalid'}`} value={cepMask(form.zip_code)} onChange={handleCepChange} onBlur={handleBlur} id='zip_code' name='zip_code' disabled={Boolean(form.id)} maxLength={8} />
                 <label htmlFor='zip_code'>CEP* </label>
@@ -190,7 +190,7 @@ const Address = () => {
               </div>
             </div>
             {/* -------------------------State------------------------- */}
-            <div className="col-md-4 my-2">
+            <div className="col-md-4 my-2 p-0 px-sm-2">
               <div className="form-floating">
                 <input className={`form-control ${errors?.state && 'is-invalid'}`} value={form.state} onChange={handleChange} onBlur={handleBlur} id='state' name='state' disabled={Boolean(form.id)} />
                 <label htmlFor='state'>Estado*</label>
@@ -198,7 +198,7 @@ const Address = () => {
               </div>
             </div>
             {/* -------------------------City------------------------- */}
-            <div className="col-md-4 my-2">
+            <div className="col-md-4 my-2 p-0 px-sm-2">
               <div className="form-floating">
                 <input className={`form-control ${errors?.city && 'is-invalid'}`} value={form.city} onChange={handleChange} onBlur={handleBlur} id='city' name='city' disabled={Boolean(form.id)} />
                 <label htmlFor='city'>Cidade*</label>
@@ -207,8 +207,8 @@ const Address = () => {
             </div>
           </div>
           {/* -------------------------Neighborhood------------------------- */}
-          <div className="row mt-4">
-            <div className="col-md-6 my-2">
+          <div className="row">
+            <div className="col-md-6 my-2 p-0 px-sm-2">
               <div className="form-floating">
                 <input className={`form-control ${errors?.neighborhood && 'is-invalid'}`} value={form.neighborhood} onChange={handleChange} onBlur={handleBlur} id='neighborhood' name='neighborhood' disabled={Boolean(form.id)} />
                 <label htmlFor='neighborhood'>Bairro*</label>
@@ -216,7 +216,7 @@ const Address = () => {
               </div>
             </div>
             {/* -------------------------Complement------------------------- */}
-            <div className="col-md-6 my-2">
+            <div className="col-md-6 my-2 p-0 px-sm-2">
               <div className="form-floating">
                 <input className={`form-control ${errors?.complement && 'is-invalid'}`} value={form.complement} onChange={handleChange} id='complement' name='complement' />
                 <label htmlFor='complement'>Complemento</label>
@@ -225,9 +225,9 @@ const Address = () => {
             </div>
           </div>
 
-          <div className="row mt-4">
+          <div className="row">
             {/* -------------------------Street------------------------- */}
-            <div className="col-md-5 my-2">
+            <div className="col-md-5 my-2 p-0 px-sm-2">
               <div className="form-floating">
                 <input className={`form-control ${errors?.street && 'is-invalid'}`} value={form.street} onChange={handleChange} onBlur={handleBlur} id='street' name='street' disabled={Boolean(form.id)} />
                 <label htmlFor='street'>Rua*</label>
@@ -235,7 +235,7 @@ const Address = () => {
               </div>
             </div>
             {/* -------------------------Number------------------------- */}
-            <div className="col-md-7 my-2">
+            <div className="col-md-7 my-2 p-0 px-sm-2">
               <div className="d-flex">
                 <div className="form-floating">
                   <input className={`form-control ${errors?.number && 'is-invalid'}`} value={numberMask(form.number)} onChange={handleChange} onBlur={hasNumber ? handleBlur : null} disabled={!hasNumber || Boolean(form.id)} id='number' name='number' />

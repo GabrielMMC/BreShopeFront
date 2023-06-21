@@ -1,11 +1,18 @@
-import React, { useState } from "react"
+import React from "react"
 import { MdClose } from 'react-icons/md'
 import { RiArrowDropDownLine } from 'react-icons/ri'
+import { BsFillArrowRightSquareFill, BsFillArrowLeftSquareFill } from 'react-icons/bs'
 import './styles.css'
 
 const Accordion = ({ types, styles, materials, selectedStyles, setSelectedStyles, selectedTypes, setSelectedTypes, selectedMaterials, setSelectedMaterials }) => {
-  const [activeItems, setActiveItems] = useState(['styles']);
+  const [activeItems, setActiveItems] = React.useState(['styles']);
+  const [showAccordion, setShowAccordion] = React.useState(true)
+  const [displayNone, setDisplayNone] = React.useState(false)
 
+  React.useEffect(() => {
+    if (!showAccordion) setTimeout(() => setDisplayNone(true), 200)
+    else setDisplayNone(false)
+  }, [showAccordion])
 
   const toggleAccordion = (item) => {
     if (activeItems.includes(item)) setActiveItems(activeItems.filter(active => active !== item));
@@ -44,52 +51,56 @@ const Accordion = ({ types, styles, materials, selectedStyles, setSelectedStyles
   }
 
   return (
-    <nav className="accordion navbar">
-      <ul className="navbar-nav">
-        {selectedStyles.length > 0 &&
-          <div className='d-flex flex-column'>
-            <span>Filtro de estilos: </span>
-            {selectedStyles.map(item => (<span onClick={() => handleDeleteStyle(item.id)} className='error'>{item.name} <MdClose /></span>))}
-          </div>
-        }
-        <li className="nav-item pointer" onClick={() => toggleAccordion('styles')} >
-          <div className="d-flex justify-content-between">
-            <span className={`${activeItems.includes('styles') && 'accordion-active'} nav-item-header`}>
-              Estilos
-            </span>
-            <RiArrowDropDownLine size={35} className={activeItems.includes('styles') ? 'rotate-in' : 'rotate-out'} />
-          </div>
-          <ul className={`${activeItems.includes('styles') && 'show'} accordion-content nav-item-submenu`}>
-            {styles && styles.map(item => (
-              <li key={item.id}>
-                <a href="#" onClick={(e) => { e.stopPropagation(); handleAddStyle(item) }}>{item.name}</a>
-              </li>
-            ))}
-          </ul>
-        </li>
+    <>
+      <span className="d-flex d-md-none my-3" onClick={() => setShowAccordion(!showAccordion)}>
+        {showAccordion ? <BsFillArrowLeftSquareFill size={35} className='shadow' /> : <BsFillArrowRightSquareFill size={35} className='shadow' />}
+      </span>
+      <nav className={`accordion navbar ${!showAccordion ? 'hidden' : ''} ${displayNone ? 'd-none' : ''}`}>
+        <ul className="navbar-nav">
+          {selectedStyles.length > 0 &&
+            <div className='d-flex flex-column'>
+              <span>Filtro de estilos: </span>
+              {selectedStyles.map(item => (<span onClick={() => handleDeleteStyle(item.id)} className='error'>{item.name} <MdClose /></span>))}
+            </div>
+          }
+          <li className="nav-item pointer" onClick={() => toggleAccordion('styles')} >
+            <div className="d-flex justify-content-between align-items-center">
+              <span className={`${activeItems.includes('styles') && 'accordion-active'} nav-item-header`}>
+                Estilos
+              </span>
+              <RiArrowDropDownLine size={35} className={activeItems.includes('styles') ? 'rotate-in' : 'rotate-out'} />
+            </div>
+            <ul className={`${activeItems.includes('styles') && 'show'} accordion-content nav-item-submenu`}>
+              {styles && styles.map(item => (
+                <li key={item.id}>
+                  <a href="#" onClick={(e) => { e.stopPropagation(); handleAddStyle(item) }}>{item.name}</a>
+                </li>
+              ))}
+            </ul>
+          </li>
 
-        {selectedTypes.length > 0 &&
-          <div className='mt-2 d-flex flex-column'>
-            <span>Filtro de tipos: </span>
-            {selectedTypes.map(item => (<span onClick={() => handleDeleteType(item.id)} className='error'>{item.name} <MdClose /></span>))}
-          </div>
-        }
-        <li className="nav-item pointer" onClick={() => toggleAccordion('types')}>
-          <div className="d-flex justify-content-between">
-            <span className={`${activeItems.includes('types') && 'accordion-active'} nav-item-header`}>
-              Tipos
-            </span>
-            <RiArrowDropDownLine size={35} className={activeItems.includes('types') ? 'rotate-in' : 'rotate-out'} />
-          </div>
-          <ul className={`${activeItems.includes('types') && 'show'} accordion-content nav-item-submenu`}>
-            {types && types.map(item => (
-              <li key={item.id}>
-                <a href="#" onClick={(e) => { e.stopPropagation(); handleAddType(item) }}>{item.name}</a>
-              </li>
-            ))}
-          </ul>
-        </li>
-        {/* <li className="nav-item">
+          {selectedTypes.length > 0 &&
+            <div className='mt-2 d-flex flex-column'>
+              <span>Filtro de tipos: </span>
+              {selectedTypes.map(item => (<span onClick={() => handleDeleteType(item.id)} className='error'>{item.name} <MdClose /></span>))}
+            </div>
+          }
+          <li className="nav-item pointer" onClick={() => toggleAccordion('types')}>
+            <div className="d-flex justify-content-between align-items-center">
+              <span className={`${activeItems.includes('types') && 'accordion-active'} nav-item-header`}>
+                Tipos
+              </span>
+              <RiArrowDropDownLine size={35} className={activeItems.includes('types') ? 'rotate-in' : 'rotate-out'} />
+            </div>
+            <ul className={`${activeItems.includes('types') && 'show'} accordion-content nav-item-submenu`}>
+              {types && types.map(item => (
+                <li key={item.id}>
+                  <a href="#" onClick={(e) => { e.stopPropagation(); handleAddType(item) }}>{item.name}</a>
+                </li>
+              ))}
+            </ul>
+          </li>
+          {/* <li className="nav-item">
      <span className="nav-item-header">Preços</span>
      <ul className="nav-item-submenu">
       <li><a href="#">Menor que R$ 50</a></li>
@@ -98,29 +109,31 @@ const Accordion = ({ types, styles, materials, selectedStyles, setSelectedStyles
      </ul>
     </li> */}
 
-        {selectedMaterials.length > 0 &&
-          <div className='mt-2 d-flex flex-column'>
-            <span>Filtro de materiais: </span>
-            {selectedMaterials.map(item => (<span onClick={() => handleDeleteMaterial(item.id)} className='error'>{item.name} <MdClose /></span>))}
-          </div>
-        }
-        <li className="nav-item pointer" onClick={() => toggleAccordion('materials')}>
-          <div className="d-flex justify-content-between">
-            <span className={`${activeItems.includes('materials') && 'accordion-active'} nav-item-header`}>
-              Materiais
-            </span>
-            <RiArrowDropDownLine size={35} className={activeItems.includes('materials') ? 'rotate-in' : 'rotate-out'} />
-          </div>
-          <ul className={`${activeItems.includes('materials') && 'show'} accordion-content nav-item-submenu`}>
-            {materials && materials.map(item => (
-              <li key={item.id}>
-                <a href="#" onClick={(e) => { e.stopPropagation(); handleAddMaterial(item) }}>{item.name}</a>
-              </li>
-            ))}
-          </ul>
-        </li>
-      </ul>
-    </nav>
+          {selectedMaterials.length > 0 &&
+            <div className='mt-2 d-flex flex-column'>
+              <span>Filtro de materiais: </span>
+              {selectedMaterials.map(item => (<span onClick={() => handleDeleteMaterial(item.id)} className='error'>{item.name} <MdClose /></span>))}
+            </div>
+          }
+          <li className="nav-item pointer" onClick={() => toggleAccordion('materials')}>
+            <div className="d-flex justify-content-between align-items-center">
+              <span className={`${activeItems.includes('materials') && 'accordion-active'} nav-item-header`}>
+                Materiais
+              </span>
+              <RiArrowDropDownLine size={35} className={activeItems.includes('materials') ? 'rotate-in' : 'rotate-out'} />
+            </div>
+            <ul className={`${activeItems.includes('materials') && 'show'} accordion-content nav-item-submenu`}>
+              {materials && materials.map(item => (
+                <li key={item.id}>
+                  <a href="#" onClick={(e) => { e.stopPropagation(); handleAddMaterial(item) }}>{item.name}</a>
+                </li>
+              ))}
+            </ul>
+          </li>
+        </ul>
+        {/* </div> */}
+      </nav>
+    </>
   );
 };
 

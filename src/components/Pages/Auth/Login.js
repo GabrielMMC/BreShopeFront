@@ -79,7 +79,7 @@ const Login = () => {
           </div>
         </div>
         <div className="col-md-5 d-flex align-items-center justify-content-center">
-          <form className="anime-left w-100 mx-4" style={{ maxWidth: 600 }}>
+          <form className="anime-left w-100 mx-sm-4" style={{ maxWidth: 600 }} onSubmit={(e) => { e.preventDefault(); handleSave() }}>
 
             <div style={{ marginBottom: loadingSave ? 10 : 14 }}>
               {loadingSave && <LinearProgress />}
@@ -88,12 +88,12 @@ const Login = () => {
 
             <h6 className="dash-title">Faça login para continuar!</h6>
             <div className="row mt-3">
-              <div className="input-container">
+              <div className="input-container p-0">
                 <input className={`${errors?.email && 'input-error'}`} type='email' value={form.email} onChange={handleChange} onBlur={handleBlur} id='email' name='email' />
                 <label htmlFor='email'>Email* <span className='error'>{errors?.email}</span></label>
               </div>
 
-              <div className='input-container'>
+              <div className='input-container p-0'>
                 <input className={`${errors?.password && 'input-error'}`} type={showPassword ? 'text' : 'password'} value={form.password} onChange={handleChange} onBlur={handleBlur} id='password' name='password' />
                 <label htmlFor='password'>Senha* <span className='error'>{errors?.password}</span></label>
                 <div className="icon-button">
@@ -107,7 +107,7 @@ const Login = () => {
             <div className="d-flex mt-4 align-items-center">
               <span>Caso não possua uma conta, <a className='link' onClick={() => history('/register')}>registre-se</a></span>
               <div className="ms-auto">
-                <Button variant='contained' endIcon={<MdOutlineLogin />} onClick={handleSave}>Entrar</Button>
+                <Button type='submit' variant='contained' endIcon={<MdOutlineLogin />}>Entrar</Button>
               </div>
             </div>
           </form>

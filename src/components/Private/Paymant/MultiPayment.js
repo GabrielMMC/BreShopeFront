@@ -92,7 +92,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
         <div className='mt-5 row'>
           {/* --------------------------Choose-Cards-------------------------- */}
           <div className="col-md-6">
-            <div className="d-flex">
+            <div className="d-flex flex-wrap">
               <CardsModal card={card} setCard={setCard} indexCard={indexCard} />
               <p className='ms-2'> ou </p>
               <p className='link-p ms-2' onClick={handleOpenInput}>adicione um agora!</p>
@@ -123,7 +123,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
             <form className='anime-left mt-3'>
               <div className="row align-items-end">
                 {/* --------------------------Holder-Name-------------------------- */}
-                <div className="col-sm-6 my-2">
+                <div className="col-sm-6 my-2 p-0 px-sm-2">
                   <div className="form-floating">
                     <input className={`form-control ${card[indexCard].holder_name.error && 'is-invalid'}`} id="name" type="text" value={card[indexCard].holder_name.value}
                       onChange={({ target }) => handleChange(target.value, 'holder_name')}
@@ -132,7 +132,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                   </div>
                 </div>
                 {/* --------------------------Number-------------------------- */}
-                <div className="col-sm-6 my-2">
+                <div className="col-sm-6 my-2 p-0 px-sm-2">
                   <div className='input-group'>
                     <div className="form-floating">
                       <input className={`form-control ${card[indexCard].number.error && 'is-invalid'}`} id="card" type="text" value={card[indexCard].number.mask}
@@ -163,8 +163,8 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                 </div>
               </div>
               {/* --------------------------Holder-Document-------------------------- */}
-              <div className="row mt-4">
-                <div className='col-12 my-2'>
+              <div className="row">
+                <div className='col-12 my-2 p-0 px-sm-2'>
                   <div className="form-floating">
                     <input className={`form-control ${card[indexCard].holder_document.error && 'is-invalid'}`} id="document" type="text" value={card[indexCard].holder_document.mask}
                       onChange={({ target }) => handleChange(target.value, 'holder_document', cpfMask)}
@@ -174,8 +174,8 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                 </div>
               </div>
               {/* --------------------------Month-------------------------- */}
-              <div className="row mt-4">
-                <div className="col-sm-3 my-2">
+              <div className="row">
+                <div className="col-sm-3 my-2 p-0 px-sm-2">
                   <div className="form-floating">
                     <select className={`form-control ${card[indexCard].exp_month.error && 'is-invalid'}`} id="month" type="text" value={card[indexCard].exp_month.value}
                       onChange={({ target }) => handleChange(target.value, 'exp_month')}
@@ -188,7 +188,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                   </div>
                 </div>
                 {/* --------------------------Year-------------------------- */}
-                <div className="col-sm-6 my-2">
+                <div className="col-sm-6 my-2 p-0 px-sm-2">
                   <div className="form-floating">
                     <select className={`form-control ${card[indexCard].exp_year.error && 'is-invalid'}`} id="year" type="text" value={card[indexCard].exp_year.value}
                       onChange={({ target }) => handleChange(target.value, 'exp_year')}
@@ -201,7 +201,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                   </div>
                 </div>
                 {/* --------------------------CVV-------------------------- */}
-                <div className="col-sm-3 my-2">
+                <div className="col-sm-3 my-2 p-0 px-sm-2">
                   <div className="form-floating">
                     <input className={`form-control ${card[indexCard].cvv.error && 'is-invalid'}`} id="cvv" type="number" value={card[indexCard].cvv.value}
                       onChange={({ target }) => {
@@ -216,8 +216,8 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                 </div>
               </div>
               {/* --------------------------Amount-------------------------- */}
-              <div className="row my-4">
-                <div className="col-sm-6 my-2">
+              <div className="row">
+                <div className="col-sm-6 my-2 p-0 px-sm-2">
                   <div className="form-floating">
                     <input className={`form-control ${card[indexCard].number.error && 'is-invalid'}`} id="amount" type="text" value={card[indexCard].amount.mask}
                       onChange={({ target }) => handleAmountChange(target.value)}
@@ -227,7 +227,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                   </div>
                 </div>
                 {/* --------------------------Installments-------------------------- */}
-                <div className="col-sm-6 my-2">
+                <div className="col-sm-6 my-2 p-0 px-sm-2">
                   <div className="form-floating">
                     <select className={`form-control ${card[indexCard].number.error && 'is-invalid'}`} id="installments" type="text" value={card[indexCard].installments.value}
                       onChange={({ target }) => handleChange(target.value, 'installments')}
@@ -244,9 +244,9 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
               </div>
             </form>
             :
-            <div className="row mb-4">
+            <div className="row">
               {/* --------------------------Amount-------------------------- */}
-              <div className="col-sm-6 my-2">
+              <div className="col-sm-6 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <input className={`form-control ${card[indexCard].amount.error && 'is-invalid'}`} id="amount" type="text" value={card[indexCard].amount.mask}
                     onChange={({ target }) => handleAmountChange(target.value)}
@@ -256,7 +256,7 @@ const MultiPayment = ({ method, card, setCard, total, pendent, setPendent }) => 
                 </div>
               </div>
               {/* --------------------------Installments-------------------------- */}
-              <div className="col-sm-6 my-2">
+              <div className="col-sm-6 my-2 p-0 px-sm-2">
                 <div className="form-floating">
                   <select className={`form-control ${card[indexCard].installments.error && 'is-invalid'}`} id="installments" type="text" value={card[indexCard].installments.value}
                     onChange={({ target }) => handleChange(target.value, 'installments')}

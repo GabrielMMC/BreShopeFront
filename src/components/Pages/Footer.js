@@ -22,10 +22,9 @@ const Footer = () => {
   const history = useNavigate()
 
   return (
-    <footer className='container-fluid bg-gray py-4' style={{ position: 'relative', bottom: 0 }}>
-      <div className="row w-principal m-auto">
-
-        <div className="col-md-3 col-sm-6">
+    <footer className='d-flex justify-content-center bg-gray py-4' style={{ position: 'relative', bottom: 0 }}>
+      <div className="w-principal row">
+        <div className="col-sm-4 col-lg-3 my-3">
           <span className='bold'>ATENDIMENTO AO CLIENTE</span>
           <div className="d-flex flex-column small" onClick={() => history('/building')}>
             <span>Como comprar</span>
@@ -38,7 +37,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="col-md-3 col-sm-6">
+        <div className="col-sm-4 col-lg-3 my-3">
           <span className='bold'>SOBRE A BRESHOP</span>
           <div className="d-flex flex-column small" onClick={() => history('/building')}>
             <span>Sobre nós</span>
@@ -51,7 +50,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="col-md-3 col-sm-6">
+        <div className="col-sm-4 col-lg-3 my-3">
           <span className='bold'>NOS SIGA</span>
           <div className="d-flex align-items-start flex-column">
             <div>
@@ -73,7 +72,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="col-md-3 col-sm-6">
+        <div className="col-sm-4 col-lg-3 my-3">
           <span>FORMAS DE PAGAMENTO</span>
           <div className="d-flex flex-wrap align-items-center">
             <img width="50" height="30" src={mastercard} alt="mastercard" className='footer-img' />
