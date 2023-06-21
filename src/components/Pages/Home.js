@@ -139,7 +139,7 @@ const Home = () => {
   return (
     <>
       <Navbar />
-      <div className="d-none d-lg-flex" style={{ background: 'linear-gradient(to bottom, #693B9F, #8C4EBE, #A57BD5)', minHeight: '40vh' }}>
+      <div className="d-none d-lg-flex justify-content-center" style={{ background: 'linear-gradient(to bottom, #693B9F, #8C4EBE, #A57BD5)', minHeight: '40vh' }}>
         <div className="row w-principal p-5 m-auto">
           <div className='col-sm-4' style={{ borderRadius: '56% 44% 66% 40% / 30% 33% 67% 70%', backgroundColor: '#FFF', height: 400 }}>
             <img src={art} alt="woman-art" className='h-100 d-flex justify-content-center m-auto' />
